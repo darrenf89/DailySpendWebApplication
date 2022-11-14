@@ -1,0 +1,37 @@
+﻿@model DailySpendBudgetWebApp.Models.CreateABudgetPageModel
+
+@{
+    ViewData["Title"] = "Enter Budget Details";
+    Layout = "~/Views/Shared/_LayoutNoFotter.cshtml";
+}
+
+<form method="Post">
+    <div style="bg-transparent">
+        <div class="container mt-2">
+            @if (ViewBag.hasBudgetName)
+            {
+            <div class="d-flex justify-content-center w-100 mt-auto mb-auto">
+                <div class="input-container col-9">
+                        <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled />
+                    <span class="text-danger" asp-validation-for="BudgetName"></span>
+                </div>
+            </div>
+            }
+            else
+            {
+            <div class="d-flex justify-content-center mt-auto mb-auto">
+                <div class="input-container col-9" >
+                    <input style="font-size:20px;" placeholder="Budget Name" asp-for="BudgetName" type="text" required />
+                    <span class="text-danger" asp-validation-for="BudgetName"></span>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    <footer class="m-0 p-0 mb-5"style="position: absolute; bottom: 0; left: 0; width: 100%">
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <button type="submit" class="btn btn-lg btn-success rounded-1 col-10 mb-1"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
+        </div>
+    </footer>
+</form>
+

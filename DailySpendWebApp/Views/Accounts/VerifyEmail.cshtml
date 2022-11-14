@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Verify Email";
+    Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
+}
+
+<form method="post" class="fill align-items-baseline">
+    <div class="d-flex flex-column justify-content-end align-items-center vh-100" style="background-color: transparent;">
+        <div class="align-items-center mb-5">
+            <img src="~/img/logoFiles/ForWeb/png/JustlogoOrange.png" class="shadow rounded-circle" style="max-width: 150px; background-color: transparent;" />
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div><span>Please Verify your Email Below! You didnt set up the account? Don't worry just click the delete account button, No Damage done!'</span></div>
+        <div class="container row justify-content-center mb-5 mt-5">
+            <button type="submit" asp-action="Logon" asp-controller="Accounts" class="btn btn-primary rounded-pill col-6 mb-4"><i class="bi bi-check-circle text-primary"></i>&nbsp Verify Email</button>
+        </div>
+        <div class="container row justify-content-center mb-5 mt-5">
+            <button type="submit" asp-action="DeleteUser" asp-controller="Accounts" class="btn btn-primary rounded-pill col-6 mb-4"><i class="bi bi-x-circle text-primary"></i>&nbsp Delete Account</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+    }
+    }

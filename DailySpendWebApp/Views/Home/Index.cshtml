@@ -1,8 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model UserHomePageModel;
+
+
+@{
+    ViewData["Title"] = "User Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="">
+    <div id="BudgetInfo" class="w-100">
+        <div class="card text-white bg-white mb-3 shadow">
+            <div class="card-header p-2 d-flex justify-content-between border-bottom border-primary" style="background-color: #FFCC98;">
+                <h8 class="col-6 text-dark">Budget Info</h8>
+                <div class="d-flex justify-content-end col-4 align-items-center">
+                    <a style="text-decoration: none" asp-controller="Budgets" asp-action="EnterBudgetDetails"><p class="text-dark d-flex align-items-center m-0" style="font-size: 12px;"> NEW</p></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="MoneyInfo"></div>
+                <div id="nextIncomeEventInfo"></div>
+            </div>
+            <div class="bg-light text-dark d-flex align-items-center justify-content-start border-top border-grey">
+                <p class="m-0 pt-1 ps-2" style="font-size: 12px"><a asp-action="EnterBudgetDetails" asp-controller="Budgets">Edit Budget Settings</a></p>
+            </div>
+        </div>
+    </div>
+    <div id="BugetInfo"></div>
+    <div id="TransactionHistory"></div>
+    <div id="BillsInfo"></div>
+    <div id="SavingsInfo"></div>
 </div>

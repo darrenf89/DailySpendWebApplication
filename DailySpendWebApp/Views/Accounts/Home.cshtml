@@ -1,0 +1,35 @@
+﻿@model LogonPageModel
+
+@{
+    ViewData["Title"] = "Logon Home";
+    Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
+}
+
+<form method="post" class="fill align-items-baseline">
+    <div class="d-flex flex-column justify-content-end align-items-center vh-100" style="background-color: transparent;">
+        <div class="align-items-center mb-5">
+            <img src="~/img/logoFiles/ForWeb/png/JustlogoOrange.png" class="shadow rounded-circle" style="max-width: 150px; background-color: transparent;" />
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="container row justify-content-center mb-5 mt-5">
+            @Html.ActionLink("Register", "Register", "Accounts",new {@returnUrl = Url.Action(ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["controller"].ToString())},new {@class = "col-5 rounded-pill shadow btn btn-light text-primary"})
+            <div class="col-1"></div>
+            @Html.ActionLink("logon", "Logon", "Accounts",new {@returnUrl = Url.Action(ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["controller"].ToString())},new {@class = "col-5 rounded-pill shadow btn btn-light text-primary"})
+        </div>
+        <div class="d-flex container justify-content-center mb-5 mt-5">
+            <div class="m-5">
+                <img src="~/img/logoFiles/ForWeb/png/Whitenamenobackground.png" style="max-width: 300px; background-color: transparent;" />
+
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+            <partial name="_ValidationScriptsPartial"></partial>
+    }
+    }
