@@ -6,12 +6,12 @@
 }
 
 <form method="Post">
-    <div style="bg-transparent">
+    <div class="bg-transparent" style="min-height: 82vh;">
         <div class="container mt-2">
             @if (ViewBag.hasBudgetName)
             {
             <div class="d-flex justify-content-center w-100 mt-auto mb-auto">
-                <div class="input-container col-9">
+                <div class="input-container col-9 mb-3">
                         <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled />
                     <span class="text-danger" asp-validation-for="BudgetName"></span>
                 </div>
@@ -20,36 +20,44 @@
             else
             {
             <div class="d-flex justify-content-center mt-auto mb-auto">
-                <div class="input-container col-9" >
+                <div class="input-container col-9 mb-3" >
                     <input style="font-size:20px;" placeholder="Budget Name" asp-for="BudgetName" type="text" required />
                     <span class="text-danger" asp-validation-for="BudgetName"></span>
                 </div>
             </div>
             }
         </div>
-        <div>
-            <h5 class="text-primary">Budget Settings!</h5>
-            <div>
-                <label asp-for="CurrencyDDL" class="d-flex form-label"></label>
-                <select asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4"></select>
+        <div class="mb-4">
+            <h5 class="text-dark p-2">Budget Settings!</h5>
+            <div class="DropDown">
+                <label asp-for="CurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
-            <div>
-                <label asp-for="NumberFormatDDL" class="d-flex form-label"></label>
-                <select asp-for="NumberFormatDDL" asp-items=ViewBag.NumberFormatDDL class="form-control w-75 ms-4"></select>
+            <div class="DropDown">
+                <label asp-for="NumberFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select asp-for="NumberFormatDDL" asp-items=ViewBag.NumberFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
-            <div>
-                <label asp-for="CurrencyPlacementDDL" class="d-flex form-label"></label>
-                <select asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4"></select>
+            <div class="DropDown">
+                <label asp-for="CurrencyPlacementDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
-            <div>
-                <label asp-for="DateFormatDDL" class="d-flex form-label"></label>
-                <select asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4"></select>
+            <div class="DropDown">
+                <label asp-for="DateFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
         </div>
-        <div id="BudgetInfo" class="w-100">
-            <div class="card text-white bg-white mb-3 shadow">
-                <div class="card-header p-2 d-flex justify-content-between border-bottom border-primary" style="background-color: #FFCC98;">
+        <div class="w-100">
+            <div id="btnEnterIncomeDetails">
+                <button onclick='enterDetails("EnterIncomeDetails")' class="btn btn-sm btn-danger rounded-1 col-4 mb-1 ms-3">Add Income &nbsp;<i class="bi bi-cash-stack text-white"></i></button>
+            </div>
+            <div id="divEnterIncomeDetails" class="card text-white bg-white mb-3 shadow" style="display: none;">
+                <div class="card-header p-1 ps-3 pe-3 d-flex justify-content-between border-bottom border-primary align-items-center" style="background-color: #FFCC98;">
                     <h8 class="col-6 text-primary">Finance Information</h8>
+                    <button onclick='saveDetails("EnterIncomeDetails")' class="btn btn-sm btn-success rounded-1">Save &nbsp;<i class="bi bi-save2 text-white"></i></button>
                 </div>
                 <div class="card-body">
                     <div id="MoneyInfo"></div>
@@ -58,10 +66,26 @@
             </div>
         </div>
     </div>
-    <footer class="m-0 p-0 mb-5"style="position: absolute; bottom: 0; left: 0; width: 100%">
+    <footer class="sticky-bottom m-0 p-0 mb-5"style="width: 100%">
         <div class="d-flex flex-column align-items-center justify-content-center">
             <button type="submit" class="btn btn-lg btn-success rounded-1 col-10 mb-1"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
         </div>
     </footer>
 </form>
 
+<script>
+
+    function enterDetails(ID) {
+        var div = document.getElementById("div" + ID);
+        var btn = document.getElementById("btn" + ID);
+        div.style.display = "block";
+        btn.style.display = "none";
+    }
+
+    function saveDetails(ID) {
+        var div = document.getElementById("div" + ID);
+        var btn = document.getElementById("btn" + ID);
+        div.style.display = "none";
+        btn.style.display = "block";
+    }
+</script>
