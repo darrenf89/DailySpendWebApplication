@@ -28,5 +28,8 @@ namespace DailySpendBudgetWebApp.Models
         public int StartingBalanceInt { get; set; }
         [Required]
         public int StartingBalanceDec { get; set; }
+        [Required]
+        [DisplayName("When's PAYDAY?")]
+        public DateOnly NextIncomeDate { get; set; }
     }
 }

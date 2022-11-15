@@ -57,52 +57,59 @@
             <div id="EnterIncomeDetails" class="card text-white bg-white mb-3 shadow" style="display: none;">
                 <div class="card-header p-1 ps-3 pe-3 d-flex justify-content-between border-bottom border-primary align-items-center" style="background-color: #FFCC98;">
                     <h8 class="col-6 text-primary">Finance Information</h8>
-                    <button onclick='saveDetails("EnterIncomeDetails")' class="btn btn-sm btn-success rounded-1">Save &nbsp;<i class="bi bi-save2 text-white"></i></button>
+                    <a onclick='saveDetails("IncomeDetails")' class="btn btn-sm btn-success rounded-1">Save &nbsp;<i class="bi bi-save2 text-white"></i></a>
                 </div>
-                <div class="card-body">
-                    <div id="MoneyInfo">
-                        <div class="input-group mb-3">
-                            <label asp-for="StartingBalanceInt"></label>
-                            <span class="input-group-text">£</span>
-                            <input asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000"/></input>
-                            <span class="input-group-text">.</span>
-                            <input asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00"></input>
+                <div class="card-body p-0">
+                    <div id="MoneyInfo" class="row mt-4 pe-3 ps-3">
+                        <div class="col-6 ps-4 pe-4">
+                            <label class="d-flex form-label ms-2 mb-2 text-secondary" asp-for="StartingBalanceInt"></label>
+                            <div class="input-group">
+                                <span style="width: 5%" class="input-group-text">£</span>
+                                <input style="width: 30%" asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000" />
+                                <span style="width: 5%" class="input-group-text">.</span>
+                                <input style="width: 10%" asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00" />
+                            </div>
                         </div>
-                        <div id="payinfo">
-                            <input type="date" asp-for="nextIncomeDate"></input>
-                            <fieldset class="form-group">
-                                <legend class="mt-4">More Money, More Problems!</legend>
-                                <div class="form-check">
+                        <div id="payinfo" class="col-6 ps-4 pe-4">
+                            <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-secondary"></label>
+                            <input class="form-control text-secondary" type="date" asp-for="NextIncomeDate" />
+                        </div>
+                    </div>
+                    <div>
+                        <fieldset class="form-group mt-5">
+                            <span class="ms-3 text-secondary">More Money, More Problems!</span>
+                            <div class="ms-3 mt-2 pe-3 ps-5">
+                                <div class="form-check col-4 p-0 mt-3 mb-3">
                                     <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""/>
-                                    <label class="form-check-label" for="optionsRadios1">
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios1">
                                         Periodically
                                     </label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2" value="option2"/>
-                                    <label class="form-check-label" for="optionsRadios2">
+                                <div class="form-check col-4 p-0 mt-3 mb-3">
+                                    <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios2">
                                         Working Day
                                     </label>
                                 </div>
-                                <div class="form-check ">
-                                    <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
-                                    <label class="form-check-label" for="optionsRadios3">
+                                <div class="form-check col-4 p-0 mt-3 mb-3">
+                                    <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios3">
                                         Date
                                     </label>
                                 </div>
-                            </fieldset>
-                        </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
             </div>
             <div id="SummaryIncomeDetails" style="display: none;">
-                <button onclick='saveDetails("IncomeDetails")' class="text-success">Edit &nbsp;<i class="bi bi-save2 text-white"></i></a>
+                <a onclick='enterDetails("IncomeDetails")' class="text-success">Edit &nbsp;<i class="bi bi-save2 text-primary"></i></a>
             </div>
         </div>
     </div>
-    <footer class="sticky-bottom m-0 p-0 mb-5"style="width: 100%">
+    <footer class="sticky-bottom m-0 p-0"style="width: 100%">
         <div class="d-flex flex-column align-items-center justify-content-center">
-            <button type="submit" class="btn btn-lg btn-success rounded-1 col-10 mb-1"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
+            <button type="submit" class="btn btn-lg btn-success rounded-1 mb-4 col-10"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
         </div>
     </footer>
 </form>
@@ -112,7 +119,7 @@
     function enterDetails(ID) {
         var Open = document.getElementById("Open" + ID);
         var Enter = document.getElementById("Enter" + ID);
-        var Edit = document.getElementById("Summary" + ID);
+        var Summary = document.getElementById("Summary" + ID);
         Open.style.display = "none";
         Enter.style.display = "block";
         Summary.style.display = "none";
@@ -121,7 +128,7 @@
     function saveDetails(ID) {
         var Open = document.getElementById("Open" + ID);
         var Enter = document.getElementById("Enter" + ID);
-        var Edit = document.getElementById("Summary" + ID);
+        var Summary = document.getElementById("Summary" + ID);
         Open.style.display = "none";
         Enter.style.display = "none";
         Summary.style.display = "block";
