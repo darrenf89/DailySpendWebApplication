@@ -57,7 +57,7 @@
             <div id="divEnterIncomeDetails" class="card text-white bg-white mb-3 shadow" style="display: none;">
                 <div class="card-header p-1 ps-3 pe-3 d-flex justify-content-between border-bottom border-primary align-items-center" style="background-color: #FFCC98;">
                     <h8 class="col-6 text-primary">Finance Information</h8>
-                    <button onclick='saveDetails("EnterIncomeDetails")' class="btn btn-sm btn-success rounded-1">Save &nbsp;<i class="bi bi-save2 text-white"></i></button>
+                    <button onclick='saveDetails("EnterIncomeDetails")' class="btn btn-sm btn-info rounded-1 p-1">Save &nbsp;<i class="bi bi-save2 text-white"></i></button>
                 </div>
                 <div class="card-body">
                     <div id="MoneyInfo"></div>
@@ -83,6 +83,13 @@
     }
 
     function saveDetails(ID) {
+        var div = document.getElementById("div" + ID);
+        var btn = document.getElementById("btn" + ID);
+        div.style.display = "none";
+        btn.style.display = "block";
+    }
+
+    function editDetails(ID) {
         var div = document.getElementById("div" + ID);
         var btn = document.getElementById("btn" + ID);
         div.style.display = "none";
