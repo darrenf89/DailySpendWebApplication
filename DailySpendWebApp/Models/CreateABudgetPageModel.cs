@@ -23,5 +23,10 @@ namespace DailySpendBudgetWebApp.Models
         public string CurrencyPlacementDDL { get; set; }
         [DisplayName("Date Format")]
         public string DateFormatDDL { get; set; }
+        [Required]
+        [DisplayName("What's in the 'Bank'")]
+        public int StartingBalanceInt { get; set; }
+        [Required]
+        public int StartingBalanceDec { get; set; }
     }
 }
