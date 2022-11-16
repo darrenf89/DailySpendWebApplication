@@ -50,93 +50,92 @@
                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
         </div>
-        <div class="w-100">
-            <div id="SummaryIncomeDetails" style="display: none;">
-                
-            </div>
-            <div id="OpenIncomeDetails">
-                <button onclick='enterDetails("IncomeDetails")' class="btn btn-sm btn-danger rounded-1 col-4 mb-1 ms-3">Add Income &nbsp;<i class="bi bi-cash-stack text-white"></i></button>
-            </div>
-            <div class="modal">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <div class="bg-dark">
-                                <h5 class="modal-title">Enter the MONIES!</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true"></span>
-                                </button>
+        <div id="SummaryIncomeDetails" style="display: none;">
+            <a id="EditIncomeDetails">Edit Money Details &nbsp;<i class="bi bi-pencil-square text-white"></i></a>
+        </div>
+        <div id="OpenIncomeDetails" class="p-2">
+            <a class="btn btn-lg btn-primary rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Some Mooooney! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
+        </div>
+        <div class="modal" id="modal">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                        <h5 class="modal-title text-primary">Enter the MONIES!</h5>
+                        <button id="btnCloseModal"type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-secondary" style="font-size: 8pt;">To start the grind you need to let us know how much money you have, and how often you get paid ... don't be embarrased I get paid less I promse!</p>
+                        <div class="ps-4 pe-4 mt-4">
+                            <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalanceInt"></label>
+                            <div class="input-group w-75">
+                                <span style="width: 5%" class="input-group-text">£</span>
+                                <input style="width: 30%" asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000" />
+                                <span style="width: 5%" class="input-group-text">.</span>
+                                <input style="width: 10%" asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00" />
                             </div>
                         </div>
-                        <div class="modal-body">
-                            <p>To start the grind you need to let us know how much money you have, and how often you get paid ... don't be embarrased I get paid less I promse!</p>
-                            <div id="MoneyInfo" class="row mt-4 pe-3 ps-3">
-                                <div class="col-6 ps-4 pe-4">
-                                    <label class="d-flex form-label ms-2 mb-2 text-secondary" asp-for="StartingBalanceInt"></label>
-                                    <div class="input-group">
-                                        <span style="width: 5%" class="input-group-text">£</span>
-                                        <input style="width: 30%" asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000" />
-                                        <span style="width: 5%" class="input-group-text">.</span>
-                                        <input style="width: 10%" asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00" />
-                                    </div>
+                        <div id="payinfo" class="ps-4 pe-4 mt-4">
+                            <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-primary"></label>
+                            <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomeDate" />
+                        </div>
+                        <div class="ms-4 mb-3 mt-4 ps-2 text-primary">
+                            <span >More Money, More Problems!</span>
+                        </div>
+                        <fieldset class="form-group">
+                            <div style="font-size: 10pt;" class="ms-5 me-4 row justify-content-between">
+                                <div class="form-check col-3 p-0">
+                                    <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""/>
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios1">
+                                        Every ...
+                                    </label>
                                 </div>
-                                <div id="payinfo" class="col-6 ps-4 pe-4">
-                                    <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-secondary"></label>
-                                    <input class="form-control text-secondary" type="date" asp-for="NextIncomeDate" />
+                                <div class="form-check col-3 p-0">
+                                    <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios2">
+                                        Last ...
+                                    </label>
+                                </div>
+                                <div class="form-check col-3 p-0">
+                                    <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios3">
+                                        On the ...
+                                    </label>
                                 </div>
                             </div>
-                            <div>
-                                <fieldset class="form-group mt-5">
-                                    <span class="ms-3 text-secondary">More Money, More Problems!</span>
-                                    <div class="ms-3 mt-2 pe-3 ps-5">
-                                        <div class="form-check col-4 p-0 mt-3 mb-3">
-                                            <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""/>
-                                            <label class="form-check-label align-self-center text-secondary" for="optionsRadios1">
-                                                Every so many ...
-                                            </label>
-                                        </div>
-                                        <div class="form-check col-4 p-0 mt-3 mb-3">
-                                            <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />
-                                            <label class="form-check-label align-self-center text-secondary" for="optionsRadios2">
-                                                Last x ...
-                                            </label>
-                                        </div>
-                                        <div class="form-check col-4 p-0 mt-3 mb-3">
-                                            <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
-                                            <label class="form-check-label align-self-center text-secondary" for="optionsRadios3">
-                                                On the ...
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div id="PeriodicPay" style="display: none">
-                                        <span>Every</span>
-                                        <input class="form-control text-secondary" type="Number" asp-for="PeriodicPayPeriod" />
-                                        <select></select>
-                                    </div>
-                                    <div id="LastDayOfMonthPay" style="display: none">
-                                        <span>On the </span>
-                                        <input class="form-control text-secondary" type="Number" asp-for="LastDayOfMonthPayPeriod" />
-                                        <span id="OrdinalIndicatorLast"></span>
-                                        <span> Last working day of every month</span>
-                                    </div>
-                                    <div id="GivenDayOfMonthPay" style="display: none">
-                                        <span>On the </span>
-                                        <input class="form-control text-secondary" type="Number" asp-for="GivenDayOfMonthPayPeriod" />
-                                        <span id="OrdinalIndicatorGiven"></span>
-                                        <span> of every month</span>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="bg-dark">
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            </div>
-                        </div>
+                        </fieldset>
+                    </div>
+                    <div id="divPlaceholder" style="min-height: 5vh;"></div>
+                    <div id="PeriodicPay" style="display: none">
+                        <span>Every</span>
+                        <input class="form-control text-secondary" type="Number" asp-for="PeriodicPayPeriod" />
+                        <select></select>
+                    </div>
+                    <div id="LastDayOfMonthPay" style="display: none">
+                        <span>On the </span>
+                        <input class="form-control text-secondary" type="Number" asp-for="LastDayOfMonthPayPeriod" />
+                        <span id="OrdinalIndicatorLast"></span>
+                        <span> Last working day of every month</span>
+                    </div>
+                    <div id="GivenDayOfMonthPay" style="display: none">
+                        <span>On the </span>
+                        <input class="form-control text-secondary" type="Number" asp-for="GivenDayOfMonthPayPeriod" />
+                        <span id="OrdinalIndicatorGiven"></span>
+                        <span> of every month</span>
+                    </div>
+                    <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                        <button type="button" id="btnSaveIncome" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="btnCancelModal"class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="OpenSavingsDetails" class="p-2">
+            <a class="btn btn-lg btn-primary rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Savings &nbsp;<i class="bi bi-piggy-bank text-white"></i></a>
+        </div>
+        <div id="OpenBillsDetails" class="p-2">
+            <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Bills &nbsp;<i class="bi bi-receipt text-white"></i></a>
         </div>
     </div>
     <footer class="sticky-bottom m-0 p-0"style="width: 100%">
@@ -148,21 +147,47 @@
 
 <script>
 
-    function enterDetails(ID) {
-        var Open = document.getElementById("Open" + ID);
-        var Enter = document.getElementById("Enter" + ID);
-        var Summary = document.getElementById("Summary" + ID);
-        Open.style.display = "none";
-        Enter.style.display = "block";
-        Summary.style.display = "none";
+    var modal = document.getElementById("modal");
+    var summary = document.getElementById("SummaryIncomeDetails");
+    var open = document.getElementById("OpenIncomeDetails") ;
+    var btnOpen = document.getElementById("OpenIncomeDetails");
+    var btnCancel = document.getElementById("btnCancelModal");
+    var btnCloseModal = document.getElementById("btnCloseModal");
+    var btnSaveIncome = document.getElementById("btnSaveIncome");
+
+    btnSaveIncome.onclick = function(){
+        modal.style.display = "none";
+        summary.style.display = "block";
+        open.style.display = "none";
+    }
+    
+    btnOpen.onclick = function () {
+        modal.style.display = "block";
+        document.getElementById("StartingBalanceInt").focus();
     }
 
-    function saveDetails(ID) {
-        var Open = document.getElementById("Open" + ID);
-        var Enter = document.getElementById("Enter" + ID);
-        var Summary = document.getElementById("Summary" + ID);
-        Open.style.display = "none";
-        Enter.style.display = "none";
-        Summary.style.display = "block";
+    btnCloseModal.onclick = function(){
+        modal.style.display = "none";
     }
+
+    btnCancel.onclick = function(){
+        modal.style.display = "none";
+        document.getElementById("StartingBalanceInt").value = null;
+        document.getElementById("StartingBalanceDec").value = null;
+        document.getElementById("NextIncomeDate").value = null;
+        document.getElementById("PeriodicPayPeriod").value = null;
+        document.getElementById("LastDayOfMonthPayPeriod").value = null;
+        document.getElementById("GivenDayOfMonthPayPeriod").value = null;
+        document.getElementById("optionsRadios1").checked = false;
+        document.getElementById("optionsRadios2").checked = false;
+        document.getElementById("optionsRadios3").checked = false;
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
 </script>

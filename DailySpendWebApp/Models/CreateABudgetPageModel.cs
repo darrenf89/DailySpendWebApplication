@@ -24,12 +24,16 @@ namespace DailySpendBudgetWebApp.Models
         [DisplayName("Date Format")]
         public string DateFormatDDL { get; set; }
         [Required]
-        [DisplayName("What's in the 'Bank'")]
+        [DisplayName("What's in the 'BANK'")]
         public int StartingBalanceInt { get; set; }
         [Required]
         public int StartingBalanceDec { get; set; }
         [Required]
         [DisplayName("When's PAYDAY?")]
         public DateOnly NextIncomeDate { get; set; }
+        public string PeriodicPayDuratiion { get; set; }
+        public int PeriodicPayPeriod { get; set; }
+        public int LastDayOfMonthPayPeriod { get; set; }
+        public int GivenDayOfMonthPayPeriod { get; set; }
     }
 }
