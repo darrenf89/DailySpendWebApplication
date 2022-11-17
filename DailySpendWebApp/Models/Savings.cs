@@ -12,6 +12,11 @@ namespace DailySpendBudgetWebApp.Models
         public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
         public decimal? LastUpdatedValue { get; set; }
         public bool isSavingsClosed { get; set; } = false;
+        public decimal? SavingsGoal { get; set; }
+        public bool canExceedGoal { get; set; }
+        public bool isRegularSaving { get; set; }
+        public string? RegularSavingType { get; set; }
+        public decimal? RegularSavingValue { get; set; }
 
     }
 }

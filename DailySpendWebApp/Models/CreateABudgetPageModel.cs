@@ -16,13 +16,13 @@ namespace DailySpendBudgetWebApp.Models
         [Required]
         public int BudgetID { get; set; }
         [DisplayName("Currency")]
-        public string CurrencyDDL { get; set; }
+        public string? CurrencyDDL { get; set; }
         [DisplayName("Number Format")]
-        public string NumberFormatDDL { get; set; }
+        public string? NumberFormatDDL { get; set; }
         [DisplayName("Symbol Placement")]
-        public string CurrencyPlacementDDL { get; set; }
+        public string? CurrencyPlacementDDL { get; set; }
         [DisplayName("Date Format")]
-        public string DateFormatDDL { get; set; }
+        public string? DateFormatDDL { get; set; }
         [Required]
         [DisplayName("What's in the 'BANK'")]
         public int StartingBalanceInt { get; set; }
@@ -31,7 +31,7 @@ namespace DailySpendBudgetWebApp.Models
         [Required]
         [DisplayName("When's PAYDAY?")]
         public DateOnly NextIncomeDate { get; set; }
-        public string PeriodicPayDuratiion { get; set; }
+        public string? PeriodicPayDuration { get; set; }
         public int PeriodicPayPeriod { get; set; }
         public int LastDayOfMonthPayPeriod { get; set; }
         public int GivenDayOfMonthPayPeriod { get; set; }

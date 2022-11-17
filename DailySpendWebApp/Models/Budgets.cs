@@ -15,10 +15,11 @@ namespace DailySpendBudgetWebApp.Models
         public decimal? MoneyAvailableBalance { get; set; }
         [DataType(DataType.Currency)]
         public decimal? LeftToSPendBalance { get; set; }
-        [ForeignKey("IncomeEvent")]
-        public int? LastIncomeEventId { get; set; }
-        public IncomeEvents? IncomeEvent { get; set; }
-        public DateTime? NextIncomeEventDate { get; set; }
+        public DateTime? NextIncomePayday { get; set; }
+        public decimal? PaydayAmount { get; set; }
+        public string? PaydayType { get; set; }
+        public int? PaydayValue { get; set; }
+        public string? PaydayDuration { get; set; }
         public List<IncomeEvents> IncomeEvents { get; set; } = new List<IncomeEvents>();
         public List<Savings> Savings { get; set; } = new List<Savings>();
         public List<Transactions> Transactions { get; set; } = new List<Transactions>();

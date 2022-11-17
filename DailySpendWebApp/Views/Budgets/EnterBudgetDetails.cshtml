@@ -109,8 +109,14 @@
                     <div id="divPlaceholder" style="min-height: 5vh;"></div>
                     <div id="PeriodicPay" style="display: none">
                         <span>Every</span>
-                        <input class="form-control text-secondary" type="Number" asp-for="PeriodicPayPeriod" />
-                        <select></select>
+                        <input class="form-control text-secondary" type="Number" asp-for="PeriodicPayPeriod"/>
+                        <div class="form-group">
+                            <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="">
+                                <option>days</option>
+                                <option>weeks</option>
+                                <option>months</option>
+                            </select>
+                        </div>
                     </div>
                     <div id="LastDayOfMonthPay" style="display: none">
                         <span>On the </span>
@@ -238,11 +244,39 @@
     });
 
     const CurrencyDDL = document.getElementById('CurrencyDDL');
+    const NumberFormatDDL = document.getElementById('NumberFormatDDL');
+    const CurrencyPlacementDDL = document.getElementByID('CurrencyPlacementDDL');
+    const DateFormatDDL = document.getElementByID('DateFormatDDL');
+    const PeriodicPayDuration = document.getElementById('PeriodicPayDuration');
+
+    PeriodicPayDuration.addEventListener('selectionchange', () =>
+    {
+        PeriodicPayDuration.style.color = '#e95420';
+        PeriodicPayDuration.style.borderColor = '#e95420';
+    });
 
     CurrencyDDL.addEventListener('selectionchange', () =>
     {
         CurrencyDDL.style.color = '#e95420';
         CurrencyDDL.style.borderColor = '#e95420';
+    });
+
+    NumberFormatDDL.addEventListener('selectionchange', () =>
+    {
+        NumberFormatDDL.style.color = '#e95420';
+        NumberFormatDDL.style.borderColor = '#e95420';
+    });
+
+    CurrencyPlacementDDL.addEventListener('selectionchange', () =>
+    {
+        CurrencyPlacementDDL.style.color = '#e95420';
+        CurrencyPlacementDDL.style.borderColor = '#e95420';
+    });
+
+    DateFormatDDL.addEventListener('selectionchange', () =>
+    {
+        DateFormatDDL.style.color = '#e95420';
+        DateFormatDDL.style.borderColor = '#e95420';
     });
 
 </script>
