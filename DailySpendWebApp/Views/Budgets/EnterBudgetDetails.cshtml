@@ -87,19 +87,19 @@
                             <div style="font-size: 10pt;" class="ms-5 me-4 row justify-content-between">
                                 <div class="form-check col-3 p-0">
                                     <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""/>
-                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios1">
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios1" id="lblOptionsRadios1">
                                         Every ...
                                     </label>
                                 </div>
                                 <div class="form-check col-3 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />
-                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios2">
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios2" id="lblOptionsRadios2">
                                         Last ...
                                     </label>
                                 </div>
                                 <div class="form-check col-3 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
-                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios3">
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios3" id="lblOptionsRadios3">
                                         On the ...
                                     </label>
                                 </div>
@@ -147,13 +147,13 @@
 
 <script>
 
-    var modal = document.getElementById("modal");
-    var summary = document.getElementById("SummaryIncomeDetails");
-    var open = document.getElementById("OpenIncomeDetails") ;
-    var btnOpen = document.getElementById("OpenIncomeDetails");
-    var btnCancel = document.getElementById("btnCancelModal");
-    var btnCloseModal = document.getElementById("btnCloseModal");
-    var btnSaveIncome = document.getElementById("btnSaveIncome");
+    const modal = document.getElementById("modal");
+    const summary = document.getElementById("SummaryIncomeDetails");
+    const open = document.getElementById("OpenIncomeDetails") ;
+    const btnOpen = document.getElementById("OpenIncomeDetails");
+    const btnCancel = document.getElementById("btnCancelModal");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const btnSaveIncome = document.getElementById("btnSaveIncome");
 
     btnSaveIncome.onclick = function(){
         modal.style.display = "none";
@@ -181,6 +181,12 @@
         document.getElementById("optionsRadios1").checked = false;
         document.getElementById("optionsRadios2").checked = false;
         document.getElementById("optionsRadios3").checked = false;
+        PeriodicPay.style.display = 'none';
+        LastPay.style.display = 'none';
+        GivenPay.style.display = 'none';
+        document.getElementById('lblOptionsRadios1').style.color = '#aea79f'
+        document.getElementById('lblOptionsRadios2').style.color = '#aea79f'
+        document.getElementById('lblOptionsRadios3').style.color = '#aea79f'
     }
 
     // When the user clicks anywhere outside of the modal, close it
@@ -189,5 +195,54 @@
             modal.style.display = "none";
         }
     }
+
+    const PeriodicPay = document.getElementById('PeriodicPay');
+    const GivenPay = document.getElementById('GivenDayOfMonthPay');
+    const LastPay = document.getElementById('LastDayOfMonthPay');
+
+    function handleIncomeRadioClick() {
+        if (document.getElementById('optionsRadios1').checked) 
+        {
+            PeriodicPay.style.display = 'block';
+            LastPay.style.display = 'none';
+            GivenPay.style.display = 'none';
+            document.getElementById('lblOptionsRadios1').style.color = '#e95420';
+            document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
+            
+        } 
+        else if (document.getElementById('optionsRadios2').checked) 
+        {
+            PeriodicPay.style.display = 'none';
+            LastPay.style.display = 'block';
+            GivenPay.style.display = 'none';
+            document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios2').style.color = '#e95420';
+            document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
+        }
+        else if (document.getElementById('optionsRadios3').checked) 
+        {
+            PeriodicPay.style.display = 'none';
+            LastPay.style.display = 'none';
+            GivenPay.style.display = 'block';
+            document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios3').style.color = '#e95420';
+        }
+    }
+
+    const radioButtons = document.querySelectorAll('input[name="optionsRadios"]');
+
+    radioButtons.forEach(radio => {
+    radio.addEventListener('click', handleIncomeRadioClick);
+    });
+
+    const CurrencyDDL = document.getElementById('CurrencyDDL');
+
+    CurrencyDDL.addEventListener('selectionchange', () =>
+    {
+        CurrencyDDL.style.color = '#e95420';
+        CurrencyDDL.style.borderColor = '#e95420';
+    });
 
 </script>
