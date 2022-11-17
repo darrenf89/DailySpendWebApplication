@@ -30,23 +30,23 @@
         <div class="mb-4">
             <h5 class="text-dark p-2">Budget Settings!</h5>
             <div class="DropDown">
-                <label asp-for="CurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <label asp-for="CurrencyDDL" id="lblCurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select onchange="onSelectionChangeWLabel('CurrencyDDL');" asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
             <div class="DropDown">
-                <label asp-for="NumberFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select asp-for="NumberFormatDDL" asp-items=ViewBag.NumberFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <label asp-for="NumberFormatDDL" id="lblNumberFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select onchange="onSelectionChangeWLabel('NumberFormatDDL');" id="NumberFormatDDL" asp-for="NumberFormatDDL" asp-items=ViewBag.NumberFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
             <div class="DropDown">
-                <label asp-for="CurrencyPlacementDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <label asp-for="CurrencyPlacementDDL" id="lblCurrencyPlacementDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select onchange="onSelectionChangeWLabel('CurrencyPlacementDDL');" asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
             <div class="DropDown">
-                <label asp-for="DateFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                <label asp-for="DateFormatDDL" id="lblDateFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                <select onchange="onSelectionChangeWLabel('DateFormatDDL');" asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
         </div>
@@ -243,40 +243,11 @@
     radio.addEventListener('click', handleIncomeRadioClick);
     });
 
-    const CurrencyDDL = document.getElementById('CurrencyDDL');
-    const NumberFormatDDL = document.getElementById('NumberFormatDDL');
-    const CurrencyPlacementDDL = document.getElementByID('CurrencyPlacementDDL');
-    const DateFormatDDL = document.getElementByID('DateFormatDDL');
-    const PeriodicPayDuration = document.getElementById('PeriodicPayDuration');
-
-    PeriodicPayDuration.addEventListener('selectionchange', () =>
-    {
-        PeriodicPayDuration.style.color = '#e95420';
-        PeriodicPayDuration.style.borderColor = '#e95420';
-    });
-
-    CurrencyDDL.addEventListener('selectionchange', () =>
-    {
-        CurrencyDDL.style.color = '#e95420';
-        CurrencyDDL.style.borderColor = '#e95420';
-    });
-
-    NumberFormatDDL.addEventListener('selectionchange', () =>
-    {
-        NumberFormatDDL.style.color = '#e95420';
-        NumberFormatDDL.style.borderColor = '#e95420';
-    });
-
-    CurrencyPlacementDDL.addEventListener('selectionchange', () =>
-    {
-        CurrencyPlacementDDL.style.color = '#e95420';
-        CurrencyPlacementDDL.style.borderColor = '#e95420';
-    });
-
-    DateFormatDDL.addEventListener('selectionchange', () =>
-    {
-        DateFormatDDL.style.color = '#e95420';
-        DateFormatDDL.style.borderColor = '#e95420';
-    });
+    function onSelectionChangeWLabel(Element){
+        const ChangeElement = document.getElementById(Element);
+        const lblChangeElement = document.getElementById('lbl'+Element);
+        ChangeElement.className="form-control w-75 ms-4 border-0 text-primary p-0 ps-4";
+        lblChangeElement.className = "d-flex form-label ms-4 mb-0 text-primary"
+    }
 
 </script>
