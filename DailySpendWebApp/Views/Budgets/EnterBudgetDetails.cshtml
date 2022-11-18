@@ -83,33 +83,41 @@
                         <div class="ms-4 mb-3 mt-4 ps-2 text-primary">
                             <span >More Money, More Problems!</span>
                         </div>
+                        <div class="text-secondary">Tell us some details about your payday! We aren't just nosey we will use this to figure out how long your money has to last you each month, but dont worry you can manually change the day if our math is wrong. Probably will be so i'd check!</div>
+                        <div class="text-secondary">I get paid ...</div>
                         <fieldset class="form-group">
                             <div style="font-size: 10pt;" class="ms-5 me-4 row justify-content-between">
                                 <div class="form-check col-3 p-0">
                                     <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""/>
                                     <label class="form-check-label align-self-center text-secondary" for="optionsRadios1" id="lblOptionsRadios1">
-                                        Every ...
+                                        Every nth ...
                                     </label>
                                 </div>
                                 <div class="form-check col-3 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />
                                     <label class="form-check-label align-self-center text-secondary" for="optionsRadios2" id="lblOptionsRadios2">
-                                        Last ...
+                                        ... Working days before end of month
                                     </label>
                                 </div>
                                 <div class="form-check col-3 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
                                     <label class="form-check-label align-self-center text-secondary" for="optionsRadios3" id="lblOptionsRadios3">
-                                        On the ...
+                                        on the ... of every month
+                                    </label>
+                                </div>
+                                <div class="form-check col-3 p-0">
+                                    <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" value="option3"/>
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios4" id="lbloptionsRadios4">
+                                       on the last --- of the month
                                     </label>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
                     <div id="divPlaceholder" style="min-height: 5vh;"></div>
-                    <div id="PeriodicPay" style="display: none">
+                    <div id="divPeriodicPay" style="display: none">
                         <span>Every</span>
-                        <input class="form-control text-secondary" type="Number" asp-for="PeriodicPayPeriod"/>
+                        <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod"/>
                         <div class="form-group">
                             <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="">
                                 <option>days</option>
@@ -118,17 +126,29 @@
                             </select>
                         </div>
                     </div>
-                    <div id="LastDayOfMonthPay" style="display: none">
-                        <span>On the </span>
-                        <input class="form-control text-secondary" type="Number" asp-for="LastDayOfMonthPayPeriod" />
+                    <div id="divLastDayOfMonthPay" style="display: none">
+                        <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" />
                         <span id="OrdinalIndicatorLast"></span>
-                        <span> Last working day of every month</span>
+                        <span>Working days before end of the month</span>
                     </div>
-                    <div id="GivenDayOfMonthPay" style="display: none">
+                    <div id="divGivenDayOfMonthPay" style="display: none">
                         <span>On the </span>
-                        <input class="form-control text-secondary" type="Number" asp-for="GivenDayOfMonthPayPeriod" />
+                        <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" />
                         <span id="OrdinalIndicatorGiven"></span>
                         <span> of every month</span>
+                    </div>
+                    <div id="divLastGivenDayOfWeekPay" style="display: none">
+                        <span>On the Last</span>
+                        <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="">
+                            <option>Monday</option>
+                            <option>Tuesday</option>
+                            <option>Wednesday</option>
+                            <option>Thursday</option>
+                            <option>Friday</option>
+                            <option>Saturday</option>
+                            <option>Sunday</option>
+                        </select>
+                        <span> of the month</span>
                     </div>
                     <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
                         <button type="button" id="btnSaveIncome" class="btn btn-primary">Save changes</button>
@@ -202,9 +222,10 @@
         }
     }
 
-    const PeriodicPay = document.getElementById('PeriodicPay');
-    const GivenPay = document.getElementById('GivenDayOfMonthPay');
-    const LastPay = document.getElementById('LastDayOfMonthPay');
+    const PeriodicPay = document.getElementById('divPeriodicPay');
+    const GivenPay = document.getElementById('divGivenDayOfMonthPay');
+    const LastPay = document.getElementById('divLastDayOfMonthPay');
+    const GivenDay = document.getElementById('divLastGivenDayOfWeekPay');
 
     function handleIncomeRadioClick() {
         if (document.getElementById('optionsRadios1').checked) 
@@ -212,9 +233,11 @@
             PeriodicPay.style.display = 'block';
             LastPay.style.display = 'none';
             GivenPay.style.display = 'none';
+            GivenDay.style.display = 'none';
             document.getElementById('lblOptionsRadios1').style.color = '#e95420';
             document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
             document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios4').style.color = '#aea79f';
             
         } 
         else if (document.getElementById('optionsRadios2').checked) 
@@ -222,18 +245,33 @@
             PeriodicPay.style.display = 'none';
             LastPay.style.display = 'block';
             GivenPay.style.display = 'none';
+            GivenDay.style.display = 'none';
             document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
             document.getElementById('lblOptionsRadios2').style.color = '#e95420';
             document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios4').style.color = '#aea79f';
         }
         else if (document.getElementById('optionsRadios3').checked) 
         {
             PeriodicPay.style.display = 'none';
             LastPay.style.display = 'none';
             GivenPay.style.display = 'block';
+            GivenDay.style.display = 'none';
             document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
             document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
             document.getElementById('lblOptionsRadios3').style.color = '#e95420';
+            document.getElementById('lblOptionsRadios4').style.color = '#aea79f';
+        }
+        else if (document.getElementById('optionsRadios4').checked) 
+        {
+            PeriodicPay.style.display = 'none';
+            LastPay.style.display = 'none';
+            GivenPay.style.display = 'none';
+            GivenDay.style.display = 'block';
+            document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
+            document.getElementById('lblOptionsRadios4').style.color = '#e95420';
         }
     }
 

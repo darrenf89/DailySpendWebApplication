@@ -35,5 +35,6 @@ namespace DailySpendBudgetWebApp.Models
         public int PeriodicPayPeriod { get; set; }
         public int LastDayOfMonthPayPeriod { get; set; }
         public int GivenDayOfMonthPayPeriod { get; set; }
+        public string? LastGivenDayOfWeekPay { get; set; }
     }
 }
