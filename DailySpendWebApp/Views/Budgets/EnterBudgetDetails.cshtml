@@ -27,7 +27,7 @@
             </div>
             }
         </div>
-        <div class="mb-4">
+        <div class="mb-2">
             <h5 class="text-dark p-2">Budget Settings!</h5>
             <div class="DropDown">
                 <label asp-for="CurrencyDDL" id="lblCurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
@@ -50,10 +50,23 @@
                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
             </div>
         </div>
-        <div id="SummaryIncomeDetails" style="display: none;">
-            <a id="EditIncomeDetails">Edit Money Details &nbsp;<i class="bi bi-pencil-square text-white"></i></a>
+        <h5 class="text-dark p-2">Budget Details!</h5>
+        <div id="SummaryIncomeDetails" style="display: none;" class="card text-white bg-primary mb-3 shadow">
+            <div class="card-header p-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="m-0">Payday Baby!</h5>
+                    <a href="#" id="EditIncomeDetails" class="text-white"><i class="bi bi-pencil-square text-white"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-2">
+                <div class="card-text">
+                    <div id="divMessageStringOne" class="pb-2"></div>
+                    <div id="divMessageStringTwo" class="pb-2"></div>
+                </div>
+            </div>
         </div>
         <div id="OpenIncomeDetails" class="p-2">
+            <p class="text-secondary" style="font-size: 11pt;"></p>
             <a class="btn btn-lg btn-primary rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Some Mooooney! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
         </div>
         <div class="modal" id="modal">
@@ -66,93 +79,118 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-secondary" style="font-size: 8pt;">To start the grind you need to let us know how much money you have, and how often you get paid ... don't be embarrased I get paid less I promse!</p>
+                        <p class="text-secondary" style="font-size: 8pt;">To start the grind you need to let us know how much money you have, and how often you get paid. Don't worry we'll keep your info safe ... just you, me and the janitor Jim!</p>
                         <div class="ps-4 pe-4 mt-4">
                             <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalanceInt"></label>
                             <div class="input-group w-75">
-                                <span style="width: 5%" class="input-group-text">£</span>
-                                <input style="width: 30%" asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000" />
+                                <span style="width: 5%" class="input-group-text" id="CurrencySymbol">£</span>
+                                <input style="width: 30%" asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000" id="StartingBalanceInt" />
                                 <span style="width: 5%" class="input-group-text">.</span>
-                                <input style="width: 10%" asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00" />
+                                <input style="width: 10%" asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00" id="StartingBalanceDec" />
                             </div>
                         </div>
+                        <p id="valStartingBalance" class="text-danger m-2" style="font-size: 8pt; display: none;">* You have to enter a current balance, or you'll have no money to spend!'</p>
                         <div id="payinfo" class="ps-4 pe-4 mt-4">
                             <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-primary"></label>
                             <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomeDate" />
                         </div>
-                        <div class="ms-4 mb-3 mt-4 ps-2 text-primary">
+                        <p id="valNextIncomeDate" class="text-danger m-2" style="font-size: 8pt; display: none;">* Please select a date for your next pay day, and make sure it is in the future ... obviously!'</p>
+                        <div class="ms-4 mb-1 mt-4 ps-2 text-primary">
                             <span >More Money, More Problems!</span>
                         </div>
-                        <div class="text-secondary">Tell us some details about your payday! We aren't just nosey we will use this to figure out how long your money has to last you each month, but dont worry you can manually change the day if our math is wrong. Probably will be so i'd check!</div>
-                        <div class="text-secondary">I get paid ...</div>
+                        <div class="text-secondary mb-3" style="font-size: 8pt">Tell us some details about your payday! We aren't just nosey we will use this to figure out how much you can spend each day so your money will last you to next PAYDAY. Dont worry you can manually change the day if our math is wrong, probably will be so i'd check!</div>
+                        <div class="text-primary mb-3">I get paid ...</div>
                         <fieldset class="form-group">
-                            <div style="font-size: 10pt;" class="ms-5 me-4 row justify-content-between">
-                                <div class="form-check col-3 p-0">
+                            <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="PayRadioButtons">
+                                <div class="form-check col-10 p-0">
                                     <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""/>
                                     <label class="form-check-label align-self-center text-secondary" for="optionsRadios1" id="lblOptionsRadios1">
                                         Every nth ...
                                     </label>
                                 </div>
-                                <div class="form-check col-3 p-0">
+                                <div class="form-check col-10 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />
                                     <label class="form-check-label align-self-center text-secondary" for="optionsRadios2" id="lblOptionsRadios2">
                                         ... Working days before end of month
                                     </label>
                                 </div>
-                                <div class="form-check col-3 p-0">
+                                <div class="form-check col-10 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
                                     <label class="form-check-label align-self-center text-secondary" for="optionsRadios3" id="lblOptionsRadios3">
                                         on the ... of every month
                                     </label>
                                 </div>
-                                <div class="form-check col-3 p-0">
+                                <div class="form-check col-10 p-0">
                                     <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" value="option3"/>
-                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios4" id="lbloptionsRadios4">
-                                       on the last --- of the month
+                                    <label class="form-check-label align-self-center text-secondary" for="optionsRadios4" id="lblOptionsRadios4">
+                                       on the last ... of the month
                                     </label>
                                 </div>
                             </div>
                         </fieldset>
-                    </div>
-                    <div id="divPlaceholder" style="min-height: 5vh;"></div>
-                    <div id="divPeriodicPay" style="display: none">
-                        <span>Every</span>
-                        <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod"/>
-                        <div class="form-group">
-                            <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="">
-                                <option>days</option>
-                                <option>weeks</option>
-                                <option>months</option>
-                            </select>
+                        <p id="valPayTypeRadioButtons" class="text-danger m-2" style="font-size: 8pt; display: none;">* Make sure to tell us how ofetn you get paid :)</p>
+                        <div class="p-4">
+                            <div id="divPlaceholder" style="min-height: 5vh;"></div>
+                            <div id="divPeriodicPay" style="display: none">
+                                <span>Every</span>
+                                <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod"/>
+                                <div class="DropDown">
+                                    <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="">
+                                        <option>days</option>
+                                        <option>weeks</option>
+                                        <option>months</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="divLastDayOfMonthPay" style="display: none">
+                                <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" />
+                                <span id="OrdinalIndicatorLast"></span>
+                                <span>Working days before end of the month</span>
+                            </div>
+                            <div id="divGivenDayOfMonthPay" style="display: none">
+                                <span>On the </span>
+                                <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" />
+                                <span id="OrdinalIndicatorGiven"></span>
+                                <span> of every month</span>
+                            </div>
+                            <div id="divLastGivenDayOfWeekPay" style="display: none" class="DropDown">
+                                <span>On the Last</span>
+                                <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="">
+                                    <option>Monday</option>
+                                    <option>Tuesday</option>
+                                    <option>Wednesday</option>
+                                    <option>Thursday</option>
+                                    <option>Friday</option>
+                                    <option>Saturday</option>
+                                    <option>Sunday</option>
+                                </select>
+                                <span> of the month</span>
+                            </div>
                         </div>
-                    </div>
-                    <div id="divLastDayOfMonthPay" style="display: none">
-                        <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" />
-                        <span id="OrdinalIndicatorLast"></span>
-                        <span>Working days before end of the month</span>
-                    </div>
-                    <div id="divGivenDayOfMonthPay" style="display: none">
-                        <span>On the </span>
-                        <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" />
-                        <span id="OrdinalIndicatorGiven"></span>
-                        <span> of every month</span>
-                    </div>
-                    <div id="divLastGivenDayOfWeekPay" style="display: none">
-                        <span>On the Last</span>
-                        <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="">
-                            <option>Monday</option>
-                            <option>Tuesday</option>
-                            <option>Wednesday</option>
-                            <option>Thursday</option>
-                            <option>Friday</option>
-                            <option>Saturday</option>
-                            <option>Sunday</option>
-                        </select>
-                        <span> of the month</span>
+                        <p id="valPayOptions" class="text-danger m-2" style="font-size: 8pt; display: none;">* Provide the details of how often you're paid, OR ELSE!'</p>
                     </div>
                     <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
                         <button type="button" id="btnSaveIncome" class="btn btn-primary">Save changes</button>
                         <button type="button" id="btnCancelModal"class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="SavingsModal">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                        <h5 class="modal-title text-primary">Modal title</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="SavingsModal" aria-label="Close" id="CloseSavingModal">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Modal body text goes here.</p>
+                    </div>
+                    <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="CancelSavingModal" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -180,16 +218,192 @@
     const btnCancel = document.getElementById("btnCancelModal");
     const btnCloseModal = document.getElementById("btnCloseModal");
     const btnSaveIncome = document.getElementById("btnSaveIncome");
+    const btnEditIncome =  document.getElementById("EditIncomeDetails");
+
+    document.getElementById("OpenSavingsDetails").onclick = function(){
+        document.getElementById("SavingsModal").style.display = "block";
+    }
+
+    document.getElementById("CloseSavingModal").onclick = function () {
+        document.getElementById("SavingsModal").style.display = "none";
+    }
+
+    document.getElementById("CloseSavingModal").onclick = function () {
+        document.getElementById("SavingsModal").style.display = "none";
+    }
+
+    document.getElementById("CancelSavingModal").onclick = function () {
+        document.getElementById("SavingsModal").style.display = "none";
+    }
+
+    btnEditIncome.onclick = function(){
+        modal.style.display = "block";
+    }
 
     btnSaveIncome.onclick = function(){
-        modal.style.display = "none";
-        summary.style.display = "block";
-        open.style.display = "none";
+
+        var isIncomeValid = true;
+        var InvalidFocus = null;
+        var MessString = 'Congrats, you have ';
+
+        const StartingBalanceInt = document.getElementById("StartingBalanceInt").value;
+        const StartingBalanceDec = document.getElementById("StartingBalanceDec").value;
+
+
+        if (StartingBalanceInt == "" && StartingBalanceDec == "")
+        {
+            isIncomeValid = false;
+            document.getElementById("valStartingBalance").style.display = 'block';
+            InvalidFocus = document.getElementById("StartingBalanceInt");
+        }
+        else
+        {
+            document.getElementById("valStartingBalance").style.display = 'none';
+            MessString += '<strong class="text-dark">' + document.getElementById('CurrencySymbol').innerHTML + document.getElementById('StartingBalanceInt').value + '.' + document.getElementById('StartingBalanceDec').value + '</strong>';
+        }
+
+        const NextIncomeDate = document.getElementById("NextIncomeDate").value;
+        const currentTime = new Date();
+        MessString += ' in the bank. This has to last you until your next payday which is on the ';
+
+        if (NextIncomeDate <= currentTime) 
+        {
+            isIncomeValid = false;
+            document.getElementById("valNextIncomeDate").style.display = 'block';
+            if (InvalidFocus == null)
+            {
+                InvalidFocus = document.getElementById("NextIncomeDate");                
+            }
+        }
+        else
+        {
+            document.getElementById("valNextIncomeDate").style.display = 'none';
+            MessString += '<strong class="text-dark">' + document.getElementById('NextIncomeDate').value + '</strong>' + '.';
+        }
+
+        const PayTypeRadioButtons = document.querySelectorAll('[name="optionsRadios"]');
+        var isChecked = false;
+        var RadioChecked = 'none';
+
+        for (var i = 0; i < PayTypeRadioButtons.length; i++)
+        {
+            if(PayTypeRadioButtons[i].checked)
+            {
+                isChecked = true;
+                RadioChecked = PayTypeRadioButtons[i].id
+            }
+        }
+
+
+        if (!isChecked) 
+        {
+            isIncomeValid = false;
+            document.getElementById("valPayTypeRadioButtons").style.display = 'block';
+            if (InvalidFocus == null)
+            {
+                InvalidFocus = document.getElementById("PayRadioButtons");
+            }
+        }
+        else
+        {
+            document.getElementById("valPayTypeRadioButtons").style.display = 'none';
+        }
+
+        var MessStringTwo = 'Apparently you get paid ';
+
+        if (RadioChecked == 'optionsRadios1') 
+        {
+            if (document.getElementById('PeriodicPayPeriod').value == '' || document.getElementById('PeriodicPayDuration').value == '') 
+            {
+                isIncomeValid = false;
+                document.getElementById("valPayOptions").style.display = 'block';
+                if (InvalidFocus == null)
+                {
+                    InvalidFocus = document.getElementById("PeriodicPayPeriod");
+                }
+            }
+            else 
+            {
+                document.getElementById("valPayOptions").style.display = 'none';
+                MessStringTwo += ' every ' + '<strong class="text-dark">' + document.getElementById('PeriodicPayPeriod').value + ' ' + document.getElementById('PeriodicPayDuration').value + '</strong>';
+            }
+        }
+        else if (RadioChecked == 'optionsRadios2') 
+        {
+            if (document.getElementById('LastDayOfMonthPayPeriod').value == '') 
+            {
+                isIncomeValid = false;
+                document.getElementById("valPayOptions").style.display = 'block';
+                if (InvalidFocus == null)
+                {
+                    InvalidFocus = document.getElementById("LastDayOfMonthPayPeriod");
+                }
+            }
+            else 
+            {
+                document.getElementById("valPayOptions").style.display = 'none';
+                MessStringTwo += '<strong class="text-dark">' + document.getElementById('LastDayOfMonthPayPeriod').value + ' < /strong>' + ' working days before the end of the month';
+            }
+        }
+        else if (RadioChecked == 'optionsRadios3') 
+        {
+            if (document.getElementById('GivenDayOfMonthPayPeriod').value == '') 
+            {
+                isIncomeValid = false;
+                document.getElementById("valPayOptions").style.display = 'block';
+                if (InvalidFocus == null)
+                {
+                    InvalidFocus = document.getElementById("GivenDayOfMonthPayPeriod");
+                }
+            }
+            else 
+            {
+                document.getElementById("valPayOptions").style.display = 'none';
+                MessStringTwo += ' on the ' + '<strong class="text-dark">' + document.getElementById('GivenDayOfMonthPayPeriod').value + document.getElementById('OrdinalIndicatorGiven').innerHTML + '</strong>' + ' of every month.';
+            }
+        }
+        else if (RadioChecked == 'optionsRadios4') 
+        {
+            if (document.getElementById('LastGivenDayOfWeekPay').value == '') 
+            {
+                isIncomeValid = false;
+                document.getElementById("valPayOptions").style.display = 'block';
+                if (InvalidFocus == null)
+                {
+                    InvalidFocus = document.getElementById("LastGivenDayOfWeekPay");
+                }
+            }
+            else 
+            {
+                document.getElementById("valPayOptions").style.display = 'none';
+                MessStringTwo += ' on the Last ' + '<strong class="text-dark">' + document.getElementById('LastGivenDayOfWeekPay').value + '</strong>' + ' of the month';
+            }
+        }
+
+        MessStringTwo += ' ... Seems Likely';
+
+        if (isIncomeValid)
+        {
+            modal.style.display = "none";
+            summary.style.display = "block";
+            open.style.display = "none";  
+            document.getElementById('divMessageStringOne').innerHTML = MessString;
+            document.getElementById('divMessageStringTwo').innerHTML = MessStringTwo;
+        }
+        else
+        {
+            InvalidFocus.focus();
+        }
+
+        //modal.style.display = "none";
+        //summary.style.display = "block";
+        //open.style.display = "none";
     }
     
     btnOpen.onclick = function () {
         modal.style.display = "block";
         document.getElementById("StartingBalanceInt").focus();
+        document.getElementById("optionsRadios1").checked = false;
     }
 
     btnCloseModal.onclick = function(){
@@ -207,12 +421,19 @@
         document.getElementById("optionsRadios1").checked = false;
         document.getElementById("optionsRadios2").checked = false;
         document.getElementById("optionsRadios3").checked = false;
+        document.getElementById("optionsRadios4").checked = false;
         PeriodicPay.style.display = 'none';
         LastPay.style.display = 'none';
         GivenPay.style.display = 'none';
-        document.getElementById('lblOptionsRadios1').style.color = '#aea79f'
-        document.getElementById('lblOptionsRadios2').style.color = '#aea79f'
-        document.getElementById('lblOptionsRadios3').style.color = '#aea79f'
+        document.getElementById('divPlaceholder').style.display = 'block';
+        document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+        document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+        document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+        document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
+        document.getElementById("valPayOptions").style.display = 'none';
+        document.getElementById("valPayTypeRadioButtons").style.display = 'none';
+        document.getElementById("valNextIncomeDate").style.display = 'none';
+        document.getElementById("valStartingBalance").style.display = 'none';
     }
 
     // When the user clicks anywhere outside of the modal, close it
@@ -226,6 +447,7 @@
     const GivenPay = document.getElementById('divGivenDayOfMonthPay');
     const LastPay = document.getElementById('divLastDayOfMonthPay');
     const GivenDay = document.getElementById('divLastGivenDayOfWeekPay');
+    
 
     function handleIncomeRadioClick() {
         if (document.getElementById('optionsRadios1').checked) 
@@ -234,10 +456,11 @@
             LastPay.style.display = 'none';
             GivenPay.style.display = 'none';
             GivenDay.style.display = 'none';
-            document.getElementById('lblOptionsRadios1').style.color = '#e95420';
-            document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios4').style.color = '#aea79f';
+            document.getElementById('divPlaceholder').style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
             
         } 
         else if (document.getElementById('optionsRadios2').checked) 
@@ -246,10 +469,11 @@
             LastPay.style.display = 'block';
             GivenPay.style.display = 'none';
             GivenDay.style.display = 'none';
-            document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios2').style.color = '#e95420';
-            document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios4').style.color = '#aea79f';
+            document.getElementById('divPlaceholder').style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
         }
         else if (document.getElementById('optionsRadios3').checked) 
         {
@@ -257,10 +481,11 @@
             LastPay.style.display = 'none';
             GivenPay.style.display = 'block';
             GivenDay.style.display = 'none';
-            document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios3').style.color = '#e95420';
-            document.getElementById('lblOptionsRadios4').style.color = '#aea79f';
+            document.getElementById('divPlaceholder').style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
         }
         else if (document.getElementById('optionsRadios4').checked) 
         {
@@ -268,10 +493,11 @@
             LastPay.style.display = 'none';
             GivenPay.style.display = 'none';
             GivenDay.style.display = 'block';
-            document.getElementById('lblOptionsRadios1').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios2').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios3').style.color = '#aea79f';
-            document.getElementById('lblOptionsRadios4').style.color = '#e95420';
+            document.getElementById('divPlaceholder').style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-primary"
         }
     }
 
