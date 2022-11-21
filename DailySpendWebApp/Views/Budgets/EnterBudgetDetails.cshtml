@@ -12,7 +12,7 @@
             {
             <div class="d-flex justify-content-center w-100 mt-auto mb-auto">
                 <div class="input-container col-9 mb-3">
-                        <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled />
+                    <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled />
                     <span class="text-danger" asp-validation-for="BudgetName"></span>
                 </div>
             </div>
@@ -186,7 +186,35 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Modal body text goes here.</p>
+                        <p>Lets be honest, if you had savings you wouldn't have downloaded the app. But Just incase, for the money you have entered what of it is saved and for what?</p>
+                        <div id="divSavingsDetails">
+                            <div id="divSavingNumber" class="">
+                                <p class="text-secondary" style="font-size: 8pt;">Give your goal an easy to remember name, or a fun one ... or anything really.</p>
+                                <div class="d-flex justify-content-center mt-auto mb-auto">
+                                    <div class="input-container col-9 mb-3">
+                                        <input class="text-primary" maxlength="15" type="Text" asp-for="AdditionalSaving[0].SavingsName" />
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div>
+                                        <label class="form-label ms-2 mb-0 text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].SavingsGoal"></label>
+                                        <input class="form-control text-secondary" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].SavingsGoal" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label ms-2 mb-0 text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].CurrentBalance"></label>
+                                        <input class="form-control text-secondary" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].CurrentBalance" />
+                                    </div>
+                                    <div>
+                                        <label class="form-label ms-2 mb-0 text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].GoalDate"></label>
+                                        <input class="form-control text-secondary" type="Date" asp-for="AdditionalSaving[0].GoalDate" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <hidden id="NumberOfSavings" value="0"></hidden>
+                            <a href="#" id="btnAddSavings" class="btn btn-success roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">Add Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
+                        </div>
                     </div>
                     <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
                         <button type="button" class="btn btn-primary">Save changes</button>
@@ -212,6 +240,7 @@
 <script>
 
     const modal = document.getElementById("modal");
+    const SavingsModal = document.getElementById("SavingsModal");
     const summary = document.getElementById("SummaryIncomeDetails");
     const open = document.getElementById("OpenIncomeDetails") ;
     const btnOpen = document.getElementById("OpenIncomeDetails");
@@ -219,6 +248,17 @@
     const btnCloseModal = document.getElementById("btnCloseModal");
     const btnSaveIncome = document.getElementById("btnSaveIncome");
     const btnEditIncome =  document.getElementById("EditIncomeDetails");
+    const btnAddSavings = document.getElementById("btnAddSavings");
+
+    btnAddSavings.onclick = function(){
+        const divSavingsDetails = document.getElementById("divSavingsDetails");
+        var NumbderOfSavings = document.getElementById("NumberOfSavings").value;
+        NumbderOfSavings += 1
+        var AddSavingHTML = '<div id="divSavingNumber' + NumbderOfSavings + '" class=""><input class="form-control text-secondary" type="Text" />';
+        var InnerHTMLText = divSavingsDetails.innerHTML + AddSavingHTML;
+        divSavingsDetails.innerHTML = InnerHTMLText;
+        document.getElementById("NumberOfSavings").value = NumbderOfSavings;
+    }
 
     document.getElementById("OpenSavingsDetails").onclick = function(){
         document.getElementById("SavingsModal").style.display = "block";
@@ -438,8 +478,9 @@
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
+        if (event.target == modal || event.target == SavingsModal) {
             modal.style.display = "none";
+            SavingsModal.style.display = "none";
         }
     }
 
@@ -513,5 +554,18 @@
         ChangeElement.className="form-control w-75 ms-4 border-0 text-primary p-0 ps-4";
         lblChangeElement.className = "d-flex form-label ms-4 mb-0 text-primary"
     }
+
+    $(document).on('keydown', 'input[pattern]', function (e) {
+        var input = $(this);
+        var oldVal = input.val();
+        var regex = new RegExp(input.attr('pattern'), 'g');
+
+        setTimeout(function () {
+            var newVal = input.val();
+            if (!regex.test(newVal)) {
+                input.val(oldVal);
+            }
+        }, 1);
+    });
 
 </script>
