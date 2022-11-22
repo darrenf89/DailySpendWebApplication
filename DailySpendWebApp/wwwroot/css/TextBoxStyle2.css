@@ -56,3 +56,10 @@ font-size: 16px;
 color: #e95420;
 text-align: center;
 }
+
+input[name="SavingsName"]::placeholder {
+    text-align: center;
+    color: #e95420;
+}
+
+

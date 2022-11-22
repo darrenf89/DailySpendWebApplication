@@ -69,6 +69,7 @@
             <div class="card-header p-2">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="m-0">What ya Saving for?!</h5>
+                    <a href="#" id="EditSavingsDetails" class="text-white"><i class="bi bi-pencil-square text-white"></i></a>
                 </div>
             </div>
             <div class="card-body p-2">
@@ -198,25 +199,24 @@
                     <div class="modal-body">
                         <p>Lets be honest, if you had savings you wouldn't have downloaded the app. But Just incase, let us know any money that is in the back that is put aside for something?</p>
                         <div id="divSavingsDetails">
-                            <div id="divSavingNumber" class="">
-                                <p class="text-secondary" style="font-size: 8pt;">Give your goal an easy to remember name, or a fun one ... or anything really.</p>
+                            <div id="divSavingNumber" class="border-bottom border-dark border-2 rounded-0 mb-3">
                                 <div class="d-flex justify-content-center mt-auto mb-auto">
-                                    <div class="input-container col-9 mb-3">
-                                        <input class="text-primary" maxlength="15" type="Text" asp-for="AdditionalSaving[0].SavingsName" />
+                                    <div class="input-container col-6 mb-3">
+                                        <input name="SavingsName" class="text-primary p-0" maxlength="15" placeholder="Savings Category" type="Text" asp-for="AdditionalSaving[0].SavingsName" />
                                     </div>
                                 </div>
-                                <div class="row p-1">
-                                    <div class="row col-6">
-                                        <span class="input-group-text col-1" id="CurrencySymbol">£</span>
-                                        <label class="form-label text-secondary col-7" style="font-size: 8pt;" asp-for="AdditionalSaving[0].SavingsGoal"></label>
-                                        <input class="form-control text-primary col-4" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].SavingsGoal" />
+                                <div class="d-flex container p-1">
+                                    <div class="d-flex m-0 p-1" style="width: 50%;">                                        
+                                        <label style="width: 55%; font-size: 8pt;" class="form-label text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].SavingsGoal"></label>
+                                        <span  class="input-group-text" id="CurrencySymbol">£</span>
+                                        <input style="width: 40%;" class="form-control text-primary" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].SavingsGoal" />
                                     </div>
-                                    <div class="row col-6">
-                                        <span class="input-group-text col-1" id="CurrencySymbol">£</span>
-                                        <label class="form-label text-secondary col-7" style="font-size: 8pt;" asp-for="AdditionalSaving[0].CurrentBalance"></label>
-                                        <input class="form-control text-primary col-4" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].CurrentBalance" />
+                                    <div class="d-flex m-0 p-1" style="width: 50%;">                                        
+                                        <label style="width: 55%; font-size: 8pt;" class="form-label text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].CurrentBalance"></label>
+                                        <span  style="width: 5%;" class="input-group-text" id="CurrencySymbol">£</span>
+                                        <input style="width: 40%;" class="form-control text-primary" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].CurrentBalance" />
                                     </div>
-                                </div class="border-bottom border-primary rounded-0">
+                                </div>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
@@ -265,10 +265,11 @@
     btnSaveSavings.onclick = function()
     {
         var MessString = "";
-        document.getElementById('divSavingsSummaryMessageString').InnerHTMLText = MessString;
+        document.getElementById('divSavingsSummaryMessageString').innerHTML = MessString;
 
         document.getElementById("SavingsModal").style.display = "none";
         document.getElementById("SummarySavingsDetails").style.display = "block";
+        document.getElementById("OpenSavingsDetails").style.display = "none";
     }
 
     btnCancelSavings.onclick = function()
@@ -280,10 +281,11 @@
     btnNoSavings.onclick = function()
     {
         var MessString = "HA! I knew it no savings ... but don't worry that's why we are here!";
-        document.getElementById('divSavingsSummaryMessageString').InnerHTMLText = MessString;
+        document.getElementById('divSavingsSummaryMessageString').innerHTML = MessString;
 
         document.getElementById("SavingsModal").style.display = "none";
         document.getElementById("SummarySavingsDetails").style.display = "block";
+        document.getElementById("OpenSavingsDetails").style.display = "none";
     }
 
     btnAddSavings.onclick = function(){
@@ -302,6 +304,11 @@
 
     document.getElementById("CloseSavingModal").onclick = function () {
         document.getElementById("SavingsModal").style.display = "none";
+    }
+
+    document.getElementById("EditSavingsDetails").onclick = function()
+    {
+        SavingsModal.style.display = "block";
     }
 
     btnEditIncome.onclick = function(){

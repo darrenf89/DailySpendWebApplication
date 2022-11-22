@@ -13,7 +13,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? SavingsName { get; set; }
         [Required]
         [DataType(DataType.Currency)]
-        [DisplayName("How Far you Got?")]
+        [DisplayName("Current Balance")]
         public decimal? CurrentBalance { get; set; } = 0;
         public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
         [DisplayName("When?")]
@@ -23,7 +23,7 @@ namespace DailySpendBudgetWebApp.Models
         public bool isSavingsClosed { get; set; } = false;
         [Required]
         [DataType(DataType.Currency)]
-        [DisplayName("What's the Target?")]
+        [DisplayName("Saving Target")]
         public decimal? SavingsGoal { get; set; }
         public bool canExceedGoal { get; set; }
         public bool isRegularSaving { get; set; }
