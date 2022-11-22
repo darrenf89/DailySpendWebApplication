@@ -65,6 +65,18 @@
                 </div>
             </div>
         </div>
+        <div id="SummarySavingsDetails" style="display: none;" class="card text-white bg-primary mt-3 mb-3 shadow">
+            <div class="card-header p-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="m-0">What ya Saving for?!</h5>
+                </div>
+            </div>
+            <div class="card-body p-2">
+                <div class="card-text">
+                    <div id="divSavingsSummaryMessageString" class="pb-2"></div>
+                </div>
+            </div>
+        </div>
         <div id="OpenIncomeDetails" class="p-2">
             <p class="text-secondary" style="font-size: 11pt;"></p>
             <a class="btn btn-lg btn-primary rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Some Mooooney! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
@@ -81,12 +93,10 @@
                     <div class="modal-body">
                         <p class="text-secondary" style="font-size: 8pt;">To start the grind you need to let us know how much money you have, and how often you get paid. Don't worry we'll keep your info safe ... just you, me and the janitor Jim!</p>
                         <div class="ps-4 pe-4 mt-4">
-                            <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalanceInt"></label>
+                            <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalance"></label>
                             <div class="input-group w-75">
                                 <span style="width: 5%" class="input-group-text" id="CurrencySymbol">£</span>
-                                <input style="width: 30%" asp-for="StartingBalanceInt" type="number" class="form-control" placeholder="0,000" id="StartingBalanceInt" />
-                                <span style="width: 5%" class="input-group-text">.</span>
-                                <input style="width: 10%" asp-for="StartingBalanceDec" type="number" class="form-control" placeholder="00" id="StartingBalanceDec" />
+                                <input style="width: 45%" asp-for="StartingBalance" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="StartingBalance" />
                             </div>
                         </div>
                         <p id="valStartingBalance" class="text-danger m-2" style="font-size: 8pt; display: none;">* You have to enter a current balance, or you'll have no money to spend!'</p>
@@ -186,7 +196,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Lets be honest, if you had savings you wouldn't have downloaded the app. But Just incase, for the money you have entered what of it is saved and for what?</p>
+                        <p>Lets be honest, if you had savings you wouldn't have downloaded the app. But Just incase, let us know any money that is in the back that is put aside for something?</p>
                         <div id="divSavingsDetails">
                             <div id="divSavingNumber" class="">
                                 <p class="text-secondary" style="font-size: 8pt;">Give your goal an easy to remember name, or a fun one ... or anything really.</p>
@@ -195,30 +205,29 @@
                                         <input class="text-primary" maxlength="15" type="Text" asp-for="AdditionalSaving[0].SavingsName" />
                                     </div>
                                 </div>
-                                <div class="d-flex">
-                                    <div>
-                                        <label class="form-label ms-2 mb-0 text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].SavingsGoal"></label>
-                                        <input class="form-control text-secondary" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].SavingsGoal" />
+                                <div class="row p-1">
+                                    <div class="row col-6">
+                                        <span class="input-group-text col-1" id="CurrencySymbol">£</span>
+                                        <label class="form-label text-secondary col-7" style="font-size: 8pt;" asp-for="AdditionalSaving[0].SavingsGoal"></label>
+                                        <input class="form-control text-primary col-4" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].SavingsGoal" />
                                     </div>
-                                    <div>
-                                        <label class="form-label ms-2 mb-0 text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].CurrentBalance"></label>
-                                        <input class="form-control text-secondary" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].CurrentBalance" />
+                                    <div class="row col-6">
+                                        <span class="input-group-text col-1" id="CurrencySymbol">£</span>
+                                        <label class="form-label text-secondary col-7" style="font-size: 8pt;" asp-for="AdditionalSaving[0].CurrentBalance"></label>
+                                        <input class="form-control text-primary col-4" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].CurrentBalance" />
                                     </div>
-                                    <div>
-                                        <label class="form-label ms-2 mb-0 text-secondary" style="font-size: 8pt;" asp-for="AdditionalSaving[0].GoalDate"></label>
-                                        <input class="form-control text-secondary" type="Date" asp-for="AdditionalSaving[0].GoalDate" />
-                                    </div>
-                                </div>
+                                </div class="border-bottom border-primary rounded-0">
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
                             <hidden id="NumberOfSavings" value="0"></hidden>
+                            <a href="#" id="btnNoSavings" class="btn btn-danger roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">No Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
                             <a href="#" id="btnAddSavings" class="btn btn-success roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">Add Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
                         </div>
                     </div>
                     <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        <button type="button" id="CancelSavingModal" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
+                        <button type="button" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -249,6 +258,33 @@
     const btnSaveIncome = document.getElementById("btnSaveIncome");
     const btnEditIncome =  document.getElementById("EditIncomeDetails");
     const btnAddSavings = document.getElementById("btnAddSavings");
+    const btnNoSavings = document.getElementById("btnNoSavings");
+    const btnSaveSavings = document.getElementById("btnSaveSavings");
+    const btnCancelSavings = document.getElementById("btnCancelSavings");
+
+    btnSaveSavings.onclick = function()
+    {
+        var MessString = "";
+        document.getElementById('divSavingsSummaryMessageString').InnerHTMLText = MessString;
+
+        document.getElementById("SavingsModal").style.display = "none";
+        document.getElementById("SummarySavingsDetails").style.display = "block";
+    }
+
+    btnCancelSavings.onclick = function()
+    {
+        document.getElementById("SavingsModal").style.display = "none";
+        document.getElementById('divSavingsDetails').innerHTML ="";
+    }
+    
+    btnNoSavings.onclick = function()
+    {
+        var MessString = "HA! I knew it no savings ... but don't worry that's why we are here!";
+        document.getElementById('divSavingsSummaryMessageString').InnerHTMLText = MessString;
+
+        document.getElementById("SavingsModal").style.display = "none";
+        document.getElementById("SummarySavingsDetails").style.display = "block";
+    }
 
     btnAddSavings.onclick = function(){
         const divSavingsDetails = document.getElementById("divSavingsDetails");
@@ -268,14 +304,6 @@
         document.getElementById("SavingsModal").style.display = "none";
     }
 
-    document.getElementById("CloseSavingModal").onclick = function () {
-        document.getElementById("SavingsModal").style.display = "none";
-    }
-
-    document.getElementById("CancelSavingModal").onclick = function () {
-        document.getElementById("SavingsModal").style.display = "none";
-    }
-
     btnEditIncome.onclick = function(){
         modal.style.display = "block";
     }
@@ -286,20 +314,19 @@
         var InvalidFocus = null;
         var MessString = 'Congrats, you have ';
 
-        const StartingBalanceInt = document.getElementById("StartingBalanceInt").value;
-        const StartingBalanceDec = document.getElementById("StartingBalanceDec").value;
+        const StartingBalance = document.getElementById("StartingBalance").value;
 
 
-        if (StartingBalanceInt == "" && StartingBalanceDec == "")
+        if (StartingBalance == "")
         {
             isIncomeValid = false;
             document.getElementById("valStartingBalance").style.display = 'block';
-            InvalidFocus = document.getElementById("StartingBalanceInt");
+            InvalidFocus = document.getElementById("StartingBalance");
         }
         else
         {
             document.getElementById("valStartingBalance").style.display = 'none';
-            MessString += '<strong class="text-dark">' + document.getElementById('CurrencySymbol').innerHTML + document.getElementById('StartingBalanceInt').value + '.' + document.getElementById('StartingBalanceDec').value + '</strong>';
+            MessString += '<strong class="text-dark">' + document.getElementById('CurrencySymbol').innerHTML + document.getElementById('StartingBalance').value + '</strong>';
         }
 
         const NextIncomeDate = document.getElementById("NextIncomeDate").value;
@@ -442,7 +469,7 @@
     
     btnOpen.onclick = function () {
         modal.style.display = "block";
-        document.getElementById("StartingBalanceInt").focus();
+        document.getElementById("StartingBalance").focus();
         document.getElementById("optionsRadios1").checked = false;
     }
 
@@ -452,8 +479,7 @@
 
     btnCancel.onclick = function(){
         modal.style.display = "none";
-        document.getElementById("StartingBalanceInt").value = null;
-        document.getElementById("StartingBalanceDec").value = null;
+        document.getElementById("StartingBalance").value = null;
         document.getElementById("NextIncomeDate").value = null;
         document.getElementById("PeriodicPayPeriod").value = null;
         document.getElementById("LastDayOfMonthPayPeriod").value = null;
