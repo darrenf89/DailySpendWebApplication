@@ -12,6 +12,9 @@ namespace DailySpendBudgetWebApp.Models
         [MaxLength(20)]
         [MinLength(5)]
         public string? BudgetName { get; set; }
+        [Required]
+        [DisplayName("What's in the 'BANK'")]
+        [DataType(DataType.Currency)]
         public int StartingBalance { get; set; }
         [Required]
         public int BudgetID { get; set; }
@@ -23,11 +26,6 @@ namespace DailySpendBudgetWebApp.Models
         public string? CurrencyPlacementDDL { get; set; }
         [DisplayName("Date Format")]
         public string? DateFormatDDL { get; set; }
-        [Required]
-        [DisplayName("What's in the 'BANK'")]
-        public int StartingBalanceInt { get; set; }
-        [Required]
-        public int StartingBalanceDec { get; set; }
         [Required]
         [DisplayName("When's PAYDAY?")]
         public DateOnly NextIncomeDate { get; set; }
