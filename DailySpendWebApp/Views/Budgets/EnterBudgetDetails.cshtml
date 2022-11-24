@@ -199,32 +199,9 @@
                     <div class="modal-body">
                         <p>Lets be honest, if you had savings you wouldn't have downloaded the app. But Just incase, let us know any money that is in the back that is put aside for something?</p>
                         <div id="divSavingsDetails">
-                            <div id="divSavingNumber" class="border-bottom border-dark border-2 rounded-0 mb-3">
-                                <div class="d-flex justify-content-center mt-auto mb-auto">
-                                    <div class="input-container col-6 mb-3">
-                                        <input name="SavingsName" class="text-primary p-0" maxlength="15" placeholder="Savings Category" type="Text" asp-for="AdditionalSaving[0].SavingsName" />
-                                    </div>
-                                </div>
-                                <div class="d-flex container p-1">
-                                    <div class="d-flex flex-column m-0 p-1 align-items-center justify-content-center" style="width: 50%;">                                        
-                                        <label class="form-label text-secondary ps-3" asp-for="AdditionalSaving[0].SavingsGoal"></label>
-                                        <div class="container">
-                                            <span  style="width: 5%" class="input-group-text rounded-0 align-items-center justify-content-center" id="CurrencySymbol">£</span>
-                                            <input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].SavingsGoal" />
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column m-0 p-1 align-items-center justify-content-center" style="width: 50%;">                                        
-                                        <label class="form-label text-secondary ps-3" asp-for="AdditionalSaving[0].CurrentBalance"></label>
-                                        <div class="container">
-                                            <span  style="width: 5%" class="input-group-text rounded-0 align-items-center justify-content-center" id="CurrencySymbol">£</span>
-                                            <input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" asp-for="AdditionalSaving[0].CurrentBalance" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="d-flex justify-content-end">
-                            <hidden id="NumberOfSavings" value="0"></hidden>
+                            <input type="Number" value="0" hidden id="NumberOfSavings"/>
                             <a href="#" id="btnNoSavings" class="btn btn-danger roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">No Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
                             <a href="#" id="btnAddSavings" class="btn btn-success roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">Add Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
                         </div>
@@ -268,14 +245,14 @@
 
     btnSaveSavings.onclick = function()
     {
-        const NumbderOfSavings = document.getElementById("NumberOfSavings").value;
+        const NumbderOfSavings = parseInt(document.getElementById('NumberOfSavings').value);
         var MessString = '<table class="table table-hover"><thead><tr><th scope="col">Saving Category</th><th scope="col">Saving Goal</th><th scope="col">Saving Balance</th></tr></thead><tbody>';
-        for (let i = 0; i < NumbderOfSavings-1; i++) {
-            var SavingCat = document.getElementById("SavingCat" + i).value;
-            var SavingGoal = document.getElementById("SavingGoal" + i).value;
-            var SavingBalance = document.getElementById("SavingBalance" + i).value;
+        for (let i = 0; i <= NumbderOfSavings-1; i++) {
+            var SavingCat = document.getElementById("SavingsCat" + i).value;
+            var SavingGoal = document.getElementById("SavingsGoal" + i).value;
+            var SavingBalance = document.getElementById("SavingsBalance" + i).value;
 
-            MessString += '<tr class="table-dark"><th scope="row">Active</th><td>' + SavingCat + '</td><td>' + SavingGoal + '</td><td>' + SavingBalance + '</td></tr>';
+            MessString += '<tr class="table-dark"><td>' + SavingCat + '</td><td>' + SavingGoal + '</td><td>' + SavingBalance + '</td></tr>';
         }
 
         MessString += '</tbody></table>';
@@ -307,34 +284,34 @@
 
     btnAddSavings.onclick = function(){
         const divSavingsDetails = document.getElementById("divSavingsDetails");
-        var NumbderOfSavings = document.getElementById("NumberOfSavings").value;
-        var AddSavingHTML = '<div id="divSavingNumber' + NumbderOfSaving + '" class="border-bottom border-dark border-2 rounded-0 mb-3">' +
+        var NumberOfSavings = parseInt(document.getElementById("NumberOfSavings").value);
+        var AddSavingHTML = '<div id="divSavingNumber' + NumberOfSavings + '" class="border-bottom border-dark border-2 rounded-0 mb-1">' +
                                 '<div class="d-flex justify-content-center mt-auto mb-auto">' +
-                                    '<div class="input-container col-6 mb-3">' +
-                                        '<input name="SavingsName" class="text-primary p-0" maxlength="15" placeholder="Savings Category" type="Text" asp-for="AdditionalSaving['+ NumbderOfSavings +'].SavingsName" id="SavingsCat' + NumbderOfSavings +'"/>' +
+                                    '<div class="input-container col-6 mb-1">' +
+                                        '<input name="SavingsName" class="text-primary p-0" maxlength="15" placeholder="Savings Category" type="Text" asp-for="AdditionalSaving['+ NumberOfSavings +'].SavingsName" id="SavingsCat' + NumberOfSavings +'"/>' +
                                     '</div>' +
                                 '</div>' +
                                 '<div class="d-flex container p-1">' +
                                     '<div class="d-flex flex-column m-0 p-1 align-items-center justify-content-center" style="width: 50%;">' +                                        
-                                        '<label class="form-label text-secondary ps-3" asp-for="AdditionalSaving['+ NumbderOfSavings +'].SavingsGoal"></label>' +
-                                        '<div class="container">' +
+                                        '<label class="form-label text-secondary ps-3" asp-for="AdditionalSaving['+ NumberOfSavings +'].SavingsGoal"></label>' +
+                                        '<div class="d-flex container p-0">' +
                                             '<span  style="width: 5%" class="input-group-text rounded-0 align-items-center justify-content-center" id="CurrencySymbol">£</span>' +
-                                            '<input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\\d*(\\.\\d{0,2})?$" step="0.01" asp-for="AdditionalSaving['+ NumbderOfSavings +'].SavingsGoal" id="SavingsGoal' + NumbderOfSavings +'"/>' +
+                                            '<input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\\d*(\\.\\d{0,2})?$" step="0.01" asp-for="AdditionalSaving['+ NumberOfSavings +'].SavingsGoal" id="SavingsGoal' + NumberOfSavings +'"/>' +
                                         '</div>' +
                                     '</div>' +
                                     '<div class="d-flex flex-column m-0 p-1 align-items-center justify-content-center" style="width: 50%;">' +                                        
-                                        '<label class="form-label text-secondary ps-3" asp-for="AdditionalSaving['+ NumbderOfSavings +'].CurrentBalance"></label>' +
-                                        '<div class="container">' +
+                                        '<label class="form-label text-secondary ps-3" asp-for="AdditionalSaving['+ NumberOfSavings +'].CurrentBalance"></label>' +
+                                        '<div class="d-flex container p-0">' +
                                             '<span  style="width: 5%" class="input-group-text rounded-0 align-items-center justify-content-center" id="CurrencySymbol">£</span>' +
-                                            '<input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\\d*(\\.\\d{0,2})?$" step="0.01" asp-for="AdditionalSaving['+ NumbderOfSavings +'].CurrentBalance" id="SavingsBalance' + NumbderOfSavings +'"/>' +
+                                            '<input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\\d*(\\.\\d{0,2})?$" step="0.01" asp-for="AdditionalSaving['+ NumberOfSavings +'].CurrentBalance" id="SavingsBalance' + NumberOfSavings +'"/>' +
                                         '</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>'; 
         var InnerHTMLText = divSavingsDetails.innerHTML + AddSavingHTML;
         divSavingsDetails.innerHTML = InnerHTMLText;
-        NumbderOfSavings += 1;
-        document.getElementById("NumberOfSavings").value = NumbderOfSavings;
+        NumberOfSavings += 1;
+        document.getElementById("NumberOfSavings").value = NumberOfSavings;
     }
 
     document.getElementById("OpenSavingsDetails").onclick = function(){
