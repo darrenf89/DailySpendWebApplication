@@ -1,0 +1,89 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model DailySpendBudgetWebApp.Models.Savings
+
+
+<div class="bg-teal" style="min-height: 82vh;">
+    <div class="container d-flex flex-column mt-4 mb-4" id="divSavingDetails">
+        <div class="Saving-Type-Toggle">
+            <div class="d-flex justify-content-center align-items-center text-center">
+                <div class="col-4 justify-content-center" id="divTargetDate">
+                    <input type="radio" id="rdbTargetDate" name="SavingTypeToggleOption" value="TargetDate" />
+                    <label for="rdbTargetDate" class="lblSavingTypeToggleOption">
+                        <strong>Target Date</strong>
+                    </label>
+                </div>
+                <div class="col-4 justify-content-center text-dark" id="divCustomAmount" style="background-color: #e95420;">
+                    <input checked type="radio" id="rdbCustomAmount" name="SavingTypeToggleOption" value="CustomAmount" />
+                    <label for="rdbCustomAmount" class="lblSavingTypeToggleOption">
+                        <strong>Custom Amount</strong>
+                    </label>
+                </div>
+                <div class="col-4 justify-content-center" id="divSetAmount">
+                    <input type="radio" id="rdbSetAmount" name="SavingTypeToggleOption" value="SetAmount" />
+                    <label for="rdbSetAmount" class="lblSavingTypeToggleOption">
+                        <strong>Set Amount</strong>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2 mb-4">
+        <div class="d-flex justify-content-center mb-auto">
+            <div class="input-container col-6 mb-3">
+                <input style="font-size:20px;" placeholder="Savings Category" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="SavingsName" type="text" required />
+                <span class="text-danger" asp-validation-for="SavingsName"></span>
+            </div>
+        </div>
+    </div>
+    <div class="border-top border-bottom border-3 border-primary ms-1 me-1" id="SavingsDetails" style="font-size: 12pt">
+        <div class="row justify-content-between mt-2 mb-2">
+            <label class="col-6 ps-4" asp-for="SavingsGoal"></label>
+            <input asp-for="SavingsGoal" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" data-type="currency" placeholder="£0.00" class="pe-4"/>
+            <span class="text-danger" asp-validation-for="SavingsGoal" ></span>
+        </div>
+        <div class="row justify-content-between mt-2 mb-2">
+            <label class="col-6 ps-4" asp-for="CurrentBalance"></label>
+            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" data-type="currency" placeholder="£0.00" class="pe-4" />
+            <span class="text-danger" asp-validation-for="CurrentBalance"></span>
+        </div>
+        <div class="row justify-content-between mt-2 mb-2">
+            <label class="col-6 ps-4" asp-for="CurrentBalance"></label>
+            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" data-type="currency" placeholder="£0.00" class="pe-4" />
+            <span class="text-danger" asp-validation-for="CurrentBalance"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const radioButtons = document.querySelectorAll('input[name="SavingTypeToggleOption"]');
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('click', HandleSavingTypeRadioClick);
+    });
+
+    function HandleSavingTypeRadioClick() {
+        if (document.getElementById('rdbTargetDate').checked) 
+        {
+            document.getElementById('divTargetDate').style.backgroundColor = '#e95420'
+            document.getElementById('divCustomAmount').style.backgroundColor = '#fff'
+            document.getElementById('divSetAmount').style.backgroundColor = '#fff'
+        }
+        else if (document.getElementById('rdbCustomAmount').checked)
+        {
+            document.getElementById('divTargetDate').style.backgroundColor = '#fff'
+            document.getElementById('divCustomAmount').style.backgroundColor = '#e95420'
+            document.getElementById('divSetAmount').style.backgroundColor = '#fff'
+        }
+        else if (document.getElementById('rdbSetAmount').checked)
+        {
+            document.getElementById('divTargetDate').style.backgroundColor = '#fff'
+            document.getElementById('divCustomAmount').style.backgroundColor = '#fff'
+            document.getElementById('divSetAmount').style.backgroundColor = '#e95420'
+        }
+    }
+
+</script>

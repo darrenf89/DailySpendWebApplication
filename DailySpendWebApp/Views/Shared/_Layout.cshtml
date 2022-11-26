@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/css/BootswatchThemeUnited.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="~/js/site.js"></script>
 </head>
 <body class="m-0 p-0" >
         <header class="sticky-top">
@@ -37,23 +38,23 @@
         </main>
     </div>
 
-    <footer class="sticky-bottom border-top border-primary border-5" style="width: 100%; max-width: 900px; line-height: normal;">
-        <div class="d-flex align-items-center justify-content-between bg-dark p-2 ps-2 pe-2">
+    <footer class="sticky-bottom border-top border-dark border-5" style="width: 100%; max-width: 900px; line-height: normal;">
+        <div class="d-flex align-items-center justify-content-between bg-primary pt-0 pb-1 ps-2 pe-2">
             <div class="d-flex flex-column align-items-center col-3">
-                    <a class="m-1" asp-action="addTransaction" asp-controller="Transactions"><i class="bi bi-wallet text-primary" style="font-size: 20px"></i></a>
-                    <p class="text-primary m-0" style="font-size:10px">Add Transaction</p>
+                <a class="m-1" asp-action="addTransaction" asp-controller="Transactions"><i class="bi bi-wallet text-white" style="font-size: 20px"></i></a>
+                <p class="text-white m-0" style="font-size:10px">Add Transaction</p>
             </div>
             <div class="d-flex flex-column align-items-center col-3">
-                    <a class="m-1" asp-action="AddBill" asp-controller="Bills"><i class="bi bi-receipt-cutoff text-primary" style="font-size: 20px"></i></a>
-                    <p class="text-primary m-0" style="font-size:10px">Add Bill</p>
+                <a class="m-1" asp-action="AddBill" asp-controller="Bills"><i class="bi bi-receipt-cutoff text-white" style="font-size: 20px"></i></a>
+                <p class="text-white m-0" style="font-size:10px">Add Bill</p>
             </div>
             <div class="d-flex flex-column align-items-center col-3">
-                    <a class="m-1" asp-action="addIncomeEvent" asp-controller="IncomeEvents"><i class="bi bi-graph-up-arrow text-primary" style="font-size: 20px"></i></a>
-                    <p class="text-primary m-0" style="font-size:10px">Add Income</p>
+                <a class="m-1" asp-action="addIncomeEvent" asp-controller="IncomeEvents"><i class="bi bi-graph-up-arrow text-white" style="font-size: 20px"></i></a>
+                <p class="text-white m-0" style="font-size:10px">Add Income</p>
             </div>
             <div class="d-flex flex-column align-items-center col-3">
-                    <a class="m-1" asp-action="addSaving" asp-controller="Savings"><i class="bi bi-piggy-bank text-primary" style="font-size: 20px"></i></a>
-                    <p class="text-primary m-0" style="font-size:10px">Add Saving</p>
+                <a class="m-1" asp-action="AddSaving" asp-controller="Savings"><i class="bi bi-piggy-bank text-white" style="font-size: 20px"></i></a>
+                <p class="text-white m-0" style="font-size:10px">Add Saving</p>
             </div>
         </div>
     </footer>

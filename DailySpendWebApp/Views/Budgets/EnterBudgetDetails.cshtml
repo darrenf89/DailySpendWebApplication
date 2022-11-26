@@ -21,7 +21,7 @@
             {
             <div class="d-flex justify-content-center mt-auto mb-auto">
                 <div class="input-container col-9 mb-3" >
-                    <input style="font-size:20px;" placeholder="Budget Name" asp-for="BudgetName" type="text" required />
+                        <input style="font-size:20px;" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Budget Name'" placeholder="Budget Name" asp-for="BudgetName" type="text" required />
                     <span class="text-danger" asp-validation-for="BudgetName"></span>
                 </div>
             </div>

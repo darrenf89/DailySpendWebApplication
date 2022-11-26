@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "Add A Saving";
+    Layout = "~/Views/Shared/_LayoutNoFotter.cshtml";
+}
+<form method="post">
+    <div>
+        <partial name="_PVAddSavings"></partial>
+    </div>
+    <footer class="sticky-bottom m-0 p-0" style="width: 100%">
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <button type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Saving</button>
+        </div>
+    </footer>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+    }
+}

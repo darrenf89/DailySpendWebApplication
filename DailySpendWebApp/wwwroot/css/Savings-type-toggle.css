@@ -1,0 +1,82 @@
+﻿
+.Saving-Type-Toggle {
+    /* background: #95A5A6; */
+    display: inline-block;
+    border-radius: 20px;
+    position: relative;
+    border: 1px solid #772953;
+}
+
+.Saving-Type-Toggle label {
+    text-align: center;
+    display: inline-block;
+    color: #772953;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    text-align: center;
+    padding: 6px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    /* cursor: pointer; */
+}
+
+.Saving-Type-Toggle input {
+    /* display: none; */
+    position: absolute;
+    z-index: 3;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.Saving-Type-Toggle input[value="TargetDate"]:checked + label {
+    color: white;
+}
+
+.Saving-Type-Toggle input[value="CustomAmount"]:checked + label {
+    color: white;
+}
+
+.Saving-Type-Toggle input[value="SetAmount"]:checked + label {
+    color: white;
+}
+
+#divTargetDate {
+    
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+#divSetAmount {
+
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+input[name="SavingsName"]::placeholder {
+    text-align: center;
+    color: #772953;
+}
+
+
+input[name="currency-field"]::placeholder {
+    text-align: right;
+    color: #772953;
+}
+
+#SavingsGoal {
+    width: 50%;
+    text-align: right;
+    border: none;
+    outline: none;
+    color: #df382c;
+}
+
+#CurrentBalance {
+    width: 50%;
+    text-align: right;
+    border: none;
+    outline: none;
+    color: #38b44a;
+}
