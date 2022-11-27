@@ -40,19 +40,19 @@
         </div>
     </div>
     <div class="border-top border-bottom border-3 border-primary ms-1 me-1" id="SavingsDetails" style="font-size: 12pt">
-        <div class="row justify-content-between align-items-center mt-4 mb-2">
+        <div class="row justify-content-between align-items-center mt-4 border-top border-dark border-1">
             <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="SavingsGoal"></label>
-            <input asp-for="SavingsGoal" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer;" data-type="currency" placeholder="£0.00" class="pe-4" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+            <input asp-for="SavingsGoal" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953;" data-type="currency" placeholder="£0.00" class="pe-4 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
             <span class="text-danger" asp-validation-for="SavingsGoal" ></span>
         </div>
-        <div class="row justify-content-between align-items-center mt-2 mb-2">
+        <div class="row justify-content-between align-items-center border-top border-dark border-1">
             <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="CurrentBalance"></label>
-            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-4" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953;" value="" data-type="currency" placeholder="£0.00" class="pe-4 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
             <span class="text-danger" asp-validation-for="CurrentBalance"></span>
         </div>
-        <div class="row justify-content-between align-items-center mt-2 mb-2">
-            <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
-            <input asp-for="GoalDate" id="GoalDate" type="date" class="pe-4" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer;" oninput="this.style.color = '#e95420'" />
+        <div class="row justify-content-between align-items-center border-top border-dark border-1">
+            <label class="form-label col-6 ps-4 pt-2 pb-2 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
+            <input asp-for="GoalDate" id="GoalDate" type="date" class="pe-4 pt-2 pb-2" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" class="pe-4" oninput="this.style.color = '#e95420'" />
             <span class="text-danger" asp-validation-for="GoalDate"></span>
         </div>
     </div>
