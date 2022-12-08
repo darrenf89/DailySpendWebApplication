@@ -1,16 +1,17 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets"
-    },
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "DailySpendBudgetWebAppDataBase"
-    },
     "mssql2": {
       "type": "mssql",
       "connectionId": "connectionstrings:DefaultConnectionString",
       "dynamicId": null
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "MyLocalSQL"
+    },
+    "secrets1": {
+      "type": "secrets",
+      "connectionId": null
     }
   }
 }

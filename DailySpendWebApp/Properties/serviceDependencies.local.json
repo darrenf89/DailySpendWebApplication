@@ -1,20 +1,23 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets.user"
-    },
-    "mssql1": {
-      "secretStore": "LocalSecretsFile",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/darrenfillis-sql-server/databases/DailySpendBudgetWebApp",
-      "type": "mssql.azure",
-      "connectionId": "DailySpendBudgetWebAppDataBase"
-    },
     "mssql2": {
       "secretStore": "LocalSecretsFile",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/darrenfillis-sql-server/databases/DailySpendBudgetWebApp",
       "type": "mssql.azure",
       "connectionId": "connectionstrings:DefaultConnectionString",
       "dynamicId": null
+    },
+    "mssql3": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": null,
+      "type": "mssql.onprem",
+      "connectionId": "MyLocalSQL"
+    },
+    "secrets1": {
+      "secretStore": null,
+      "resourceId": null,
+      "type": "secrets.user",
+      "connectionId": null
     }
   }
 }
