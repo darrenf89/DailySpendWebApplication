@@ -52,8 +52,22 @@
         </div>
         <div class="row justify-content-between align-items-center border-top border-dark border-1">
             <label class="form-label col-6 ps-4 pt-2 pb-2 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
-            <input asp-for="GoalDate" id="GoalDate" type="date" class="pe-4 pt-2 pb-2" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" class="pe-4" oninput="this.style.color = '#e95420'" />
+            <input asp-for="GoalDate" id="GoalDate" type="date" class="pe-4 pt-2 pb-2" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
             <span class="text-danger" asp-validation-for="GoalDate"></span>
+        </div>
+        <div class="row justify-content-between align-items-center border-top border-dark border-1">
+            <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="RegularSavingValue"></label>
+            <div>
+            <input asp-for="RegularSavingValue" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953;" value="" data-type="currency" placeholder="£0.00" class="pe-4 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+                <span id="spnPerDay">Per Day</span>
+                <span id="spnPerPayPeriod">Every Pay Period</span>
+            </div>
+            <span class="text-danger" asp-validation-for="RegularSavingValue"></span>
+        </div>
+        <div class="row justify-content-between align-items-center border-top border-dark border-1">
+            <label class="form-label col-6 ps-4 pt-2 pb-2 m-0 text-dark" asp-for="GoalDate">Allow Goal Value to be exceeded?</label>
+            <input asp-for="canExceedGoal" id="canExceedGoal" type="checkbox" class="pe-4 pt-2 pb-2" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+            <span class="text-danger" asp-validation-for="canExceedGoal"></span>
         </div>
     </div>
 </div>
