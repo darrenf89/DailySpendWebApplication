@@ -80,3 +80,12 @@ input[name="currency-field"]::placeholder {
     outline: none;
     color: #38b44a;
 }
+
+#RegularSavingValue {
+    width: 30%;
+    text-align: right;
+    border: none;
+    outline: none;
+    color: #38b44a;
+}
+

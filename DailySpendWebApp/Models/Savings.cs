@@ -28,6 +28,7 @@ namespace DailySpendBudgetWebApp.Models
         public bool canExceedGoal { get; set; }
         public bool isRegularSaving { get; set; }
         public string? RegularSavingType { get; set; }
+        [DisplayName("Saving Value")]
         public decimal? RegularSavingValue { get; set; }
 
     }

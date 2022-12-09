@@ -1,18 +1,29 @@
 ﻿
 @{
     ViewData["Title"] = "Add A Saving";
-    Layout = "~/Views/Shared/_LayoutForLogon.cshtml";
+    Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
 }
 <form method="post">
-    <div>
-        <partial name="_PVAddSavings"></partial>
-    </div>
-    <footer class="sticky-bottom m-0 p-0" style="width: 100%">
-        <div class="d-flex flex-column align-items-center justify-content-center">
-            <button type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Saving</button>
+    <div class="d-flex flex-column align-items-center" style="background-color: transparent;">
+        <div class="d-flex container align-items-center justify-content-center mt-4 pt-2">   
+            <h3 class="text-white">@TempData["PageHeading"]</h3>
         </div>
-    </footer>
+        <div class="align-items-center mb-5 mt-5">
+            <img src="~/img/logoFiles/ForWeb/png/JustlogoOrange.png" class="shadow rounded-circle" style="max-width: 75px; background-color: transparent;" />
+        </div>
+        <partial name="_PVAddSavings"></partial>
+        <footer class="sticky-bottom m-0 p-0" style="width: 100%">
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <button type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Saving</button>
+            </div>
+        </footer>
+    </div>
 </form>
+<div class="fixed-top">
+    <div class="d-flex container justify-content-end">
+        <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
+    </div>
+</div>
 
 @section Scripts{
     @{

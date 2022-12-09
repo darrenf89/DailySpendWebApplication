@@ -7,69 +7,75 @@
 
 
 <div class="bg-teal" style="min-height: 82vh;">
-    <div class="container mt-2 mb-4">
-        <div class="d-flex justify-content-center mb-auto">
-            <div class="input-container col-6 mb-3">
-                <input style="font-size: 20px; cursor: pointer;" placeholder="Savings Category" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="SavingsName" type="text" required />
-                <span class="text-danger" asp-validation-for="SavingsName"></span>
-            </div>
-        </div>
-    </div>
-    <div>
-    
-    </div>
-    <div class="container d-flex flex-column mt-4 mb-4" id="divSavingDetails">
-        <div class="Saving-Type-Toggle">
-            <div class="d-flex justify-content-center align-items-center text-center">
-                <div class="col-4 justify-content-center" id="divTargetDate">
-                    <input type="radio" id="rdbTargetDate" name="SavingTypeToggleOption" value="TargetDate" />
-                    <label for="rdbTargetDate" class="lblSavingTypeToggleOption">
-                        <strong>Target Date</strong>
-                    </label>
-                </div>
-                <div class="col-4 justify-content-center text-dark" id="divCustomAmount" style="background-color: #e95420;">
-                    <input checked type="radio" id="rdbCustomAmount" name="SavingTypeToggleOption" value="CustomAmount" />
-                    <label for="rdbCustomAmount" class="lblSavingTypeToggleOption">
-                        <strong>Custom Amount</strong>
-                    </label>
-                </div>
-                <div class="col-4 justify-content-center" id="divSetAmount">
-                    <input type="radio" id="rdbSetAmount" name="SavingTypeToggleOption" value="SetAmount" />
-                    <label for="rdbSetAmount" class="lblSavingTypeToggleOption">
-                        <strong>Set Amount</strong>
-                    </label>
+    <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark">
+        <div class="container mt-2 mb-4">
+            <div class="d-flex justify-content-center mb-auto">
+                <div class="input-container col-6 mb-0">
+                    <input style="font-size: 20px; cursor: pointer;" placeholder="Savings Category" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="SavingsName" type="text" required />
+                    <span class="text-danger" asp-validation-for="SavingsName"></span>
                 </div>
             </div>
         </div>
+        <div class="container d-flex flex-column mb-4 ps-3 pe-3" id="divSavingDetails">
+            <div class="Saving-Type-Toggle">
+                <div class="d-flex justify-content-center align-items-center text-center">
+                    <div class="col-4 justify-content-center" id="divTargetDate">
+                        <input type="radio" id="rdbTargetDate" name="SavingTypeToggleOption" value="TargetDate" />
+                        <label style="font-size:8pt" for="rdbTargetDate" class="lblSavingTypeToggleOption">
+                            <strong>Target Date</strong>
+                        </label>
+                    </div>
+                    <div class="col-4 justify-content-center text-dark" id="divCustomAmount" style="background-color: #e95420;">
+                        <input checked type="radio" id="rdbCustomAmount" name="SavingTypeToggleOption" value="CustomAmount" />
+                        <label style="font-size:8pt" for="rdbCustomAmount" class="lblSavingTypeToggleOption">
+                            <strong>Custom Amount</strong>
+                        </label>
+                    </div>
+                    <div class="col-4 justify-content-center" id="divSetAmount">
+                        <input type="radio" id="rdbSetAmount" name="SavingTypeToggleOption" value="SetAmount" />
+                        <label style="font-size:8pt" for="rdbSetAmount" class="lblSavingTypeToggleOption">
+                            <strong>Set Amount</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="border-top border-bottom border-3 border-primary ms-1 me-1" id="SavingsDetails" style="font-size: 12pt">
-        <div class="row justify-content-between align-items-center mt-4 border-top border-dark border-1">
-            <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="SavingsGoal"></label>
-            <input asp-for="SavingsGoal" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953;" data-type="currency" placeholder="£0.00" class="pe-4 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+    <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="SavingsDetails">
+        <div class="row justify-content-between align-items-center ms-2 me-2 mt-4">
+            <label class="form-label col-6 ps-3 m-0 text-dark" asp-for="SavingsGoal"></label>
+            <input asp-for="SavingsGoal" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
             <span class="text-danger" asp-validation-for="SavingsGoal" ></span>
         </div>
-        <div class="row justify-content-between align-items-center border-top border-dark border-1">
-            <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="CurrentBalance"></label>
-            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953;" value="" data-type="currency" placeholder="£0.00" class="pe-4 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+        <div class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+            <label class="form-label col-6 ps-3 m-0 text-dark" asp-for="CurrentBalance"></label>
+            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
             <span class="text-danger" asp-validation-for="CurrentBalance"></span>
         </div>
-        <div class="row justify-content-between align-items-center border-top border-dark border-1">
-            <label class="form-label col-6 ps-4 pt-2 pb-2 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
-            <input asp-for="GoalDate" id="GoalDate" type="date" class="pe-4 pt-2 pb-2" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+        <div class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+            <label class="form-label col-6 ps-3 pt-2 pb-2 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
+            <input asp-for="GoalDate" id="GoalDate" type="date" class="pe-2 pt-2 pb-2" style="width: 45%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
             <span class="text-danger" asp-validation-for="GoalDate"></span>
         </div>
-        <div class="row justify-content-between align-items-center border-top border-dark border-1">
-            <label class="form-label col-6 ps-4 m-0 text-dark" asp-for="RegularSavingValue"></label>
-            <div>
-            <input asp-for="RegularSavingValue" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953;" value="" data-type="currency" placeholder="£0.00" class="pe-4 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
-                <span id="spnPerDay">Per Day</span>
-                <span id="spnPerPayPeriod">Every Pay Period</span>
+        <div class="row justify-content-between align-items-center ms-2 me-2 mt-2 text-dark">
+            <label class="form-label col-6 ps-3 m-0" asp-for="RegularSavingValue"></label>
+            <div style="width: 45%; border-left: 1px solid #772953;" class="d-flex text-dark justify-content-between">
+                <input asp-for="RegularSavingValue" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="width: 45%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+                <div class="d-flex text-dark align-items-center">
+                    <span id="spnPerDay">Per Day</span>
+                    <span id="spnPerPayPeriod" style="display: none;">Every Pay Period</span>
+                </div>
             </div>
             <span class="text-danger" asp-validation-for="RegularSavingValue"></span>
         </div>
-        <div class="row justify-content-between align-items-center border-top border-dark border-1">
-            <label class="form-label col-6 ps-4 pt-2 pb-2 m-0 text-dark" asp-for="GoalDate">Allow Goal Value to be exceeded?</label>
-            <input asp-for="canExceedGoal" id="canExceedGoal" type="checkbox" class="pe-4 pt-2 pb-2" style="width: 40%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+        <div class="row justify-content-between align-items-center ms-2 me-2 mt-4">            
+            <input asp-for="canExceedGoal" id="canExceedGoal" type="checkbox" class="pe-4 pt-1 pb-1" style="width: 15%; border: none; outline: none; color: #772953; cursor: pointer;" />
+            <label class="form-label col-10 ps-3 pt-1 pb-1 m-0 text-dark text-end" asp-for="GoalDate">Allow Goal Value to be exceeded?</label>
+            <span class="text-danger" asp-validation-for="canExceedGoal"></span>
+        </div>
+        <div class="row justify-content-between align-items-center ms-2 me-2 mt-0 mb-1">
+            <input asp-for="canExceedGoal" id="canExceedGoal" type="checkbox" class="pe-4 pt-1 pb-1" style="width: 15%; border: none; outline: none; color: #772953; cursor: pointer;" />
+            <label class="form-label col-10 ps-3 pt-1 pb-1 m-0 text-dark text-end" asp-for="GoalDate">Allow Goal Value to be exceeded?</label>
             <span class="text-danger" asp-validation-for="canExceedGoal"></span>
         </div>
     </div>
