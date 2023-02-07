@@ -26,6 +26,8 @@ namespace DailySpendBudgetWebApp.Models
         public List<Categories> Categories { get; set; } = new List<Categories>();
         public List<Bills> Bills { get; set; } = new List<Bills>();
         public string? CurrencyType { get; set; }
+        [DataType(DataType.Currency)]
+        public int? AproxDaysBetweenPay { get; set; } = 30;
 
 
     }

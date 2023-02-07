@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendBudgetWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20221210084806_SavingUpdate")]
+    partial class SavingUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,9 +82,6 @@ namespace DailySpendBudgetWebApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BudgetID"), 1L, 1);
-
-                    b.Property<int?>("AproxDaysBetweenPay")
-                        .HasColumnType("int");
 
                     b.Property<decimal?>("BankBalance")
                         .HasColumnType("decimal(18,2)");
@@ -241,6 +240,7 @@ namespace DailySpendBudgetWebApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("CurrentBalance")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("GoalDate")
@@ -252,10 +252,14 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<decimal?>("LastUpdatedValue")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("RegularSavingType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("RegularSavingValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("SavingsGoal")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SavingsName")
@@ -263,16 +267,10 @@ namespace DailySpendBudgetWebApp.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<string>("SavingsType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("canExceedGoal")
                         .HasColumnType("bit");
 
                     b.Property<bool>("isAutoComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isDailySaving")
                         .HasColumnType("bit");
 
                     b.Property<bool>("isRegularSaving")
