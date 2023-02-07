@@ -30,6 +30,7 @@ public class SavingsController : Controller
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
         Budgets Budget = BudgetList.FirstOrDefault();
 
+        ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
         ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
 
         return View();

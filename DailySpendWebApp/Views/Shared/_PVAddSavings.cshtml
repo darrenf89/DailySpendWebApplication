@@ -185,12 +185,12 @@
             document.getElementById('divTargetAmount').style.backgroundColor = '#e95420';
             document.getElementById('divSavingTarget').style.display = 'flex';
             document.getElementById('divCurrentBalance').style.display = 'flex';
-            document.getElementById('divGoalDate').style.display = 'none';
+            document.getElementById('divGoalDate').style.display = 'flex';
             document.getElementById('divSavingValue').style.display = 'flex';
             document.getElementById('divCanExceedGoal').style.display = 'flex';
             document.getElementById('divIsAutoComplete').style.display = 'flex';
             document.getElementById('RegularSavingValue').disabled = false;
-            document.getElementById('GoalDate').disabled = false;
+            document.getElementById('GoalDate').disabled = true;
             document.getElementById('ddlSavingsPeriod').disabled = false;
             document.getElementById('divCategoryExp').innerHTML = '<p class="pb-1 ps-2 pe-2 m-0">For emergency fund, downpayment ...</p><p class="pb-1 ps-2 pe-2 m-0">Save towards a target over time, contribute as much as you can each period</p>'
         }
@@ -207,7 +207,7 @@
         else if (document.getElementById('rdbTargetAmount').checked)
         {
             //console.log('TargetAmount');
-            //UpdateGoalDate();
+            UpdateGoalDate();
         }
     }
 
@@ -294,13 +294,20 @@
     function CalculateGoalDate(){
         var SavingGoal = Number((document.getElementById('SavingsGoal').value).replace(/[^0-9.-]+/g,""));
         var CurrentSavings = Number((document.getElementById('CurrentBalance').value).replace(/[^0-9.-]+/g, ""));
-        var SavingsAmount = Number((document.getElementById('RegularSavingValue').value).replace(/[^0-9.-]+/g, ""));
+        if (document.getElementById('ddlSavingsPeriod').value = 'PerDay') 
+        {
+            var DailySavingsAmount = Number((document.getElementById('RegularSavingValue').value).replace(/[^0-9.-]+/g, ""));
+        }
+        else if (document.getElementById('ddlSavingsPeriod').value = 'PerPayPeriod') 
+        {
+            var DailySavingsAmount = Number((document.getElementById('RegularSavingValue').value).replace(/[^0-9.-]+/g, "")) / @ViewBag.PaymentPeriod;
+        }
         var CurrentDateString = (document.getElementById('hdnServerDate').value);
         var CurrentDateStringSplit = CurrentDateString.split(' ');
         var DateCurrentDate = new Date(CurrentDateStringSplit[0].split('/')[2], CurrentDateStringSplit[0].split('/')[1] - 1, CurrentDateStringSplit[0].split('/')[0]);
         var CurrentDate = DateCurrentDate.getTime();             
 
-        var NumberOfDays = (SavingGoal - CurrentSavings) / SavingsAmount;
+        var NumberOfDays = (SavingGoal - CurrentSavings) / DailySavingsAmount;
         var NumberOfDaysTime = NumberOfDays * (1000 * 3600 * 24);
         //console.log(NumberOfDays);
         var GoalCompleteDate = new Date(CurrentDate + NumberOfDaysTime);
