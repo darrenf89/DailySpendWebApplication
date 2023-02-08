@@ -4,7 +4,8 @@ using DailySpendBudgetWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using DailySpendBudgetWebApp.Data;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace DailySpendBudgetWebApp.Controllers;
 
@@ -40,77 +41,107 @@ public class SavingsController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult AddSaving(Savings obj, string ReturnUrl)
     {   
-        Savings? A = new();
+        Savings? S = new();
 
-        if (!ModelState.IsValid) 
+        var BudgetSavingsList = _db.Budgets
+            .Include(x=>x.Savings)
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .ToList();
+
+        foreach (var saving in BudgetSavingsList[0].Savings)
         {
-            var BudgetList = _db.Budgets
-                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
-            Budgets Budget = BudgetList.FirstOrDefault();
+            if (saving.SavingsName == obj.SavingsName && !saving.isSavingsClosed)
+            {
+                ModelState.AddModelError("SavingsName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
+                break;
+            }
+        }
 
-            var PayPeriod = Budget.AproxDaysBetweenPay;
+        var BudgetList = _db.Budgets
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+        Budgets? Budget = BudgetList.FirstOrDefault();
 
-            A.SavingsName = obj.SavingsName;
-            A.LastUpdatedValue = obj.CurrentBalance;
-            A.LastUpdatedDate = DateTime.Now;
-            A.SavingsGoal = obj.SavingsGoal;
+        if (ModelState.IsValid) 
+        {
+            S.SavingsName = obj.SavingsName;
+            S.LastUpdatedValue = obj.CurrentBalance;
+            S.LastUpdatedDate = DateTime.Now;
+            S.SavingsGoal = obj.SavingsGoal;
 
             if (obj.isRegularSaving == false)
             {
-                A.isRegularSaving = false;
-                A.CurrentBalance = obj.CurrentBalance;
-                A.canExceedGoal = true;
-                A.isAutoComplete = false;
-                A.isDailySaving = false;
+                S.isRegularSaving = false;
+                S.CurrentBalance = obj.CurrentBalance;
+                S.canExceedGoal = true;
+                S.isAutoComplete = false;
+                S.isDailySaving = false;
                 
             }
             else if (obj.isRegularSaving == true)
             {
-                A.isRegularSaving = true;
-                A.isDailySaving = true;
-                A.CurrentBalance = obj.CurrentBalance;
+                S.isRegularSaving = true;
+                S.isDailySaving = true;
+                S.CurrentBalance = obj.CurrentBalance;
 
                 if (obj.SavingsType == "TargetDate")
                 {
 
-                    A.SavingsType = obj.SavingsType;                
-                    A.GoalDate = obj.GoalDate;
-                    A.RegularSavingValue= obj.RegularSavingValue;
-                    A.canExceedGoal = obj.canExceedGoal;
-                    A.isAutoComplete = false;
+                    S.SavingsType = obj.SavingsType;                
+                    S.GoalDate = obj.GoalDate;
+                    S.RegularSavingValue= obj.RegularSavingValue;
+                    S.canExceedGoal = obj.canExceedGoal;
+                    S.isAutoComplete = false;
 
                 }
                 else if (obj.SavingsType == "SavingsBuilder")
                 {
-                    A.SavingsType = obj.SavingsType;                
-                    A.RegularSavingValue= obj.RegularSavingValue;
-                    A.SavingsGoal = null;
-                    A.canExceedGoal = false;
-                    A.isAutoComplete = false;
+                    S.SavingsType = obj.SavingsType;                
+                    S.RegularSavingValue= obj.RegularSavingValue;
+                    S.SavingsGoal = null;
+                    S.canExceedGoal = false;
+                    S.isAutoComplete = false;
 
                 }
                 else if (obj.SavingsType == "TargetAmount")
                 {
 
-                    A.SavingsType = obj.SavingsType;
-                    A.SavingsGoal = obj.SavingsGoal;
-                    A.CurrentBalance = obj.CurrentBalance;
-                    A.GoalDate = obj.GoalDate;
-                    A.RegularSavingValue = obj.RegularSavingValue;
-                    A.canExceedGoal = obj.canExceedGoal;
-                    A.isAutoComplete = obj.isAutoComplete;
-                    A.isSavingsClosed = false;
-                    A.isRegularSaving = true;
-                    A.isDailySaving = false;
+                    S.SavingsType = obj.SavingsType;
+                    S.SavingsGoal = obj.SavingsGoal;
+                    S.CurrentBalance = obj.CurrentBalance;
+                    S.GoalDate = obj.GoalDate;
+                    S.RegularSavingValue = obj.RegularSavingValue;
+                    S.canExceedGoal = obj.canExceedGoal;
+                    S.isAutoComplete = obj.isAutoComplete;
+                    S.isSavingsClosed = false;
+                    S.isRegularSaving = true;
+                    S.isDailySaving = false;
                 }
                 else
                 {
-                    ModelState.AddModelError("SavingsType", "* There is a probelm, we don't have a clue the type of saving. Could be your fault, could be ours but you sort it out.");
+                    ModelState.AddModelError("SavingsType", "* There is a probelm, we don't have a clue what type of saving you want. Could be your fault, could be ours but you sort it out.");
                 }
             }
+
+            _db.Attach(Budget);
+            Budget.Savings.Add(S);
+            _db.SaveChanges();
+
+        }
+        else
+        {
+            if (obj.isRegularSaving== false)
+            {
+                ViewBag.PageStatus = "Savings Name Error NotRegular";
+            }
+            else
+            {
+                ViewBag.PageStatus = "Savings Name Error Regular";
+            }
+            ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
+            return View();
         }
 
-        return View(obj);
+        return View();
     }
 }
 

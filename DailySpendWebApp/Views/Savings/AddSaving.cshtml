@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Add A Saving";
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
+
+    var parms = new Dictionary<string, string>
+            {
+                { "ReturnURL", "test" }
+            };
 }
 <form method="post">
     <input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
@@ -15,14 +20,14 @@
         <partial name="_PVAddSavings"></partial>
         <footer class="sticky-bottom m-0 p-0" style="width: 100%">
             <div class="d-flex flex-column align-items-center justify-content-center">
-                <button asp-action="AddSaving" asp-controller="Savings" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Saving</button>
+                <button asp-action="AddSaving" asp-controller="Savings" asp-all-route-data="parms" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11" ><i class="bi bi-save2"></i> &nbsp Add Saving</button>
             </div>
         </footer>
     </div>
 </form>
 <div class="fixed-top">
     <div class="d-flex container justify-content-end">
-        <a onclick="UpdateRegularSavingValueBeforePost();" asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
+        <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
     </div>
 </div>
 

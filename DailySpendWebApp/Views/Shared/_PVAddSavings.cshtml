@@ -13,23 +13,25 @@
             <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Let us do the work for you. Set up a Saving goal and we will figure everything else out, well apart from what you should wear!</p>
         </div>
         <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRegularSaving">
-            <div class="d-flex justify-content-between align-items-center text-center">
-                <div id="divRegularSavingYes" class="col-4">
-                    <button id="btnYes" type="button" class="btn btn-success rounded-2" onclick="isRegularSavingSelection('Yes'), false;">Yes</button>
+            <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
+                <div id="divRegularSavingYes" class="col-4 m-2">
+                    <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRegularSavingSelection('Yes'), false;">Yes</button>
                 </div>
-                <div id="divRegularSavingYes" class="col-4">
-                    <button id="btnNo" type="button" class="btn btn-success rounded-2" onclick="isRegularSavingSelection('No'), false;">No</button>
+                <div id="divRegularSavingYes" class="col-4 m-2">
+                    <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRegularSavingSelection('No'), false;">No</button>
                 </div>
                 <input type="hidden" asp-for="isRegularSaving" />
             </div>
         </div>
     </div>
-    <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divSavingsTypeSelector">
+    <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divSavingsTypeSelector" style="display: none;">
         <div class="container mt-1 mb-2">
-            <div class="d-flex justify-content-center mb-auto">
+            <div class="d-flex flex-column align-items-center">
                 <div class="input-container col-7 mb-0">
                     <input style="font-size: 20px; cursor: pointer;" placeholder="Savings Category" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="SavingsName" type="text" required />
-                    <span class="text-danger" asp-validation-for="SavingsName"></span>
+                </div>
+                <div class="text-center p-1 pt-2" style="line-height: 11px">
+                    <span style="font: normal 10px Arial;" class="text-danger" asp-validation-for="SavingsName"></span>
                 </div>
             </div>
         </div>
@@ -76,7 +78,7 @@
         </div>
         <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
             <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
-            <input asp-for="GoalDate" id="GoalDate" type="date" onchange="CheckDateFuture(), UpdateValues(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+            <input asp-for="GoalDate" id="GoalDate" type="date" onblur="CheckDateFuture(), UpdateValues(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
             <span class="text-danger" asp-validation-for="GoalDate" id="valGoalDate"></span>
         </div>
         <div id="divSavingValue" class="row justify-content-between align-items-center ms-2 me-2 mt-2 text-dark">
@@ -108,19 +110,100 @@
 </div>
 
 <script>
+    var Status = "@ViewBag.PageStatus"
+    document.onload = CheckPageStatus(Status);
+
+    function CheckPageStatus(Status)
+    {
+        if (Status == "Savings Name Error Regular") 
+        {
+            LoadRegularSavingYes();
+        }
+        else if (Status == "Savings Name Error NotRegular") {
+            LoadRegularSavingNo();
+        }
+    }
+
+    function LoadRegularSavingNo(){
+        document.getElementById('divIsRegularSavingSelector').style.display = 'none';
+        document.getElementById('divSavingDetails').style.visibility = 'collapse';
+        document.getElementById('divSavingsTypeSelector').style.display = 'flex';
+        document.getElementById('divCategoryExp').style.display = 'none';
+        document.getElementById('SavingsDetails').style.display = 'block';
+        //document.getElementById('btnSubmit').style.display = 'block';
+        document.getElementById('isRegularSaving').value = 'False';
+        document.getElementById('rdbSavingsBuilder').Checked = true;
+        document.getElementById('divSavingTarget').style.display = 'flex';
+        document.getElementById('divCurrentBalance').style.display = 'flex';
+        document.getElementById('divGoalDate').style.display = 'none';
+        document.getElementById('divSavingValue').style.display = 'none';
+        document.getElementById('divCanExceedGoal').style.display = 'none';
+        document.getElementById('divIsAutoComplete').style.display = 'none';
+    }
+
+    function LoadRegularSavingYes(){
+        document.getElementById('divIsRegularSavingSelector').style.display = 'none';
+        document.getElementById('divSavingsTypeSelector').style.display = 'flex';
+        document.getElementById('SavingsDetails').style.display = 'none';
+        //document.getElementById('btnSubmit').style.display = 'block';
+        document.getElementById('isRegularSaving').value = 'True';
+    }
+
+    function LoadSavingTypeTargetDate(){
+        document.getElementById('SavingsType').value = 'TargetDate';
+        document.getElementById('divTargetDate').style.backgroundColor = '#e95420';
+        document.getElementById('divSavingsBuilder').style.backgroundColor = '#fff';
+        document.getElementById('divTargetAmount').style.backgroundColor = '#fff';
+        document.getElementById('divSavingTarget').style.display = 'flex';
+        document.getElementById('divCurrentBalance').style.display = 'flex';
+        document.getElementById('divGoalDate').style.display = 'flex';
+        document.getElementById('divSavingValue').style.display = 'flex';
+        document.getElementById('divCanExceedGoal').style.display = 'none';
+        document.getElementById('divIsAutoComplete').style.display = 'flex';
+        document.getElementById('RegularSavingValue').disabled = true;
+        document.getElementById('GoalDate').disabled = false;
+        document.getElementById('ddlSavingsPeriod').value = 'PerDay'
+        document.getElementById('ddlSavingsPeriod').disabled = true;
+        document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For holidays, your wedding ...</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Figure out how much you need to contribute each day to meet a goal with a deadline</p>'
+    }
+
+    function LoadSavingTypeSavingsBuilder() {
+        document.getElementById('SavingsType').value = 'SavingsBuilder';
+        document.getElementById('divTargetDate').style.backgroundColor = '#fff';
+        document.getElementById('divSavingsBuilder').style.backgroundColor = '#e95420';
+        document.getElementById('divTargetAmount').style.backgroundColor = '#fff';
+        document.getElementById('divSavingTarget').style.display = 'none';
+        document.getElementById('divCurrentBalance').style.display = 'flex';
+        document.getElementById('divGoalDate').style.display = 'none';
+        document.getElementById('divSavingValue').style.display = 'flex';
+        document.getElementById('divCanExceedGoal').style.display = 'none';
+        document.getElementById('divIsAutoComplete').style.display = 'none';
+        document.getElementById('RegularSavingValue').disabled = false;
+        document.getElementById('GoalDate').disabled = false;
+        document.getElementById('ddlSavingsPeriod').disabled = false;
+        document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For saving goals without any time or target constraints</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Save the same amount each period, as much as you can afford!</p>'
+
+    }
+
+    function LoadSavingTypeTargetAmount() {
+        document.getElementById('SavingsType').value = 'TargetAmount';
+        document.getElementById('divTargetDate').style.backgroundColor = '#fff';
+        document.getElementById('divSavingsBuilder').style.backgroundColor = '#fff';
+        document.getElementById('divTargetAmount').style.backgroundColor = '#e95420';
+        document.getElementById('divSavingTarget').style.display = 'flex';
+        document.getElementById('divCurrentBalance').style.display = 'flex';
+        document.getElementById('divGoalDate').style.display = 'flex';
+        document.getElementById('divSavingValue').style.display = 'flex';
+        document.getElementById('divCanExceedGoal').style.display = 'flex';
+        document.getElementById('divIsAutoComplete').style.display = 'flex';
+        document.getElementById('RegularSavingValue').disabled = false;
+        document.getElementById('GoalDate').disabled = true;
+        document.getElementById('ddlSavingsPeriod').disabled = false;
+        document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For emergency fund, downpayment ...</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Save towards a target over time, contribute as much as you can each period</p>'
+
+    }
 
     const radioButtons = document.querySelectorAll('input[name="SavingTypeToggleOption"]');
-    const radioRegularSaving = document.querySelectorAll('input[name="RegularSavingToggleOption"]');
-
-    radioRegularSaving.forEach(radio => {
-        radio.addEventListener('click', HandleRegularSavingRadioClick);
-    });
-
-    function HandleRegularSavingRadioClick() 
-    {
-        document.getElementById('divSavingsTypeSelector').style.display = 'block';
-        document.getElementById('btnSubmit').style.display = 'block';
-    }
 
     radioButtons.forEach(radio => {
         radio.addEventListener('click', HandleSavingTypeRadioClick);
@@ -136,25 +219,11 @@
     {
         if (isRegular == 'Yes')
         {
-            document.getElementById('divIsRegularSavingSelector').style.display = 'none';
-            document.getElementById('divSavingsTypeSelector').style.display = 'flex';
-            document.getElementById('SavingsDetails').style.display = 'none';
-            document.getElementById('btnSubmit').style.display = 'flex';
-            document.getElementById('isRegularSaving').value = 'True';
+            LoadRegularSavingYes();
         }
         else if (isRegular == 'No')
         {
-            document.getElementById('divIsRegularSavingSelector').style.display = 'none';
-            document.getElementById('divSavingsTypeSelector').style.display = 'none';
-            document.getElementById('SavingsDetails').style.display = 'block';
-            document.getElementById('btnSubmit').style.display = 'flex';
-            document.getElementById('isRegularSaving').value = 'False';
-            document.getElementById('rdbSavingsBuilder').Checked = true;
-            document.getElementById('divSavingTarget').style.display = 'flex';
-            document.getElementById('divCurrentBalance').style.display = 'flex';
-            document.getElementById('divGoalDate').style.display = 'none';
-            document.getElementById('divSavingValue').style.display = 'none';
-
+            LoadRegularSavingNo();
         }
     }
 
@@ -164,54 +233,14 @@
         HideValidationMessages();
         if (document.getElementById('rdbTargetDate').checked) 
         {
-            document.getElementById('SavingsType').value = 'TargetDate';
-            document.getElementById('divTargetDate').style.backgroundColor = '#e95420';
-            document.getElementById('divSavingsBuilder').style.backgroundColor = '#fff';
-            document.getElementById('divTargetAmount').style.backgroundColor = '#fff';
-            document.getElementById('divSavingTarget').style.display = 'flex';
-            document.getElementById('divCurrentBalance').style.display = 'flex';
-            document.getElementById('divGoalDate').style.display = 'flex';
-            document.getElementById('divSavingValue').style.display = 'flex';
-            document.getElementById('divCanExceedGoal').style.display = 'none';
-            document.getElementById('divIsAutoComplete').style.display = 'flex';
-            document.getElementById('RegularSavingValue').disabled = true;
-            document.getElementById('GoalDate').disabled = false;
-            document.getElementById('ddlSavingsPeriod').value = 'PerDay'
-            document.getElementById('ddlSavingsPeriod').disabled = true;
-            document.getElementById('divCategoryExp').innerHTML = '<p class="pb-1 ps-2 pe-2 m-0">For holidays, your wedding ...</p><p class="pb-1 ps-2 pe-2 m-0">Figure out how much you need to contribute each day to meet a goal with a deadline</p>'
+            LoadSavingTypeTargetDate();
         }
         else if (document.getElementById('rdbSavingsBuilder').checked)
         {
-            document.getElementById('SavingsType').value = 'SavingsBuilder';
-            document.getElementById('divTargetDate').style.backgroundColor = '#fff';
-            document.getElementById('divSavingsBuilder').style.backgroundColor = '#e95420';
-            document.getElementById('divTargetAmount').style.backgroundColor = '#fff';
-            document.getElementById('divSavingTarget').style.display = 'none';
-            document.getElementById('divCurrentBalance').style.display = 'flex';
-            document.getElementById('divGoalDate').style.display = 'none';
-            document.getElementById('divSavingValue').style.display = 'flex';
-            document.getElementById('divCanExceedGoal').style.display = 'none';
-            document.getElementById('divIsAutoComplete').style.display = 'none';
-            document.getElementById('RegularSavingValue').disabled = false;
-            document.getElementById('GoalDate').disabled = false;
-            document.getElementById('ddlSavingsPeriod').disabled = false;
-            document.getElementById('divCategoryExp').innerHTML = '<p class="pb-1 ps-2 pe-2 m-0">For saving goals without any time or target constraints</p><p class="pb-1 ps-2 pe-2 m-0">Save the same amount each period, as much as you can afford!</p>'
+            LoadSavingTypeSavingsBuilder();
         }
         else if (document.getElementById('rdbTargetAmount').checked) {
-            document.getElementById('SavingsType').value = 'TargetAmount';
-            document.getElementById('divTargetDate').style.backgroundColor = '#fff';
-            document.getElementById('divSavingsBuilder').style.backgroundColor = '#fff';
-            document.getElementById('divTargetAmount').style.backgroundColor = '#e95420';
-            document.getElementById('divSavingTarget').style.display = 'flex';
-            document.getElementById('divCurrentBalance').style.display = 'flex';
-            document.getElementById('divGoalDate').style.display = 'flex';
-            document.getElementById('divSavingValue').style.display = 'flex';
-            document.getElementById('divCanExceedGoal').style.display = 'flex';
-            document.getElementById('divIsAutoComplete').style.display = 'flex';
-            document.getElementById('RegularSavingValue').disabled = false;
-            document.getElementById('GoalDate').disabled = true;
-            document.getElementById('ddlSavingsPeriod').disabled = false;
-            document.getElementById('divCategoryExp').innerHTML = '<p class="pb-1 ps-2 pe-2 m-0">For emergency fund, downpayment ...</p><p class="pb-1 ps-2 pe-2 m-0">Save towards a target over time, contribute as much as you can each period</p>'
+            LoadSavingTypeTargetAmount();
         }
     }
 
