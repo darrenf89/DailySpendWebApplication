@@ -39,58 +39,74 @@ public class SavingsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult AddSaving(Savings obj, string ReturnUrl)
-    {
+    {   
         Savings? A = new();
 
         if (!ModelState.IsValid) 
         {
-            if (obj.SavingsType == "TargetDate")
+            var BudgetList = _db.Budgets
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+            Budgets Budget = BudgetList.FirstOrDefault();
+
+            var PayPeriod = Budget.AproxDaysBetweenPay;
+
+            A.SavingsName = obj.SavingsName;
+            A.LastUpdatedValue = obj.CurrentBalance;
+            A.LastUpdatedDate = DateTime.Now;
+            A.SavingsGoal = obj.SavingsGoal;
+
+            if (obj.isRegularSaving == false)
             {
-                A.SavingsName = obj.SavingsName;
-                A.SavingsType = obj.SavingsType;                
-                A.SavingsGoal = obj.SavingsGoal;
+                A.isRegularSaving = false;
                 A.CurrentBalance = obj.CurrentBalance;
-                A.GoalDate = obj.GoalDate;
-                A.RegularSavingValue= obj.RegularSavingValue;
-                A.canExceedGoal = obj.canExceedGoal;
+                A.canExceedGoal = true;
                 A.isAutoComplete = false;
-                A.isSavingsClosed = false;
+                A.isDailySaving = false;
+                
+            }
+            else if (obj.isRegularSaving == true)
+            {
                 A.isRegularSaving = true;
                 A.isDailySaving = true;
-
-            }
-            else if (obj.SavingsType == "SavingsBuilder")
-            {
-                A.SavingsName = obj.SavingsName;
-                A.SavingsType = obj.SavingsType;
-                A.SavingsGoal = obj.SavingsGoal;
                 A.CurrentBalance = obj.CurrentBalance;
-                A.GoalDate = obj.GoalDate;
-                A.RegularSavingValue = obj.RegularSavingValue;
-                A.canExceedGoal = false;
-                A.isAutoComplete = false;
-                A.isSavingsClosed = false;
-                A.isRegularSaving = true;
-                A.isDailySaving = false;
 
-            }
-            else if (obj.SavingsType == "TargetAmount")
-            {
-                A.SavingsName = obj.SavingsName;
-                A.SavingsType = obj.SavingsType;
-                A.SavingsGoal = obj.SavingsGoal;
-                A.CurrentBalance = obj.CurrentBalance;
-                A.GoalDate = obj.GoalDate;
-                A.RegularSavingValue = obj.RegularSavingValue;
-                A.canExceedGoal = obj.canExceedGoal;
-                A.isAutoComplete = obj.isAutoComplete;
-                A.isSavingsClosed = false;
-                A.isRegularSaving = true;
-                A.isDailySaving = false;
-            }
-            else
-            {
-                ModelState.AddModelError("SavingsType", "* There is a probelm, we don't have a clue the type of saving. Could be your fault, could be ours but you sort it out.");
+                if (obj.SavingsType == "TargetDate")
+                {
+
+                    A.SavingsType = obj.SavingsType;                
+                    A.GoalDate = obj.GoalDate;
+                    A.RegularSavingValue= obj.RegularSavingValue;
+                    A.canExceedGoal = obj.canExceedGoal;
+                    A.isAutoComplete = false;
+
+                }
+                else if (obj.SavingsType == "SavingsBuilder")
+                {
+                    A.SavingsType = obj.SavingsType;                
+                    A.RegularSavingValue= obj.RegularSavingValue;
+                    A.SavingsGoal = null;
+                    A.canExceedGoal = false;
+                    A.isAutoComplete = false;
+
+                }
+                else if (obj.SavingsType == "TargetAmount")
+                {
+
+                    A.SavingsType = obj.SavingsType;
+                    A.SavingsGoal = obj.SavingsGoal;
+                    A.CurrentBalance = obj.CurrentBalance;
+                    A.GoalDate = obj.GoalDate;
+                    A.RegularSavingValue = obj.RegularSavingValue;
+                    A.canExceedGoal = obj.canExceedGoal;
+                    A.isAutoComplete = obj.isAutoComplete;
+                    A.isSavingsClosed = false;
+                    A.isRegularSaving = true;
+                    A.isDailySaving = false;
+                }
+                else
+                {
+                    ModelState.AddModelError("SavingsType", "* There is a probelm, we don't have a clue the type of saving. Could be your fault, could be ours but you sort it out.");
+                }
             }
         }
 
