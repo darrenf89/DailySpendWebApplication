@@ -27,9 +27,9 @@ public class SavingsController : Controller
         TempData["NickName"] = HttpContext.Session.GetString("_Name");
         TempData["PageHeading"] = "Add A New Saving!";
 
-        var BudgetList = _db.Budgets
+        var BudgetList = _db.Budgets?
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
-        Budgets Budget = BudgetList.FirstOrDefault();
+        Budgets? Budget = BudgetList?.FirstOrDefault();
 
         ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
         ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
@@ -43,7 +43,7 @@ public class SavingsController : Controller
     {   
         Savings? S = new();
 
-        var BudgetSavingsList = _db.Budgets
+        var BudgetSavingsList = _db.Budgets?
             .Include(x=>x.Savings)
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .ToList();
@@ -57,9 +57,9 @@ public class SavingsController : Controller
             }
         }
 
-        var BudgetList = _db.Budgets
+        var BudgetList = _db.Budgets?
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
-        Budgets? Budget = BudgetList.FirstOrDefault();
+        Budgets? Budget = BudgetList?.FirstOrDefault();
 
         if (ModelState.IsValid) 
         {
@@ -137,11 +137,39 @@ public class SavingsController : Controller
             {
                 ViewBag.PageStatus = "Savings Name Error Regular";
             }
-            ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
+            ViewBag.PaymentPeriod = Budget?.AproxDaysBetweenPay;
             return View();
         }
 
+        ViewBag.isRegularSaving = S.isRegularSaving;
+        ViewBag.GoalDate = S.GoalDate;
+        ViewBag.SavingsName = S.SavingsName;
+        ViewBag.SavingsGoal = S.SavingsGoal;
+        ViewBag.RegularSavingValue = S.RegularSavingValue;
+        ViewBag.SavingsType = S.SavingsType;
+        ViewBag.PageStatus = "Confirmation";
+
         return View();
     }
-}
 
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult AddSavingCancel(Savings obj, string SavingName)
+    {
+        var BudgetSavingsList = _db.Budgets?
+            .Include(x=>x.Savings.Where(x=>x.SavingsName == SavingName))
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+
+        ViewBag.PageStatus = "Cancel";
+        return RedirectToAction("AddSaving");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult AddSavingConfirmation(Savings obj)
+    {
+        return Redirect("Home/Index");
+    }
+
+}

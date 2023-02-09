@@ -110,10 +110,10 @@
 </div>
 
 <script>
-    var Status = "@ViewBag.PageStatus"
-    document.onload = CheckPageStatus(Status);
+    const Status = "@ViewBag.PageStatus"
+    document.addEventListener("load", CheckErrorPageStatus(Status)); 
 
-    function CheckPageStatus(Status)
+    function CheckErrorPageStatus(Status)
     {
         if (Status == "Savings Name Error Regular") 
         {
