@@ -113,9 +113,10 @@
 
     function ShowCancelConfirmation()
     {
-        var message = 'Your Saving wasnt crated, Whats wrong you scard?'
+        var message = 'Your Saving wasnt created, Whats wrong you scard?'
         var x = document.getElementById("snackbar");
-
+        x.innerHTML = message;
+        
         // Add the "show" class to DIV
         x.className = "show";
 
