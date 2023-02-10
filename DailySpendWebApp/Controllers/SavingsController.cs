@@ -157,9 +157,15 @@ public class SavingsController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult AddSavingCancel(Savings obj, string SavingName)
     {
-        var BudgetSavingsList = _db.Budgets?
+        Budgets? BudgetSavingsList = _db.Budgets?
             .Include(x=>x.Savings.Where(x=>x.SavingsName == SavingName))
-            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .FirstOrDefault();
+
+        Savings? CreatedSaving = BudgetSavingsList.Savings.First();
+
+        _db.Remove(CreatedSaving);
+        _db.SaveChangesAsync();
 
         ViewBag.PageStatus = "Cancel";
         return RedirectToAction("AddSaving");
@@ -169,7 +175,8 @@ public class SavingsController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult AddSavingConfirmation(Savings obj)
     {
-        return Redirect("Home/Index");
+        TempData["SnackbarMess"] = "SavingCreated";
+        return RedirectToAction("Index", "Home");
     }
 
 }

@@ -8,5 +8,6 @@ namespace DailySpendBudgetWebApp.Models
         public string Email { get; set; }
         public int DefaultBudget { get; set; }
         public string? NickName { get; set; }
+        public List<Savings>? Savings { get; set; }
     }
 }
