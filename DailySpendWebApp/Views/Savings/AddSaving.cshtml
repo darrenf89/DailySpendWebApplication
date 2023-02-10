@@ -2,15 +2,6 @@
 @{
     ViewData["Title"] = "Add A Saving";
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
-
-    var parms = new Dictionary<string, string>
-            {
-                { "ReturnURL", "test" }
-            };
-    var Cancelparms = new Dictionary<string, string>
-            {
-                { "SavingName", ViewBag.SavingName }
-            };
 }
 <form method="post">
     <input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
@@ -24,7 +15,7 @@
         <partial name="_PVAddSavings"></partial>
         <footer class="sticky-bottom m-0 p-0" style="width: 100%">
             <div class="d-flex flex-column align-items-center justify-content-center">
-                <button asp-action="AddSaving" asp-controller="Savings" asp-all-route-data="parms" onclick="UpdateRegularSavingValueBeforePost();" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11" ><i class="bi bi-save2"></i> &nbsp Add Saving</button>
+                <button asp-action="AddSaving" asp-controller="Savings" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11" ><i class="bi bi-save2"></i> &nbsp Add Saving</button>
             </div>
         </footer>
     </div>
@@ -42,7 +33,7 @@
                     </div>
                     <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
                         <button asp-action="AddSavingConfirmation" asp-controller="Savings" type="submit" id="btnSaveSavings" class="btn btn-primary">Amazing, Let's Continue</button>
-                        <button asp-action="AddSavingCancel" asp-controller="Savings" asp-all-route-data="Cancelparms" type="submit" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="ConfirmationModal">Opps, Delete!</button>
+                        <button asp-action="AddSavingCancel" asp-controller="Savings" type="submit" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="ConfirmationModal">Opps, Delete!</button>
                     </div>
                 </div>
             </div>
@@ -56,51 +47,47 @@
 <div id="snackbar"></div>
 
 <script>
-    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    const monthlist = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
-    var Status = "@ViewBag.PageStatus"
-    document.addEventListener("load", CheckPageStatus(Status)); 
+    const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const monthlist = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'];
+    var PageStatus = '@ViewBag.PageStatus'
+    document.addEventListener("load", CheckPageStatus(PageStatus));
 
-    function CHeckPageStatus(Status)
-    {
-        var HtmlText = ''
+    function CheckPageStatus(Status) {
+        //var HtmlText = ''
 
-        if(Status == "Confirmation")
+        if(Status == 'Confirmation')
         {
-            var isRegularSaving = "@ViewBag.isRegularSaving";
-            var GoalDate = "@ViewBag.GoalDate";
-            var SavingName = "@ViewBag.SavingsName";
-            var SavingGoal = "@ViewBag.SavingsGoal";
-            var RegularSavingValue = "@ViewBag.RegularSavingValue";
-            var SavingType = "@ViewBag.SavingsType";
+            var isRegularSaving = '@ViewBag.isRegularSaving';
+            var GoalDate = '@ViewBag.GoalDate';
+            var SavingName = '@ViewBag.SavingsName';
+            var SavingGoal = '@ViewBag.SavingsGoal';
+            var RegularSavingValue = '@ViewBag.RegularSavingValue';
+            var SavingType = '@ViewBag.SavingsType';
 
-            if(isRegularSaving == 'True')
-            {
-                var FullDate = Date.parse(GoalDate)
-                Day = weekday[FullDate.getDay()];
-                DateNumber = FullDate.getDay();
-                month = monthlist[FullDate.getMonth()];
-                year = FullDate.getFullYear();
+            if (isRegularSaving == 'True') {
+                
+                var DateStringSplit = GoalDate.split(' ');
+                var DateGoalDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DateStringSplit[0].split('/')[0]);
 
-                GoalDate = day+' '+DateNumber+' '+month+' '+year
+                day = weekday[DateGoalDate.getDay()];
+                datenumber = DateGoalDate.getDay();
+                month = monthlist[DateGoalDate.getMonth()];
+                year = DateGoalDate.getFullYear();
 
-                if(SavingType == 'TargetDate')
-                {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Regular Saving for your ' + SavingName + '</h3><p> You have created a '+ SavingType+' Regular Savings with a Target of £'+SavingGoal+' by the '+GoalDate+'. This will required you to save £'+RegularSavingValue+' Each day.</p></div>'
+                GoalDate = day+' '+datenumber+' '+month+' '+year
+
+                if (SavingType == 'TargetDate') {
+                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>congrats you created a regular saving for your ' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings with a target of £' + SavingGoal + ' by the ' + GoalDate + '. this will required you to save £' + RegularSavingValue + ' each day.</p></div>'
                 }
-                else if(SavingType == 'SavingBuilder')
-                {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Regular Saving for your' + SavingName + '</h3><p> You have created a '+ SavingType+' Regular Savings you plan to save £'+RegularSavingValue+' Each day. Lets get going!</p></div>'
+                else if (SavingType == 'SavingBuilder') {
+                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you plan to save £' + RegularSavingValue + ' each day. lets get going!</p></div>'
                 }
-                else if(SavingType == 'TargetAmount')
-                {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Regular Saving for your' + SavingName + '</h3><p> You have created a '+ SavingType+' Regular Savings you are trying to save £'+SavingGoal+ ' By Saving £' +RegularSavingValue+' Each day. If you keep it up you will reach your goal by'+GoalDate+'!</p></div>'
+                else if (SavingType == 'TargetAmount') {
+                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you are trying to save £' + SavingGoal + ' by saving £' + RegularSavingValue + ' each day. if you keep it up you will reach your goal by' + GoalDate + '!</p></div>'
                 }
             }
-            else if(isRegularSaving == 'False')
-            {
-                '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Saving Category for your' + SavingName + '</h3><p>Get Saving, you can do it! And dont forget you can add to your saving every payday or at any time!</p></div>'
-       
+            else if (isRegularSaving == 'False') {
+                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Saving Category for your' + SavingName + '</h3><p>Get Saving, you can do it! And dont forget you can add to your saving every payday or at any time!</p></div>'
             }
             document.getElementById('ConfirmationModalBody').innerHTML = HtmlText
             document.getElementById('ConfirmationModal').style.display = "block";

@@ -115,7 +115,7 @@ input[name="currency-field"]::placeholder {
     color: #772953;
 }
 
-#SavingsGoal {
+#txtSavingsGoal {
     width: 30%;
     text-align: right;
     border: none;
@@ -123,7 +123,7 @@ input[name="currency-field"]::placeholder {
     color: #df382c;
 }
 
-#CurrentBalance {
+#txtCurrentBalance {
     width: 30%;
     text-align: right;
     border: none;
@@ -131,7 +131,7 @@ input[name="currency-field"]::placeholder {
     color: #38b44a;
 }
 
-#RegularSavingValue {
+#txtRegularSavingValue {
     width: 30%;
     text-align: right;
     border: none;

@@ -39,7 +39,7 @@ public class SavingsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AddSaving(Savings obj, string ReturnUrl)
+    public IActionResult AddSaving(Savings obj)
     {   
         Savings? S = new();
 
@@ -155,10 +155,10 @@ public class SavingsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AddSavingCancel(Savings obj, string SavingName)
+    public IActionResult AddSavingCancel(Savings obj)
     {
         Budgets? BudgetSavingsList = _db.Budgets?
-            .Include(x=>x.Savings.Where(x=>x.SavingsName == SavingName))
+            .Include(x=>x.Savings.Where(x=>x.SavingsName == obj.SavingsName))
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .FirstOrDefault();
 

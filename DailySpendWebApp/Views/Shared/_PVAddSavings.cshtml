@@ -68,12 +68,14 @@
         <div id="divSpacerTop2" class="mt-4"></div>
         <div id="divSavingTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">            
             <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="SavingsGoal"></label>
-            <input asp-for="SavingsGoal" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+            <input id="txtSavingsGoal" type="text" pattern="^\d*(\.\d{0,2})?£" value="5000" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
+            <input asp-for="SavingsGoal" type="number" style="display:none;"/>
             <span class="text-danger" asp-validation-for="SavingsGoal" ></span>
         </div>
         <div id="divCurrentBalance" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
             <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="CurrentBalance"></label>
-            <input asp-for="CurrentBalance" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+            <input id="txtCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onchange="UpdateHdnCurrentBalance();" onblur="this.placeholder = '£0.00';" />
+            <input asp-for="CurrentBalance" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="CurrentBalance"></span>
         </div>
         <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
@@ -84,7 +86,8 @@
         <div id="divSavingValue" class="row justify-content-between align-items-center ms-2 me-2 mt-2 text-dark">
             <label class="form-label col-4 ps-2 pe-1 m-0" asp-for="RegularSavingValue"></label>
             <div style="width: 65%; border-left: 1px solid #772953; " class="d-flex text-dark justify-content-between ps-1 pe-1">
-                <input asp-for="RegularSavingValue" type="text" name="currency-field" pattern="^\d*(\.\d{0,2})?£" style=" color: #38b44a; width: 40%; text-align: right; border: none; outline: none; cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" />
+                <input id="txtRegularSavingValue" type="text" pattern="^\d*(\.\d{0,2})?£" style=" color: #38b44a; width: 40%; text-align: right; border: none; outline: none; cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingAmount();" />
+                <input asp-for="RegularSavingValue" type="number" style="display:none;" />
                 <div class="d-flex text-dark align-items-center" style="width: 55%">
                     <select name="ddlSavingsPeriod" id="ddlSavingsPeriod" class="form-select form-select-sm">
                         <option value="PerDay">Every Day</option>
@@ -112,6 +115,19 @@
 <script>
     const Status = "@ViewBag.PageStatus"
     document.addEventListener("load", CheckErrorPageStatus(Status)); 
+
+    function UpdateHdnSavingGoal()
+    {
+        var txtSavingsGoal = document.getElementById('txtSavingsGoal').value;
+        var numSavingsGoal = txtSavingsGoal.replace('£','').replace(',', '');
+        document.getElementById('SavingsGoal').value = numSavingsGoal;
+    }
+
+    function UpdateHdnCurrentBalance() {
+        var txtSavingsGoal = document.getElementById('txtCurrentBalance').value;
+        var numSavingsGoal = txtSavingsGoal.replace('£','').replace(',', '');
+        document.getElementById('CurrentBalance').value = numSavingsGoal;
+    }
 
     function CheckErrorPageStatus(Status)
     {
@@ -160,7 +176,7 @@
         document.getElementById('divSavingValue').style.display = 'flex';
         document.getElementById('divCanExceedGoal').style.display = 'none';
         document.getElementById('divIsAutoComplete').style.display = 'flex';
-        document.getElementById('RegularSavingValue').disabled = true;
+        document.getElementById('txtRegularSavingValue').disabled = true;
         document.getElementById('GoalDate').disabled = false;
         document.getElementById('ddlSavingsPeriod').value = 'PerDay'
         document.getElementById('ddlSavingsPeriod').disabled = true;
@@ -178,7 +194,7 @@
         document.getElementById('divSavingValue').style.display = 'flex';
         document.getElementById('divCanExceedGoal').style.display = 'none';
         document.getElementById('divIsAutoComplete').style.display = 'none';
-        document.getElementById('RegularSavingValue').disabled = false;
+        document.getElementById('txtRegularSavingValue').disabled = false;
         document.getElementById('GoalDate').disabled = false;
         document.getElementById('ddlSavingsPeriod').disabled = false;
         document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For saving goals without any time or target constraints</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Save the same amount each period, as much as you can afford!</p>'
@@ -196,7 +212,7 @@
         document.getElementById('divSavingValue').style.display = 'flex';
         document.getElementById('divCanExceedGoal').style.display = 'flex';
         document.getElementById('divIsAutoComplete').style.display = 'flex';
-        document.getElementById('RegularSavingValue').disabled = false;
+        document.getElementById('txtRegularSavingValue').disabled = false;
         document.getElementById('GoalDate').disabled = true;
         document.getElementById('ddlSavingsPeriod').disabled = false;
         document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For emergency fund, downpayment ...</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Save towards a target over time, contribute as much as you can each period</p>'
@@ -209,8 +225,8 @@
         radio.addEventListener('click', HandleSavingTypeRadioClick);
     });
 
-    document.getElementById("SavingsGoal").addEventListener('change', UpdateValues, false);
-    document.getElementById("CurrentBalance").addEventListener('change', UpdateValues, false);
+    document.getElementById("txtSavingsGoal").addEventListener('change', UpdateValues, false);
+    document.getElementById("txtCurrentBalance").addEventListener('change', UpdateValues, false);
     //document.getElementById("GoalDate").addEventListener('change', CheckDateFuture, UpdateValues, false);
     document.getElementById("RegularSavingValue").addEventListener('change', UpdateValues, false);
     document.getElementById('ddlSavingsPeriod').addEventListener('change', UpdateValues, false);
@@ -261,21 +277,22 @@
 
     function UpdateSavingsValue()
     {    
-        if (document.getElementById('SavingsGoal').value == '' || document.getElementById('CurrentBalance').value == '' || document.getElementById('hdnServerDate').value == '' || document.getElementById('GoalDate').value == '') {
+        if (document.getElementById('txtSavingsGoal').value == '' || document.getElementById('txtCurrentBalance').value == '' || document.getElementById('hdnServerDate').value == '' || document.getElementById('GoalDate').value == '') {
                 
-            document.getElementById('RegularSavingValue').value = '';
+            document.getElementById('txtRegularSavingValue').value = '';
         }
         else
         {
             var SpendPerDay = CalculateSavingsValue();
-            document.getElementById('RegularSavingValue').value = '£' + SpendPerDay;
+            document.getElementById('txtRegularSavingValue').value = '£' + SpendPerDay;
+            document.getElementById('RegularSavingValue').value = SpendPerDay;
         }           
 
     }
 
     function UpdateGoalDate()
     {
-        if (document.getElementById('SavingsGoal').value == '' || document.getElementById('CurrentBalance').value == '' || document.getElementById('hdnServerDate').value == '' || document.getElementById('RegularSavingValue').value == '') {
+        if (document.getElementById('txtSavingsGoal').value == '' || document.getElementById('txtCurrentBalance').value == '' || document.getElementById('hdnServerDate').value == '' || document.getElementById('RegularSavingValue').value == '') {
 
             document.getElementById('GoalDate').value = '';
             //console.log('Not all values Set');
@@ -290,8 +307,8 @@
     }
 
     function CalculateSavingsValue(){
-        var SavingGoal = Number((document.getElementById('SavingsGoal').value).replace(/[^0-9.-]+/g,""));
-        var CurrentSavings = Number((document.getElementById('CurrentBalance').value).replace(/[^0-9.-]+/g, ""));
+        var SavingGoal = Number((document.getElementById('txtSavingsGoal').value).replace(/[^0-9.-]+/g, ""));
+        var CurrentSavings = Number((document.getElementById('txtCurrentBalance').value).replace(/[^0-9.-]+/g, ""));
         var CurrentDateString = (document.getElementById('hdnServerDate').value);
         var CurrentDateStringSplit = CurrentDateString.split(' ');
         var DateCurrentDate = new Date(CurrentDateStringSplit[0].split('/')[2], CurrentDateStringSplit[0].split('/')[1] - 1, CurrentDateStringSplit[0].split('/')[0]);
@@ -340,15 +357,15 @@
     }
 
     function CalculateGoalDate(){
-        var SavingGoal = Number((document.getElementById('SavingsGoal').value).replace(/[^0-9.-]+/g,""));
-        var CurrentSavings = Number((document.getElementById('CurrentBalance').value).replace(/[^0-9.-]+/g, ""));
+        var SavingGoal = Number((document.getElementById('txtSavingsGoal').value).replace(/[^0-9.-]+/g, ""));
+        var CurrentSavings = Number((document.getElementById('txtCurrentBalance').value).replace(/[^0-9.-]+/g, ""));
         if (document.getElementById('ddlSavingsPeriod').value = 'PerDay') 
         {
-            var DailySavingsAmount = Number((document.getElementById('RegularSavingValue').value).replace(/[^0-9.-]+/g, ""));
+            var DailySavingsAmount = Number((document.getElementById('txtRegularSavingValue').value).replace(/[^0-9.-]+/g, ""));
         }
         else if (document.getElementById('ddlSavingsPeriod').value = 'PerPayPeriod') 
         {
-            var DailySavingsAmount = Number((document.getElementById('RegularSavingValue').value).replace(/[^0-9.-]+/g, "")) / @ViewBag.PaymentPeriod;
+            var DailySavingsAmount = Number((document.getElementById('txtRegularSavingValue').value).replace(/[^0-9.-]+/g, "")) / @ViewBag.PaymentPeriod;
         }
         var CurrentDateString = (document.getElementById('hdnServerDate').value);
         var CurrentDateStringSplit = CurrentDateString.split(' ');
@@ -378,10 +395,10 @@
     }
 
     function ClearSavingsInputs(){
-        document.getElementById('SavingsGoal').value = '';
-        document.getElementById('CurrentBalance').value = '';
+        document.getElementById('txtSavingsGoal').value = '';
+        document.getElementById('txtCurrentBalance').value = '';
         document.getElementById('GoalDate').value = '';
-        document.getElementById('RegularSavingValue').value = '';
+        document.getElementById('txtRegularSavingValue').value = '';
         document.getElementById('isAutoComplete').Checked = false;
         document.getElementById('canExceedGoal').Checked = false;
     }
@@ -393,16 +410,21 @@
         });
     }
 
-    function UpdateRegularSavingValueBeforePost()
-    {
+    function UpdateHdnSavingAmount() {
         if (document.getElementById('ddlSavingsPeriod').value = 'PerDay') 
         {
-            
+            var txtSavingsGoal = document.getElementById('txtRegularSavingValue').value;
+            var numSavingsGoal = txtSavingsGoal.replace('£', '').replace(',', '');
+            document.getElementById('RegularSavingValue').value = numSavingsGoal;
         }
         else if (document.getElementById('ddlSavingsPeriod').value = 'PerPayPeriod') 
         {
-            var SpendPerDay = Number((document.getElementById('RegularSavingValue').value).replace(/[^0-9.-]+/g, ""));
-            document.getElementById('RegularSavingValue').value = '£' + SpendPerDay;
+
+            var txtSavingsGoal = document.getElementById('txtRegularSavingValue').value;
+            var numSavingsGoal = txtSavingsGoal.replace('£', '').replace(',', '');
+            var numSavingsGoal = numSavingsGoal / @ViewBag.PaymentPeriod
+            document.getElementById('RegularSavingValue').value = numSavingsGoal;
+
         }
     }
 

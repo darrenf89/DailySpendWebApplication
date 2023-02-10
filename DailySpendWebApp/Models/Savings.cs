@@ -23,7 +23,7 @@ namespace DailySpendBudgetWebApp.Models
         public bool isSavingsClosed { get; set; } = false;
         [DataType(DataType.Currency)]
         [DisplayName("Saving Target")]
-        public decimal? SavingsGoal { get; set; }
+        public decimal? SavingsGoal { get; set; } = 0;
         public bool canExceedGoal { get; set; }
         public bool isDailySaving { get; set; }
         public bool isRegularSaving { get; set; }
