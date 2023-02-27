@@ -15,6 +15,10 @@
 		<None Remove="wwwroot\NewFolder1\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Remove="Views\Home\_SavingsTablePV.razor" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="Castle.Core" Version="5.1.0" />

@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using DailySpendBudgetWebApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace DailySpendBudgetWebApp.Controllers;
 
@@ -74,5 +75,20 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public IActionResult AddSavingsTable()
+    {
+        Budgets? BudgetSavingsList = _db.Budgets?
+            .Include(x => x.Savings)
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .FirstOrDefault();
+
+        List<Savings> SavingsList= new List<Savings>();
+        foreach(Savings saving in BudgetSavingsList.Savings)
+        {
+            SavingsList.Add(saving);
+        }
+        return PartialView("_SavingsTablePV",SavingsList);
     }
 }

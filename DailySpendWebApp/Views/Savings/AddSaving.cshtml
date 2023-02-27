@@ -21,7 +21,7 @@
     </div>
     <div class="modal" id="ConfirmationModal" style="display: none;">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
+                <div class="modal-content" style="margin-bottom: 45%">
                     <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
                         <h5 class="modal-title text-primary">Congrats, Saving Created!</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="ConfirmationModal" aria-label="Close" id="CloseSavingModal">
@@ -77,19 +77,19 @@
                 GoalDate = day+' '+datenumber+' '+month+' '+year
 
                 if (SavingType == 'TargetDate') {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>congrats you created a regular saving for your ' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings with a target of £' + SavingGoal + ' by the ' + GoalDate + '. this will required you to save £' + RegularSavingValue + ' each day.</p></div>'
+                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your ' + SavingName + '</h3><p class="text-muted"> you have created a ' + SavingType + ' regular savings with a target of £' + SavingGoal + ' by the ' + GoalDate + '. this will required you to save £' + RegularSavingValue + ' each day.</p></div>'
                 }
-                else if (SavingType == 'SavingBuilder') {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you plan to save £' + RegularSavingValue + ' each day. lets get going!</p></div>'
+                else if (SavingType == 'SavingsBuilder') {
+                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p class="text-muted"> you have created a ' + SavingType + ' regular savings you plan to save £' + RegularSavingValue + ' each day. lets get going!</p></div>'
                 }
                 else if (SavingType == 'TargetAmount') {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you are trying to save £' + SavingGoal + ' by saving £' + RegularSavingValue + ' each day. if you keep it up you will reach your goal by' + GoalDate + '!</p></div>'
+                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you are trying to save £' + SavingGoal + ' by saving £' + RegularSavingValue + ' each day. if you keep it up you will reach your goal by' + GoalDate + '!</p></div>'
                 }
             }
             else if (isRegularSaving == 'False') {
-                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Saving Category for your' + SavingName + '</h3><p>Get Saving, you can do it! And dont forget you can add to your saving every payday or at any time!</p></div>'
+                    HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Saving Category for your' + SavingName + '</h3><p class="text-muted">Get Saving, you can do it! And dont forget you can add to your saving every payday or at any time!</p></div>'
             }
-            document.getElementById('ConfirmationModalBody').innerHTML = HtmlText
+            document.getElementById('ConfirmationModalBody').innerHTML = HtmlText;
             document.getElementById('ConfirmationModal').style.display = "block";
         }
         else if(status == 'Cancel')
@@ -115,5 +115,6 @@
 @section Scripts{
     @{
         <partial name="_ValidationScriptsPartial"></partial>
+
     }
 }
