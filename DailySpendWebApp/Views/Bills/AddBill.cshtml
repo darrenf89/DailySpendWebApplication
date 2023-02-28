@@ -3,3 +3,17 @@
     ViewData["Title"] = "Add A Bill";
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
 }
+<form method="post">
+<div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divBillName" style="display: none;">
+        <div class="container mt-1 mb-2">
+            <div class="d-flex flex-column align-items-center">
+                <div class="input-container col-7 mb-0">
+                    <input style="font-size: 20px; cursor: pointer;" placeholder="What Bill you paying?" onfocus="this.placeholder = ''" onblur="this.placeholder = 'What Bill you paying?'" asp-for="BillName" type="text" required />
+                </div>
+                <div class="text-center p-1 pt-2" style="line-height: 11px">
+                    <span style="font: normal 10px Arial;" class="text-danger" asp-validation-for="BillName"></span>
+                </div>
+            </div>
+        </div>
+    </div>    
+</form>
