@@ -3,3 +3,217 @@
     ViewData["Title"] = "Add A Bill";
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
 }
+<form method="post">
+    <input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
+    <div class="d-flex flex-column align-items-center" style="background-color: transparent;">
+        <div class="d-flex container align-items-center justify-content-center mt-4 pt-2">
+            <h3 class="text-white">@TempData["PageHeading"]</h3>
+        </div>
+        <div class="align-items-center mb-5 mt-5">
+            <img src="~/img/logoFiles/ForWeb/png/JustlogoOrange.png" class="shadow rounded-circle" style="max-width: 75px; background-color: transparent;" />
+        </div>
+        <div id="divMainBillContent" class="container" style="min-height: 82vh;">
+            <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divSavingsTypeSelector" style="display: block;">
+                <div class="container mt-1 mb-1">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="input-container col-7 mb-0">
+                            <input style="font-size: 20px; cursor: pointer;" placeholder="Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="BillName" type="text" required />
+                        </div>
+                        <div class="text-center p-1 pt-2" style="line-height: 11px">
+                            <span style="font: normal 10px Arial;" class="text-danger" asp-validation-for="BillName"></span>
+                        </div>
+                        <div id="divRecurringTypeSelected" style="display: none;">
+                            <h5 class="text-dark p-2 text-center" id="txtRecurringTypeSelected"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div id="divIsReccuring">
+                    <div>
+                        <h5 class="text-dark p-2 text-center">Do you want to set up a One-off or a Recurring Bill?</h5>
+                        <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Set up a Recurring Bill and we will make sure you are saving for it every time! Or a one-off if you are never going to save for it again, sounds more like a Saving to me though!</p>
+                    </div>
+                    <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRecurringBill">
+                        <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
+                            <div id="divRecurringBillYes" class="col-5 m-2">
+                                <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRecurringBillSelection('Yes'), false;">Recurring</button>
+                            </div>
+                            <div id="divRecurringBillYes" class="col-5 m-2">
+                                <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRecurringBillSelection('No'), false;">One-off</button>
+                            </div>
+                            <input type="hidden" asp-for="isRecuring" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="BillsDetails" style="display: none;">
+                <div id="divSpacerTop2" class="mt-4"></div>
+                <div id="divBillTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
+                    <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillAmount">Total Amount Due</label>
+                    <input id="txtBillAmount" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
+                    <input asp-for="BillAmount" type="number" style="display:none;" />
+                    <span class="text-danger" asp-validation-for="BillAmount"></span>
+                </div>
+                <div id="divCurrentBalance" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+                    <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillCurrentBalance">Current Saved</label>
+                    <input id="txtBillCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onchange="UpdateHdnCurrentBalance();" onblur="this.placeholder = '£0.00';" />
+                    <input asp-for="BillCurrentBalance" type="number" style="display:none;" />
+                    <span class="text-danger" asp-validation-for="BillCurrentBalance"></span>
+                </div>
+                <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+                    <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="BillDueDate">Bill Due Date</label>
+                    <input asp-for="BillDueDate" id="GoalDate" type="date" onblur="CheckDateFuture(), UpdateValues(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+                    <span class="text-danger" asp-validation-for="BillDueDate" id="valGoalDate"></span>
+                </div>
+                <div id="divRecurringType" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
+                    <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringType">What is the recurring period?</label>
+                    <div class="DropDown col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
+                        <select class="form-select text-secondary" asp-for="RecuringType">
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
+                    </div>
+                    <span class="text-danger" asp-validation-for="RecuringPeriod" id="RecuringType"></span>
+                </div>
+                <div id="divRecurringPeriod" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
+                    <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringPeriod">How many periods between each bill?</label>
+                    <div class="col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
+                        <input class="form-control text-secondary" type="Number" asp-for="RecuringPeriod" style="text-align: right; border: none; outline: none; color: #772953;" />
+                    </div>
+                    <span class="text-danger" asp-validation-for="RecuringPeriod" id="RecuringPeriod"></span>
+                </div>
+                <div id="divSpacerTop2" class="mt-4"></div>
+            </div>
+        </div>
+        <footer class="sticky-bottom m-0 p-0" style="width: 100%">
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <button asp-action="AddBill" asp-controller="Bills" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add a Bill</button>
+            </div>
+        </footer>
+    </div>
+    <div class="modal" id="ConfirmationModal" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="margin-bottom: 45%">
+                <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-primary">Congrats, Saving Created!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="ConfirmationModal" aria-label="Close" id="CloseSavingModal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ConfirmationModalBody">
+                </div>
+                <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                    <button asp-action="AddBillConfirmation" asp-controller="Bills" type="submit" id="btnSaveBills" class="btn btn-primary">Amazing, Let's Continue</button>
+                    <button asp-action="AddBillCancel" asp-controller="Bills" type="submit" id="btnCancelBills" class="btn btn-danger" data-bs-dismiss="ConfirmationModal">Opps, Delete!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="fixed-top">
+    <div class="d-flex container justify-content-end">
+        <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
+    </div>
+</div>
+<div id="snackbar"></div>
+
+<script>
+    const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const monthlist = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    var PageStatus = '@ViewBag.PageStatus'
+    document.addEventListener("load", CheckPageStatus(PageStatus));
+
+    function CheckPageStatus(Status) {
+        //var HtmlText = ''
+
+        if (Status == 'Confirmation') {
+            var isRegularSaving = '@ViewBag.isRegularSaving';
+            var GoalDate = '@ViewBag.GoalDate';
+            var SavingName = '@ViewBag.SavingsName';
+            var SavingGoal = '@ViewBag.SavingsGoal';
+            var RegularSavingValue = '@ViewBag.RegularSavingValue';
+            var SavingType = '@ViewBag.SavingsType';
+
+            if (isRegularSaving == 'True') {
+
+                var DateStringSplit = GoalDate.split(' ');
+                var DateGoalDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DateStringSplit[0].split('/')[0]);
+
+                day = weekday[DateGoalDate.getDay()];
+                datenumber = DateGoalDate.getDay();
+                month = monthlist[DateGoalDate.getMonth()];
+                year = DateGoalDate.getFullYear();
+
+                GoalDate = day + ' ' + datenumber + ' ' + month + ' ' + year
+
+                if (SavingType == 'TargetDate') {
+                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your ' + SavingName + '</h3><p class="text-muted"> you have created a ' + SavingType + ' regular savings with a target of £' + SavingGoal + ' by the ' + GoalDate + '. this will required you to save £' + RegularSavingValue + ' each day.</p></div>'
+                }
+                else if (SavingType == 'SavingsBuilder') {
+                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p class="text-muted"> you have created a ' + SavingType + ' regular savings you plan to save £' + RegularSavingValue + ' each day. lets get going!</p></div>'
+                }
+                else if (SavingType == 'TargetAmount') {
+                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you are trying to save £' + SavingGoal + ' by saving £' + RegularSavingValue + ' each day. if you keep it up you will reach your goal by' + GoalDate + '!</p></div>'
+                }
+            }
+            else if (isRegularSaving == 'False') {
+                HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Saving Category for your' + SavingName + '</h3><p class="text-muted">Get Saving, you can do it! And dont forget you can add to your saving every payday or at any time!</p></div>'
+            }
+            document.getElementById('ConfirmationModalBody').innerHTML = HtmlText;
+            document.getElementById('ConfirmationModal').style.display = "block";
+        }
+        else if (status == 'Cancel') {
+            ShowCancelConfirmation();
+        }
+    }
+
+    function ShowCancelConfirmation() {
+        var message = 'Your Saving wasnt created, Whats wrong you scared?'
+        var x = document.getElementById("snackbar");
+        x.innerHTML = message;
+
+        // Add the "show" class to DIV
+        x.className = "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    function isRecurringBillSelection(isRegular) 
+    {
+        document.getElementById("divIsReccuring").style.display = "none";
+        document.getElementById("divRecurringTypeSelected").style.display = "block";
+        document.getElementById("BillsDetails").style.display = "block"; 
+        if (isRegular == 'Yes')
+        {
+            document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a recurring bill";
+            document.getElementById("divRecurringPeriod").style.display = "block";
+            LoadBillSavingYes();
+        }
+        else if (isRegular == 'No')
+        {
+            document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a one off bill";
+            document.getElementById("divRecurringPeriod").style.display = "none";
+            LoadBillSavingNo();
+        }
+    }
+
+    function LoadBillSavingYes()
+    {
+
+    }
+
+    function LoadBillSavingNo() {
+
+    }
+
+
+</script>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+
+    }
+}

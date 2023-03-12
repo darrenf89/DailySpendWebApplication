@@ -123,6 +123,22 @@ input[name="currency-field"]::placeholder {
     color: #df382c;
 }
 
+#txtBillCurrentBalance {
+    width: 30%;
+    text-align: right;
+    border: none;
+    outline: none;
+    color: #df382c;
+}
+
+#txtBillAmount {
+    width: 30%;
+    text-align: right;
+    border: none;
+    outline: none;
+    color: #df382c;
+}
+
 #txtCurrentBalance {
     width: 30%;
     text-align: right;

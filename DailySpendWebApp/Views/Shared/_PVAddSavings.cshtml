@@ -25,10 +25,10 @@
         </div>
     </div>
     <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divSavingsTypeSelector" style="display: none;">
-        <div class="container mt-1 mb-2">
+        <div class="container mt-1 mb-1">
             <div class="d-flex flex-column align-items-center">
                 <div class="input-container col-7 mb-0">
-                    <input style="font-size: 20px; cursor: pointer;" placeholder="Savings Category" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="SavingsName" type="text" required />
+                    <input style="font-size: 20px; cursor: pointer;" placeholder="Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="SavingsName" type="text" required />
                 </div>
                 <div class="text-center p-1 pt-2" style="line-height: 11px">
                     <span style="font: normal 10px Arial;" class="text-danger" asp-validation-for="SavingsName"></span>
@@ -68,7 +68,7 @@
         <div id="divSpacerTop2" class="mt-4"></div>
         <div id="divSavingTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">            
             <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="SavingsGoal"></label>
-            <input id="txtSavingsGoal" type="text" pattern="^\d*(\.\d{0,2})?£" value="5000" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
+            <input id="txtSavingsGoal" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
             <input asp-for="SavingsGoal" type="number" style="display:none;"/>
             <span class="text-danger" asp-validation-for="SavingsGoal" ></span>
         </div>
