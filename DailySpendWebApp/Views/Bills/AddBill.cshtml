@@ -49,19 +49,19 @@
                 <div id="divSpacerTop2" class="mt-4"></div>
                 <div id="divBillTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
                     <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillAmount">Total Amount Due</label>
-                    <input id="txtBillAmount" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
+                    <input id="txtBillAmount" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" />
                     <input asp-for="BillAmount" type="number" style="display:none;" />
                     <span class="text-danger" asp-validation-for="BillAmount"></span>
                 </div>
                 <div id="divCurrentBalance" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
                     <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillCurrentBalance">Current Saved</label>
-                    <input id="txtBillCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onchange="UpdateHdnCurrentBalance();" onblur="this.placeholder = '£0.00';" />
+                    <input id="txtBillCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00';" />
                     <input asp-for="BillCurrentBalance" type="number" style="display:none;" />
                     <span class="text-danger" asp-validation-for="BillCurrentBalance"></span>
                 </div>
                 <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
                     <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="BillDueDate">Bill Due Date</label>
-                    <input asp-for="BillDueDate" id="GoalDate" type="date" onblur="CheckDateFuture(), UpdateValues(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+                    <input asp-for="BillDueDate" id="GoalDate" type="date" onblur="CheckDateFuture(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
                     <span class="text-danger" asp-validation-for="BillDueDate" id="valGoalDate"></span>
                 </div>
                 <div id="divRecurringBill">
@@ -165,8 +165,34 @@
             document.getElementById('ConfirmationModalBody').innerHTML = HtmlText;
             document.getElementById('ConfirmationModal').style.display = "block";
         }
-        else if (status == 'Cancel') {
+        else if (Status == 'Cancel') {
             ShowCancelConfirmation();
+        }
+    }
+
+    function CheckDateFuture() {
+        var CurrentDateString = (document.getElementById('hdnServerDate').value);
+        var CurrentDateStringSplit = CurrentDateString.split(' ');
+        var DateCurrentDate = new Date(CurrentDateStringSplit[0].split('/')[2], CurrentDateStringSplit[0].split('/')[1] - 1, CurrentDateStringSplit[0].split('/')[0]);
+        var CurrentDate = DateCurrentDate.getTime();
+        var TargetDate = Date.parse(document.getElementById('GoalDate').value);
+
+        console.log(CurrentDateString)
+        console.log(CurrentDateStringSplit)
+        console.log(DateCurrentDate)
+        console.log(TargetDate)
+        console.log(CurrentDate)
+
+        var DateTargetDate = new Date(TargetDate)
+        var year = DateTargetDate.getFullYear()
+
+        if (!(year <= 9)) {
+            if (CurrentDate > TargetDate) {
+                document.getElementById('valGoalDate').innerHTML = '<span id="GoalDate-error" style="font-size:8pt" class> * The Date must be in the future</span>'
+            }
+            else {
+                document.getElementById('valGoalDate').innerHTML = ''
+            }
         }
     }
 
@@ -179,7 +205,7 @@
         x.className = "show";
 
         // After 3 seconds, remove the show class from DIV
-        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 30000);
     }
 
     function isRecurringBillSelection(isRegular) 

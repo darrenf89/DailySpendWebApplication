@@ -97,5 +97,40 @@ namespace DailySpendWebApp.Controllers
 
             return View(obj);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddBillCancel(Bills obj)
+        {
+            Budgets? BudgetSavingsList = _db.Budgets?
+                .Include(x => x.Bills.Where(x => x.BillName == obj.BillName))
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            Bills? CreatedBill = BudgetSavingsList.Bills.First();
+
+            _db.Remove(CreatedBill);
+            _db.SaveChangesAsync();
+
+            ViewBag.PageStatus = "Cancel";
+            return View("AddBill", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddBillConfirmation(Bills obj)
+        {
+
+            Budgets? BudgetSavingsList = _db.Budgets?
+                .Include(x => x.Bills.Where(x => x.BillName == obj.BillName))
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            Bills? CreatedBill = BudgetSavingsList.Bills.First();
+
+            TempData["SnackbarMess"] = "Bill Created";
+            return RedirectToAction("Index", "Home", new { SnackBarMess = "Bill Created", id = CreatedBill.BillID });
+        }
+
     }
 }

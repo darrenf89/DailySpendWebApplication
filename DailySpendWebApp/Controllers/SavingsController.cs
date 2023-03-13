@@ -168,15 +168,23 @@ public class SavingsController : Controller
         _db.SaveChangesAsync();
 
         ViewBag.PageStatus = "Cancel";
-        return RedirectToAction("AddSaving");
+        return View("AddSaving", obj);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult AddSavingConfirmation(Savings obj)
     {
+
+        Budgets? BudgetSavingsList = _db.Budgets?
+            .Include(x => x.Savings.Where(x => x.SavingsName == obj.SavingsName))
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .FirstOrDefault();
+
+        Savings? CreatedSaving = BudgetSavingsList.Savings.First();
+
         TempData["SnackbarMess"] = "SavingCreated";
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Home", new {SnackBarMess = "Saving Created", id = CreatedSaving.SavingID});
     }
 
 }
