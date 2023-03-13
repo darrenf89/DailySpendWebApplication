@@ -96,7 +96,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content" style="margin-bottom: 45%">
                 <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
-                    <h5 class="modal-title text-primary">Congrats, Saving Created!</h5>
+                    <h5 class="modal-title text-primary">Congrats, Your Bill was Created!</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="ConfirmationModal" aria-label="Close" id="CloseSavingModal">
                         <span aria-hidden="true"></span>
                     </button>
@@ -128,38 +128,38 @@
         //var HtmlText = ''
 
         if (Status == 'Confirmation') {
-            var isRegularSaving = '@ViewBag.isRegularSaving';
-            var GoalDate = '@ViewBag.GoalDate';
-            var SavingName = '@ViewBag.SavingsName';
-            var SavingGoal = '@ViewBag.SavingsGoal';
-            var RegularSavingValue = '@ViewBag.RegularSavingValue';
-            var SavingType = '@ViewBag.SavingsType';
 
-            if (isRegularSaving == 'True') {
+            var GoalDate = '@Model.BillDueDate';
+            var Amount = '@Model.BillAmount';
+            var Name = '@Model.BillName';
 
-                var DateStringSplit = GoalDate.split(' ');
-                var DateGoalDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DateStringSplit[0].split('/')[0]);
 
-                day = weekday[DateGoalDate.getDay()];
-                datenumber = DateGoalDate.getDay();
-                month = monthlist[DateGoalDate.getMonth()];
-                year = DateGoalDate.getFullYear();
+            var DateStringSplit = GoalDate.split(' ');
+            var DateGoalDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DateStringSplit[0].split('/')[0]);
 
-                GoalDate = day + ' ' + datenumber + ' ' + month + ' ' + year
+            day = weekday[DateGoalDate.getDay()];
+            datenumber = DateGoalDate.getDay();
+            month = monthlist[DateGoalDate.getMonth()];
+            year = DateGoalDate.getFullYear();
 
-                if (SavingType == 'TargetDate') {
-                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your ' + SavingName + '</h3><p class="text-muted"> you have created a ' + SavingType + ' regular savings with a target of £' + SavingGoal + ' by the ' + GoalDate + '. this will required you to save £' + RegularSavingValue + ' each day.</p></div>'
-                }
-                else if (SavingType == 'SavingsBuilder') {
-                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p class="text-muted"> you have created a ' + SavingType + ' regular savings you plan to save £' + RegularSavingValue + ' each day. lets get going!</p></div>'
-                }
-                else if (SavingType == 'TargetAmount') {
-                    HtmlText = '<div class="ms-0 mb-2 mt-2 ps-1 text-primary"><h3>congrats you created a regular saving for your' + SavingName + '</h3><p> you have created a ' + SavingType + ' regular savings you are trying to save £' + SavingGoal + ' by saving £' + RegularSavingValue + ' each day. if you keep it up you will reach your goal by' + GoalDate + '!</p></div>'
-                }
+            GoalDate = day+' '+datenumber+' '+month+' '+year
+
+            if ('@Model.isRecuring' == 'True')
+            {
+                var Type = '@Model.RecuringType';
+                var Period = '@Model.RecuringPeriod'
+                var HtmlText = 'Congrats you have set up '+ Name + ' as a recurring bill for £' + Amount +  ' which is due on ' + GoalDate + ' and then every ' + Period + ' ' + Type +  ' , well maybe not congrats but still.'
             }
-            else if (isRegularSaving == 'False') {
-                HtmlText = '<div class="ms-4 mb-1 mt-4 ps-2 text-primary"><h3>Congrats you created a Saving Category for your' + SavingName + '</h3><p class="text-muted">Get Saving, you can do it! And dont forget you can add to your saving every payday or at any time!</p></div>'
+            else if ('@Model.isRecuring' == "False")
+            {
+                var HtmlText = 'Congrats you have created a one-off £' + Amount +  ' Bill for ' + Name + ' which is due on ' + GoalDate + ' , well maybe not congrats but still.'
             }
+            else
+            {
+                var HtmlText = "There seems to have been an issue, Opps!";
+            }
+
+            
             document.getElementById('ConfirmationModalBody').innerHTML = HtmlText;
             document.getElementById('ConfirmationModal').style.display = "block";
         }
@@ -169,7 +169,7 @@
     }
 
     function ShowCancelConfirmation() {
-        var message = 'Your Saving wasnt created, Whats wrong you scared?'
+        var message = 'Your Bill still needs to be paid even if you dont add it here, so maybe just add it anyway?'
         var x = document.getElementById("snackbar");
         x.innerHTML = message;
 
@@ -189,25 +189,13 @@
         {
             document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a recurring bill";
             document.getElementById("divRecurringPeriod").style.display = "block";
-            LoadBillSavingYes();
         }
         else if (isRegular == 'No')
         {
             document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a one off bill";
             document.getElementById("divRecurringPeriod").style.display = "none";
-            LoadBillSavingNo();
         }
     }
-
-    function LoadBillSavingYes()
-    {
-
-    }
-
-    function LoadBillSavingNo() {
-
-    }
-
 
 </script>
 
