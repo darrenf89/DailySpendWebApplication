@@ -30,7 +30,9 @@ namespace DailySpendWebApp.Controllers
             ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
             ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
 
-            return View();
+            Bills? B = new();
+
+            return View(B);
         }
 
         [HttpPost]

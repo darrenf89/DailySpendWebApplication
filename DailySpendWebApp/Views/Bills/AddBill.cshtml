@@ -64,24 +64,26 @@
                     <input asp-for="BillDueDate" id="GoalDate" type="date" onblur="CheckDateFuture(), UpdateValues(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
                     <span class="text-danger" asp-validation-for="BillDueDate" id="valGoalDate"></span>
                 </div>
-                <div id="divRecurringType" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
-                    <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringType">What is the recurring period?</label>
-                    <div class="DropDown col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
-                        <select class="form-select text-secondary" asp-for="RecuringType">
-                            <option>Daily</option>
-                            <option>Weekly</option>
-                            <option>Monthly</option>
-                            <option>Yearly</option>
-                        </select>
+                <div id="divRecurringBill">
+                    <div id="divRecurringType" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
+                        <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringType">What is the recurring period?</label>
+                        <div class="DropDown col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
+                            <select class="form-select text-secondary" asp-for="RecuringType">
+                                <option>Daily</option>
+                                <option>Weekly</option>
+                                <option>Monthly</option>
+                                <option>Yearly</option>
+                            </select>
+                        </div>
+                        <span class="text-danger" asp-validation-for="RecuringType" id="RecuringType" min="0"></span>
                     </div>
-                    <span class="text-danger" asp-validation-for="RecuringPeriod" id="RecuringType"></span>
-                </div>
-                <div id="divRecurringPeriod" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
-                    <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringPeriod">How many periods between each bill?</label>
-                    <div class="col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
-                        <input class="form-control text-secondary" type="Number" asp-for="RecuringPeriod" style="text-align: right; border: none; outline: none; color: #772953;" />
+                    <div id="divRecurringPeriod" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
+                        <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringPeriod">How many periods between each bill?</label>
+                        <div class="col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
+                            <input class="form-control text-secondary" type="Number" asp-for="RecuringPeriod" style="text-align: right; border: none; outline: none; color: #772953;" />
+                        </div>
+                        <span class="text-danger" asp-validation-for="RecuringPeriod" id="RecuringPeriod"></span>
                     </div>
-                    <span class="text-danger" asp-validation-for="RecuringPeriod" id="RecuringPeriod"></span>
                 </div>
                 <div id="divSpacerTop2" class="mt-4"></div>
             </div>
@@ -188,12 +190,12 @@
         if (isRegular == 'Yes')
         {
             document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a recurring bill";
-            document.getElementById("divRecurringPeriod").style.display = "block";
+            document.getElementById("divRecurringBill").style.display = "block";
         }
         else if (isRegular == 'No')
         {
             document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a one off bill";
-            document.getElementById("divRecurringPeriod").style.display = "none";
+            document.getElementById("divRecurringBill").style.display = "none";
         }
     }
 

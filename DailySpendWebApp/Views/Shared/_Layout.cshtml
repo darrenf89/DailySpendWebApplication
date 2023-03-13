@@ -39,22 +39,26 @@
     </div>
 
     <footer class="sticky-bottom border-top border-dark border-5" style="width: 100%; max-width: 900px; line-height: normal;">
-        <div class="d-flex align-items-center justify-content-between bg-primary pt-0 pb-1 ps-2 pe-2">
-            <div class="d-flex flex-column align-items-center col-3">
-                <a class="m-1" asp-action="addTransaction" asp-controller="Transactions"><i class="bi bi-wallet text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Add Transaction</p>
+        <div class="d-flex align-items-center justify-content-between bg-primary p-2 pb-3">
+            <div class="d-flex flex-column align-items-center col-2">
+                <a class="m-1" asp-action="Index" asp-controller="Home"><i class="bi bi-columns-gap text-white" style="font-size: 20px"></i></a>
+                <p class="text-white m-0" style="font-size:10px">Dashboard</p>
             </div>
-            <div class="d-flex flex-column align-items-center col-3">
+            <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="AddBill" asp-controller="Bills"><i class="bi bi-receipt-cutoff text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Add Bill</p>
+                <p class="text-white m-0" style="font-size:10px">Bills</p>
             </div>
-            <div class="d-flex flex-column align-items-center col-3">
+            <div class="d-flex flex-column align-items-center col-2">
+                <a class="m-1" asp-action="addTransaction" asp-controller="Transactions"><i class="bi bi-wallet text-white" style="font-size: 20px"></i></a>
+                <p class="text-white m-0" style="font-size:10px">Transactions</p>
+            </div>
+            <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="addIncomeEvent" asp-controller="IncomeEvents"><i class="bi bi-graph-up-arrow text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Add Income</p>
+                <p class="text-white m-0" style="font-size:10px">Pay</p>
             </div>
-            <div class="d-flex flex-column align-items-center col-3">
+            <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="AddSaving" asp-controller="Savings"><i class="bi bi-piggy-bank text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Add Saving</p>
+                <p class="text-white m-0" style="font-size:10px">Savings</p>
             </div>
         </div>
     </footer>
