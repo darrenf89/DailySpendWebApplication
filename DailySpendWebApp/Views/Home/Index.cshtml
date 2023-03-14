@@ -30,6 +30,37 @@
     <div id="BillsInfo"></div>
     <div id="SavingsInfo"></div>
 </div>
+<div id="snackbar"></div>
+
+<script>
+    document.addEventListener("load", CheckReMessage('@SnackBarMess'));
+
+    function CheckReMessage(SnackBarMess){
+        if (SnackBarMess == '')
+        {
+
+        }
+        else
+        {
+            ShowSnackBar('@TempData["SnackBarMessage"]')
+        }
+
+    }
+
+    function ShowSnackBar(Message) {
+
+        var x = document.getElementById("snackbar");
+        x.innerHTML = Message;
+        x.style.backgroundColor = '#80c904';
+
+        // Add the "show" class to DIV
+        x.className = "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 30000);
+    }
+    
+</script>
 
 @section Scripts{
     <script>

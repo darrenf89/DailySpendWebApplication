@@ -49,6 +49,28 @@ public class HomeController : Controller
                 HttpContext.Session.SetInt32("_DefaultBudgetID", (int)UserAccount.DefaultBudgetID);
                 TempData["PageHeading"] = "Good Morning " + obj.NickName;
                 TempData["NickName"] = HttpContext.Session.GetString("_Name");
+
+                int? id = (int?)(RouteData.Values["id"]); 
+                string? ReMess = RouteData.Values["ReMess"].ToString();
+
+                if (ReMess == "BillCreated")
+                {
+                    Bills? CreatedBill = new();
+                    var Bills = _db.Bills.Where(x=> x.BillID == id);
+                    CreatedBill = Bills.FirstOrDefault();
+
+                    TempData["SnackBarMessage"] = "Congrats you set up " + CreatedBill.BillName + "as a Bill for £" + CreatedBill.BillAmount + " which will require you to save £" + CreatedBill.BillDailyValue + " a day!";
+                }
+                else if (ReMess == "SavingCreated")
+                {
+                    var Savings = _db.Savings.Where(x => x.SavingID == id);
+
+                    Savings? CreatedSaving = new();
+                    CreatedSaving = Savings.FirstOrDefault();
+
+                    TempData["SnackBarMessage"] = "Congrats you set up " + CreatedSaving.SavingsName + "as a Bill for £" + CreatedSaving.SavingsGoal + " which will required you to save £" + CreatedSaving.RegularSavingValue + " a day!";
+                }
+
                 return View(obj);
             }
             else

@@ -28,6 +28,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? CurrencyType { get; set; }
         [DataType(DataType.Currency)]
         public int? AproxDaysBetweenPay { get; set; } = 30;
+        public DateTime BudgetValuesLastUpdated { get; set; } = DateTime.UtcNow;
 
 
     }

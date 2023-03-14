@@ -184,7 +184,7 @@ public class SavingsController : Controller
         Savings? CreatedSaving = BudgetSavingsList.Savings.First();
 
         TempData["SnackbarMess"] = "SavingCreated";
-        return RedirectToAction("Index", "Home", new {SnackBarMess = "Saving Created", id = CreatedSaving.SavingID});
+        return RedirectToAction("Index", "Home", new {ReMess = "SavingCreated", id = CreatedSaving.SavingID});
     }
 
 }

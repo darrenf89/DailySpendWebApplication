@@ -129,7 +129,7 @@ namespace DailySpendWebApp.Controllers
             Bills? CreatedBill = BudgetSavingsList.Bills.First();
 
             TempData["SnackbarMess"] = "Bill Created";
-            return RedirectToAction("Index", "Home", new { SnackBarMess = "Bill Created", id = CreatedBill.BillID });
+            return RedirectToAction("Index", "Home", new { ReMess = "BillCreated", id = CreatedBill.BillID });
         }
 
     }
