@@ -21,7 +21,8 @@ public class HomeController : Controller
         _db = db;
     }
 
-    public IActionResult Index()
+    [Route("Home/Index/{id?}/{ReMess?}")]
+    public IActionResult Index(int? id, string? ReMess)
     {
         UserHomePageModel obj = new();
         try
@@ -50,13 +51,10 @@ public class HomeController : Controller
                 TempData["PageHeading"] = "Good Morning " + obj.NickName;
                 TempData["NickName"] = HttpContext.Session.GetString("_Name");
 
-                int? id = (int?)(RouteData.Values["id"]); 
-                string? ReMess = RouteData.Values["ReMess"].ToString();
-
                 if (ReMess == "BillCreated")
                 {
                     Bills? CreatedBill = new();
-                    var Bills = _db.Bills.Where(x=> x.BillID == id);
+                    var Bills = _db.Bills.Where(x => x.BillID == id);
                     CreatedBill = Bills.FirstOrDefault();
 
                     TempData["SnackBarMessage"] = "Congrats you set up " + CreatedBill.BillName + "as a Bill for £" + CreatedBill.BillAmount + " which will require you to save £" + CreatedBill.BillDailyValue + " a day!";

@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendBudgetWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230314181008_230314dbupdates")]
+    partial class _230314dbupdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,48 +73,6 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.HasIndex("BudgetsBudgetID");
 
                     b.ToTable("Bills");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.BudgetHstoryLastPeriod", b =>
-                {
-                    b.Property<int>("BudgetHistoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BudgetHistoryID"), 1L, 1);
-
-                    b.Property<decimal?>("BankBalance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("BudgetsBudgetID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("LeftToSPendBalance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("MoneyAvailableBalance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("TotalBillsLastPeriod")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("TotalEarnedLastPeriod")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("TotalSavedlastPeriod")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("TotalSpentLastPeriod")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("BudgetHistoryID");
-
-                    b.HasIndex("BudgetsBudgetID");
-
-                    b.ToTable("BudgetHstoryLastPeriod");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
@@ -461,13 +421,6 @@ namespace DailySpendBudgetWebApp.Migrations
                         .HasForeignKey("BudgetsBudgetID");
                 });
 
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.BudgetHstoryLastPeriod", b =>
-                {
-                    b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
-                        .WithMany("BudgetHistory")
-                        .HasForeignKey("BudgetsBudgetID");
-                });
-
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
                 {
                     b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", null)
@@ -532,8 +485,6 @@ namespace DailySpendBudgetWebApp.Migrations
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
                 {
                     b.Navigation("Bills");
-
-                    b.Navigation("BudgetHistory");
 
                     b.Navigation("Categories");
 

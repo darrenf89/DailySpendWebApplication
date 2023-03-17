@@ -18,6 +18,7 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<Savings>? Savings { get; set; }
         public DbSet<Transactions>? Transactions { get; set; }
         public DbSet<BudgetSettings>? BudgetSettings { get; set; }
+        public DbSet<BudgetSettings>? BudgetHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

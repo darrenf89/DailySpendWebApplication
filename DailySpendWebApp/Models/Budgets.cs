@@ -25,6 +25,7 @@ namespace DailySpendBudgetWebApp.Models
         public List<Transactions> Transactions { get; set; } = new List<Transactions>();
         public List<Categories> Categories { get; set; } = new List<Categories>();
         public List<Bills> Bills { get; set; } = new List<Bills>();
+        public List<BudgetHstoryLastPeriod> BudgetHistory { get; set; } = new List<BudgetHstoryLastPeriod>();
         public string? CurrencyType { get; set; }
         [DataType(DataType.Currency)]
         public int? AproxDaysBetweenPay { get; set; } = 30;
@@ -32,7 +33,5 @@ namespace DailySpendBudgetWebApp.Models
         public decimal DailySavingOutgoing { get; set; }
         public decimal DailyBillOutgoing { get; set; }
         public decimal LeftToSpendDailyAmount { get; set; }
-
-
     }
 }
