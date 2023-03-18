@@ -7,6 +7,42 @@
     }
 });
 
+//function ShowSnackBar(Message, Type) {
+
+//    var x = document.getElementById("SnackBarMessage");
+
+//    if (Message == 'BillCreated')
+//    {
+//        x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["BillName"]' + "</strong> as a Bill for <strong>£" + '@TempData["BillAmount"]' + "</strong> which will require you to save <strong>£" + '@TempData["BillDailyValue"]' + "</strong> a day!</div>"
+//    }
+//    else if (Message == 'SavingCreated')
+//    {
+//        x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as a Bill for <strong>£" + '@TempData["SavingsGoal"]' + "</strong> which will required you to save <strong>£" + '@TempData["RegularSavingValue"]' + "</strong> a day!</div>";
+//    }
+//    else if (Message == 'SavingCancelled')
+//    {
+//        x.innerHTML = '<div>Youve back out of creating the <strong>Saving</strong>, Whats wrong you scared? Dont worry we believe in you!</div>'
+//    }
+//    else if (Message == 'BillCancelled')
+//    {
+//        x.innerHTML = '<div>You <strong>Deleted</strong> your Bill, This doesnt delete it from life though just in the app it still needs to be paid, so maybe just add it anyway?</div>';
+//    }
+
+//    var y = document.getElementById("snackbar");
+//    y.className = y.className.replace("alert-success", "");
+//    y.className = y.className.replace("alert-danger", "");
+
+//    if (Type == 'success') {
+//        y.className = y.className + ' alert-success';
+//    }
+//    else if (Type == 'danger') {
+//        y.className = y.className + ' alert-danger';
+//    }
+
+//    y.className = y.className + " show";
+
+//    setTimeout(function () { x.className = x.className.replace("show", ""); }, 10900);
+//}
 
 function formatNumber(n) {
     // format number 1000000 to 1,234,567

@@ -7,8 +7,11 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int BillID { get; set; }
         public string? BillType { get; set; }
+        [Required]
         public string? BillName { get; set; }
+        [Required]
         public decimal? BillAmount { get; set; }
+        [Required]
         public DateTime? BillDueDate { get; set; }
         public decimal BillCurrentBalance { get; set; } = decimal.Zero;
         public bool isRecuring { get; set; } = false;

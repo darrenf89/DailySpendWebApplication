@@ -21,6 +21,7 @@ public class HomeController : Controller
         _db = db;
     }
 
+    [Route("Home/Index/{id?}")]
     [Route("Home/Index/{id?}/{ReMess?}")]
     public IActionResult Index(int? id, string? ReMess)
     {
@@ -57,7 +58,10 @@ public class HomeController : Controller
                     var Bills = _db.Bills.Where(x => x.BillID == id);
                     CreatedBill = Bills.FirstOrDefault();
 
-                    TempData["SnackBarMessage"] = "Congrats you set up " + CreatedBill.BillName + "as a Bill for £" + CreatedBill.BillAmount + " which will require you to save £" + CreatedBill.BillDailyValue + " a day!";
+                    TempData["BillName"] = CreatedBill.BillName;
+                    TempData["BillAmount"] = CreatedBill.BillAmount;
+                    TempData["BillDailyValue"] = CreatedBill.BillDailyValue;
+
                 }
                 else if (ReMess == "SavingCreated")
                 {
@@ -66,7 +70,9 @@ public class HomeController : Controller
                     Savings? CreatedSaving = new();
                     CreatedSaving = Savings.FirstOrDefault();
 
-                    TempData["SnackBarMessage"] = "Congrats you set up " + CreatedSaving.SavingsName + "as a Bill for £" + CreatedSaving.SavingsGoal + " which will required you to save £" + CreatedSaving.RegularSavingValue + " a day!";
+                    TempData["SavingsName"] = CreatedSaving.SavingsName;
+                    TempData["SavingsGoal"] = CreatedSaving.SavingsGoal;
+                    TempData["RegularSavingValue"] = CreatedSaving.RegularSavingValue;
                 }
 
                 return View(obj);

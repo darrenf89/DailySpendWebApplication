@@ -75,6 +75,7 @@ namespace DailySpendWebApp.Controllers
                 B.BillCurrentBalance = obj.BillCurrentBalance;
                 B.LastUpdatedDate = DateTime.UtcNow;
                 B.LastUpdatedValue = obj.BillCurrentBalance;
+                B.BillAmount = obj.BillAmount;
 
                 if (obj.isRecuring)
                 {

@@ -3,8 +3,8 @@
 
 @{
     ViewData["Title"] = "User Dashboard";  
-    var id = Context.Request.Query["id"];
-    var SnackBarMess = Context.Request.Query["SnackBarMess"];
+    var id = ViewContext.RouteData.Values["id"];
+    var ReMess = ViewContext.RouteData.Values["ReMess"];
 }
 
 <div class="">
@@ -30,34 +30,59 @@
     <div id="BillsInfo"></div>
     <div id="SavingsInfo"></div>
 </div>
-<div id="snackbar"></div>
+<div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
+    <div class="d-flex">
+        <div id="SnackBarMessage" class="col-11 pe-1"></div>
+        <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>       
+    </div>
+</div>
 
 <script>
-    document.addEventListener("load", CheckReMessage('@SnackBarMess'));
+    document.addEventListener("load", CheckReMessage('@ReMess'));
 
-    function CheckReMessage(SnackBarMess){
-        if (SnackBarMess == '')
+    function CheckReMessage(ReMess){
+        if (ReMess == '')
         {
 
         }
         else
         {
-            ShowSnackBar('@TempData["SnackBarMessage"]')
+            ShowSnackBar(ReMess, 'success')
         }
 
     }
 
-    function ShowSnackBar(Message) {
+    function ShowSnackBar(Message, Type) {
 
-        var x = document.getElementById("snackbar");
-        x.innerHTML = Message;
-        x.style.backgroundColor = '#80c904';
+        var x = document.getElementById("SnackBarMessage");
 
-        // Add the "show" class to DIV
-        x.className = "show";
+        if (Message == 'BillCreated') {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["BillName"]' + "</strong> as a Bill for <strong>£" + '@TempData["BillAmount"]' + "</strong> which will require you to save <strong>£" + '@TempData["BillDailyValue"]' + "</strong> a day!</div>"
+        }
+        else if (Message == 'SavingCreated') {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as a Bill for <strong>£" + '@TempData["SavingsGoal"]' + "</strong> which will required you to save <strong>£" + '@TempData["RegularSavingValue"]' + "</strong> a day!</div>";
+        }
+        else if (Message == 'SavingCancelled') {
+            x.innerHTML = '<div>Youve back out of creating the <strong>Saving</strong>, Whats wrong you scared? Dont worry we believe in you!</div>'
+        }
+        else if (Message == 'BillCancelled') {
+            x.innerHTML = '<div>You <strong>Deleted</strong> your Bill, This doesnt delete it from life though just in the app it still needs to be paid, so maybe just add it anyway?</div>';
+        }
 
-        // After 3 seconds, remove the show class from DIV
-        setTimeout(function () { x.className = x.className.replace("show", ""); }, 30000);
+        var y = document.getElementById("snackbar");
+        y.className = y.className.replace("alert-success", "");
+        y.className = y.className.replace("alert-danger", "");
+
+        if (Type == 'success') {
+            y.className = y.className + ' alert-success';
+        }
+        else if (Type == 'danger') {
+            y.className = y.className + ' alert-danger';
+        }
+
+        y.className = y.className + " show";
+
+        setTimeout(function () { y.className = y.className.replace("show", ""); }, 6900);
     }
     
 </script>

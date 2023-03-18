@@ -44,7 +44,12 @@
         <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
     </div>
 </div>
-<div id="snackbar"></div>
+<div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
+    <div class="d-flex">
+        <div id="SnackBarMessage" class="col-11 pe-1"></div>
+        <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>
+    </div>
+</div>
 
 <script>
     const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -94,22 +99,45 @@
         }
         else if(status == 'Cancel')
         {
-            ShowCancelConfirmation();
+            ShowSnackBar('SavingCancelled', 'danger');
         }
     }
 
-    function ShowCancelConfirmation()
-    {
-        var message = 'Your Saving wasnt created, Whats wrong you scared?'
-        var x = document.getElementById("snackbar");
-        x.innerHTML = message;
-        x.style.backgroundColor = '#ff0000';
-        
-        // Add the "show" class to DIV
-        x.className = "show";
+    function ShowSnackBar(Message, Type) {
 
-        // After 3 seconds, remove the show class from DIV
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        var x = document.getElementById("SnackBarMessage");
+
+        if (Message == 'BillCreated')
+        {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["BillName"]' + "</strong> as a Bill for <strong>£" + '@TempData["BillAmount"]' + "</strong> which will require you to save <strong>£" + '@TempData["BillDailyValue"]' + "</strong> a day!</div>"
+        }
+        else if (Message == 'SavingCreated')
+        {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as a Bill for <strong>£" + '@TempData["SavingsGoal"]' + "</strong> which will required you to save <strong>£" + '@TempData["RegularSavingValue"]' + "</strong> a day!</div>";
+        }
+        else if (Message == 'SavingCancelled')
+        {
+            x.innerHTML = '<div>Youve back out of creating the <strong>Saving</strong>, Whats wrong you scared? Dont worry we believe in you!</div>'
+        }
+        else if (Message == 'BillCancelled')
+        {
+            x.innerHTML = '<div>You <strong>Deleted</strong> your Bill, This doesnt delete it from life though just in the app it still needs to be paid, so maybe just add it anyway?</div>';
+        }
+
+        var y = document.getElementById("snackbar");
+        y.className = y.className.replace("alert-success", "");
+        y.className = y.className.replace("alert-danger", "");
+
+        if (Type == 'success') {
+            y.className = y.className + ' alert-success';
+        }
+        else if (Type == 'danger') {
+            y.className = y.className + ' alert-danger';
+        }
+
+        y.className = y.className + " show";
+
+        setTimeout(function () { y.className = y.className.replace("show", ""); }, 6900);
     }
 </script>
 

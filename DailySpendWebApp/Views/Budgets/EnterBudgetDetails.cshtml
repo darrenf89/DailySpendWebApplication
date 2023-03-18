@@ -7,47 +7,82 @@
 
 <form method="Post">
     <div class="bg-transparent" style="min-height: 82vh;">
-        <div class="container mt-2">
+        <div class="mt-4 row justify-content-center p-2">
             @if (ViewBag.hasBudgetName)
             {
-            <div class="d-flex justify-content-center w-100 mt-auto mb-auto">
-                <div class="input-container col-9 mb-3">
-                    <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled />
-                    <span class="text-danger" asp-validation-for="BudgetName"></span>
+            <div id="divBudgetName" class="card text-white bg-white mb-3 shadow rounded-4 ms-3 me-3 border-dark w-75">
+                <div class="d-flex justify-content-around align-items-center w-100 mt-auto mb-auto">
+                        <a class="mb-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"><i class="bi bi-info-circle text-info me-3" style="font-size: 20px"></i></a>
+                    <div class="input-container col-9 mb-3">                        
+                        <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled onchange="ChangeDivBudgetNameBorder();" />
+                        <span class="text-danger" asp-validation-for="BudgetName"></span>
+                    </div>
                 </div>
             </div>
             }
             else
             {
-            <div class="d-flex justify-content-center mt-auto mb-auto">
-                <div class="input-container col-9 mb-3" >
-                        <input style="font-size:20px;" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Budget Name'" placeholder="Budget Name" asp-for="BudgetName" type="text" required />
-                    <span class="text-danger" asp-validation-for="BudgetName"></span>
+            <div id="divBudgetName" class="card text-white bg-white mb-3 shadow rounded-4 ms-3 me-3 border-dark w-75">
+                    <div class="d-flex justify-content-around align-items-center mt-auto mb-auto">
+                    <a class="mb-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"><i class="bi bi-info-circle text-info me-3" style="font-size: 20px"></i></a>                       
+                    <div class="input-container col-9 mb-3" >
+                        <input style="font-size:20px;" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Budget Name'" placeholder="Budget Name" asp-for="BudgetName" type="text" required onchange="ChangeDivBudgetNameBorder();"/>
+                        <span class="text-danger" asp-validation-for="BudgetName"></span>
+                    </div>
                 </div>
             </div>
             }
         </div>
-        <div class="mb-2">
-            <h5 class="text-dark p-2">Budget Settings!</h5>
-            <div class="DropDown">
-                <label asp-for="CurrencyDDL" id="lblCurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select onchange="onSelectionChangeWLabel('CurrencyDDL');" asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
-                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
-            </div>
-            <div class="DropDown">
-                <label asp-for="NumberFormatDDL" id="lblNumberFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select onchange="onSelectionChangeWLabel('NumberFormatDDL');" id="NumberFormatDDL" asp-for="NumberFormatDDL" asp-items=ViewBag.NumberFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
-                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
-            </div>
-            <div class="DropDown">
-                <label asp-for="CurrencyPlacementDDL" id="lblCurrencyPlacementDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select onchange="onSelectionChangeWLabel('CurrencyPlacementDDL');" asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
-                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
-            </div>
-            <div class="DropDown">
-                <label asp-for="DateFormatDDL" id="lblDateFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
-                <select onchange="onSelectionChangeWLabel('DateFormatDDL');" asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
-                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
+        <div class="p-2">
+            <div class="accordion mb-3 shadow ms-1 me-1 " id="divBudgetSettings">
+                <div class="accordion-item">
+                    <h2 class="accordion-header text-white" id="headingTwo">
+                        <div class="d-flex align-items-center justify-content-center m-0 p-0">                            
+                            <button class="accordion-button text-white bg-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                PayDay information
+                            </button>
+                        </div>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
+                        <div class="accordion-body">
+                        </div>
+                    </div>
+                </div>
+            </div>                            
+            <div class="accordion mb-3 shadow ms-1 me-1 " id="divBudgetSettings">
+                <div class="accordion-item">
+                    <h2 class="accordion-header text-white" id="headingOne">
+                        <div>
+                            <button class="accordion-button text-white bg-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Budget Settings!
+                            </button>
+                        </div>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                        <div class="accordion-body">
+                            <div class="DropDown">
+                                <label asp-for="CurrencyDDL" id="lblCurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                                <select onchange="onSelectionChangeWLabel('CurrencyDDL');" asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
+                            </div>
+                            <div class="DropDown">
+                                <label asp-for="NumberFormatDDL" id="lblNumberFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                                <select onchange="onSelectionChangeWLabel('NumberFormatDDL');" id="NumberFormatDDL" asp-for="NumberFormatDDL" asp-items=ViewBag.NumberFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
+                            </div>
+                            <div class="DropDown">
+                                <label asp-for="CurrencyPlacementDDL" id="lblCurrencyPlacementDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                                <select onchange="onSelectionChangeWLabel('CurrencyPlacementDDL');" asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
+                            </div>
+                            <div class="DropDown">
+                                <label asp-for="DateFormatDDL" id="lblDateFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
+                                <select onchange="onSelectionChangeWLabel('DateFormatDDL');" asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
+                                <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <h5 class="text-dark p-2">Budget Details!</h5>
@@ -220,6 +255,17 @@
             <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Bills &nbsp;<i class="bi bi-receipt text-white"></i></a>
         </div>
     </div>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+              Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+            </div>           
+        </div>
+    </div>
     <footer class="sticky-bottom m-0 p-0"style="width: 100%">
         <div class="d-flex flex-column align-items-center justify-content-center">
             <button type="submit" class="btn btn-lg btn-success rounded-1 mb-4 col-10"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
@@ -242,6 +288,24 @@
     const btnNoSavings = document.getElementById("btnNoSavings");
     const btnSaveSavings = document.getElementById("btnSaveSavings");
     const btnCancelSavings = document.getElementById("btnCancelSavings");
+
+    function ChangeDivBudgetNameBorder()
+    {
+        var x = document.getElementById("divBudgetName")
+        if (document.getElementById("BudgetName").value == '')
+        {            
+            if (x.className.includes("border-primary"))
+            {
+                x.className = x.className.replace("border-primary", "border-dark");
+            }           
+        }
+        else
+        {
+            if (x.className.includes("border-dark")) {
+                x.className = x.className.replace("border-dark", "border-primary");
+            }
+        }            
+    }
 
     btnSaveSavings.onclick = function()
     {
