@@ -11,8 +11,7 @@
             @if (ViewBag.hasBudgetName)
             {
             <div id="divBudgetName" class="card text-white bg-white mb-3 shadow rounded-4 ms-3 me-3 border-dark w-75">
-                <div class="d-flex justify-content-around align-items-center w-100 mt-auto mb-auto">
-                        <a class="mb-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"><i class="bi bi-info-circle text-info me-3" style="font-size: 20px"></i></a>
+                <div class="d-flex justify-content-around align-items-center w-100 mt-auto mb-auto">                        
                     <div class="input-container col-9 mb-3">                        
                         <input class="text-secondary border-bottom border-1 border-secondary" style="font-size:20px;" value="@ViewBag.BudgetName" asp-for="BudgetName" type="text" disabled onchange="ChangeDivBudgetNameBorder();" />
                         <span class="text-danger" asp-validation-for="BudgetName"></span>
@@ -23,8 +22,7 @@
             else
             {
                 <div id="divBudgetName" class="card text-white bg-white mb-3 shadow rounded-4 ms-3 me-3 border-dark w-75">
-                    <div class="d-flex justify-content-around align-items-center mt-auto mb-auto">
-                    <a class="mb-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"><i class="bi bi-info-circle text-info me-3" style="font-size: 20px"></i></a>                       
+                    <div class="d-flex justify-content-around align-items-center mt-auto mb-auto">                                        
                     <div class="input-container col-9 mb-3" >
                         <input style="font-size:20px;" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Budget Name'" placeholder="Budget Name" asp-for="BudgetName" type="text" required onchange="ChangeDivBudgetNameBorder();"/>
                         <span class="text-danger" asp-validation-for="BudgetName"></span>
@@ -233,7 +231,7 @@
             </div>
         </div>
     </div>
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="max-width: 80vw;">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -570,7 +568,7 @@
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal || event.target == SavingsModal) {
-            modal.style.display = "none";
+            //modal.style.display = "none";
             SavingsModal.style.display = "none";
         }
     }
