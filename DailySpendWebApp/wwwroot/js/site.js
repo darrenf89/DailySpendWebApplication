@@ -49,6 +49,19 @@ function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
+function ShowHideInfo(DivName, Icon) {
+    var x = document.getElementById(DivName);
+    var y = document.getElementById(Icon);
+
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        y.className = "bi bi-arrow-bar-left text-white";
+    } else {
+        x.style.display = "none";
+        y.className = "bi bi-arrow-bar-right text-white";
+    }
+}
+
 
 function formatCurrency(input, blur) {
     // appends $ to value, validates decimal side
