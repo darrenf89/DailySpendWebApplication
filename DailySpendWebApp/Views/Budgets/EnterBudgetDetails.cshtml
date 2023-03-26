@@ -194,42 +194,16 @@
             </div>
         </div>
         <div class="p-2">
-            <div id="OpenIncomeDetails" class="p-2">
-                <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Extra Income! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
-            </div>
             <div id="OpenSavingsDetails" class="p-2">
                 <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Some Savings &nbsp;<i class="bi bi-piggy-bank text-white"></i></a>
             </div>
             <div id="OpenBillsDetails" class="p-2">
                 <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Some Bills &nbsp;<i class="bi bi-receipt text-white"></i></a>
             </div>
-        </div>
-        <div class="modal" id="SavingsModal">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
-                        <h5 class="modal-title text-primary">Modal title</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="SavingsModal" aria-label="Close" id="CloseSavingModal">
-                            <span aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Lets be honest, if you had savings you wouldn't have downloaded the app. But Just incase, let us know any money that is in the back that is put aside for something?</p>
-                        <div id="divSavingsDetails">
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <input type="Number" value="0" hidden id="NumberOfSavings"/>
-                            <a href="#" id="btnNoSavings" class="btn btn-danger roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">No Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
-                            <a href="#" id="btnAddSavings" class="btn btn-success roudned-pill m-0 p-0"><div class="p-1 ps-4 pe-4">Add Savings &nbsp<i class="bi bi-plus-circle p-0 m-0"></i></div></a>
-                        </div>
-                    </div>
-                    <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                        <button type="button" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
-                        <button type="button" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
-                    </div>
-                </div>
+            <div id="OpenIncomeDetails" class="p-2">
+                <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Extra Income! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
             </div>
-        </div>
+        </div>        
     </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="max-width: 80vw;">
         <div class="offcanvas-header">
@@ -247,6 +221,50 @@
             <button type="submit" class="btn btn-lg btn-success rounded-1 mb-4 col-10"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
         </div>
     </footer>
+</form>
+<form method="Post">
+    <div class="modal" id="SavingsModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-primary">Add a Saving to your Budget</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="SavingsModal" aria-label="Close" id="CloseSavingModal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="SavingsInfo">
+                    </div>
+                </div>
+                <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                    <button type="button" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form method="Post">
+    <div class="modal" id="BillsModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-primary">Add a Bill to your Budget</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="BillsModal" aria-label="Close" id="CloseBillsModal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="BillsInfo">
+                    </div>
+                </div>
+                <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                    <button type="button" id="btnSaveBills" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="btnCancelBills" class="btn btn-danger" data-bs-dismiss="BillsModal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 <script>
@@ -281,295 +299,35 @@
                 x.className = x.className.replace("border-dark", "border-primary");
             }
         }            
-    }
-
-    //btnSaveSavings.onclick = function()
-    //{
-    //    const NumbderOfSavings = parseInt(document.getElementById('NumberOfSavings').value);
-    //    var MessString = '<table class="table table-hover"><thead><tr><th scope="col">Saving Category</th><th scope="col">Saving Goal</th><th scope="col">Saving Balance</th></tr></thead><tbody>';
-    //    for (let i = 0; i <= NumbderOfSavings-1; i++) {
-    //        var SavingCat = document.getElementById("SavingsCat" + i).value;
-    //        var SavingGoal = document.getElementById("SavingsGoal" + i).value;
-    //        var SavingBalance = document.getElementById("SavingsBalance" + i).value;
-
-    //        MessString += '<tr class="table-dark"><td>' + SavingCat + '</td><td>' + SavingGoal + '</td><td>' + SavingBalance + '</td></tr>';
-    //    }
-
-    //    MessString += '</tbody></table>';
-                            
-    //    document.getElementById('divSavingsSummaryMessageString').innerHTML = MessString;
-
-    //    document.getElementById("SavingsModal").style.display = "none";
-    //    document.getElementById("SummarySavingsDetails").style.display = "block";
-    //    document.getElementById("OpenSavingsDetails").style.display = "none";
-    //}
-
-    //btnCancelSavings.onclick = function()
-    //{
-    //    document.getElementById("SavingsModal").style.display = "none";
-    //    document.getElementById('divSavingsDetails').innerHTML ="";
-    //    document.getElementById("OpenSavingsDetails").style.display = "block";
-    //    document.getElementById('divSavingsSummaryMessageString').innerHTML ="You sure none of your money is saved for something? Like tottaly sure?";
-    //}
-    
-    btnNoSavings.onclick = function()
-    {
-        var MessString = "HA! I knew it no savings ... but don't worry that's why we are here!";
-        document.getElementById('divSavingsSummaryMessageString').innerHTML = MessString;
-
-        document.getElementById("SavingsModal").style.display = "none";
-        document.getElementById("SummarySavingsDetails").style.display = "block";
-        document.getElementById("OpenSavingsDetails").style.display = "none";
-    }
-
-    btnAddSavings.onclick = function(){
-        const divSavingsDetails = document.getElementById("divSavingsDetails");
-        var NumberOfSavings = parseInt(document.getElementById("NumberOfSavings").value);
-        var AddSavingHTML = '<div id="divSavingNumber' + NumberOfSavings + '" class="border-bottom border-dark border-2 rounded-0 mb-1">' +
-                                '<div class="d-flex justify-content-center mt-auto mb-auto">' +
-                                    '<div class="input-container col-6 mb-1">' +
-                                        '<input name="SavingsName" class="text-primary p-0" maxlength="15" placeholder="Savings Category" type="Text" asp-for="AdditionalSaving['+ NumberOfSavings +'].SavingsName" id="SavingsCat' + NumberOfSavings +'"/>' +
-                                    '</div>' +
-                                '</div>' +
-                                '<div class="d-flex container p-1">' +
-                                    '<div class="d-flex flex-column m-0 p-1 align-items-center justify-content-center" style="width: 50%;">' +                                        
-                                        '<label class="form-label text-secondary ps-3" asp-for="AdditionalSaving['+ NumberOfSavings +'].SavingsGoal"></label>' +
-                                        '<div class="d-flex container p-0">' +
-                                            '<span  style="width: 5%" class="input-group-text rounded-0 align-items-center justify-content-center" id="CurrencySymbol">£</span>' +
-                                            '<input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\\d*(\\.\\d{0,2})?$" step="0.01" asp-for="AdditionalSaving['+ NumberOfSavings +'].SavingsGoal" id="SavingsGoal' + NumberOfSavings +'"/>' +
-                                        '</div>' +
-                                    '</div>' +
-                                    '<div class="d-flex flex-column m-0 p-1 align-items-center justify-content-center" style="width: 50%;">' +                                        
-                                        '<label class="form-label text-secondary ps-3" asp-for="AdditionalSaving['+ NumberOfSavings +'].CurrentBalance"></label>' +
-                                        '<div class="d-flex container p-0">' +
-                                            '<span  style="width: 5%" class="input-group-text rounded-0 align-items-center justify-content-center" id="CurrencySymbol">£</span>' +
-                                            '<input style="width: 95%" class="form-control text-primary rounded-0" type="Number" pattern="^\\d*(\\.\\d{0,2})?$" step="0.01" asp-for="AdditionalSaving['+ NumberOfSavings +'].CurrentBalance" id="SavingsBalance' + NumberOfSavings +'"/>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                            '</div>'; 
-        var InnerHTMLText = divSavingsDetails.innerHTML + AddSavingHTML;
-        divSavingsDetails.innerHTML = InnerHTMLText;
-        NumberOfSavings += 1;
-        document.getElementById("NumberOfSavings").value = NumberOfSavings;
-    }
+    }    
 
     document.getElementById("OpenSavingsDetails").onclick = function(){
-        document.getElementById("SavingsModal").style.display = "block";
+        
+        document.getElementById("SavingsModal").style.display = "block"
+        $('#SavingsInfo').empty();
+        $('#SavingsInfo').load("/Budgets/AddSavingPV");
+    }
+
+    document.getElementById("OpenBillsDetails").onclick = function () {
+        document.getElementById("BillsModal").style.display = "block"
+        $('#BillsInfo').empty();
+        $('#BillsInfo').load("/Budgets/AddBillPV");
     }
 
     document.getElementById("CloseSavingModal").onclick = function () {
         document.getElementById("SavingsModal").style.display = "none";
     }
 
-    document.getElementById("EditSavingsDetails").onclick = function()
-    {
-        SavingsModal.style.display = "block";
+    document.getElementById("CloseBillsModal").onclick = function () {
+        document.getElementById("BillsModal").style.display = "none";
     }
-
-    //btnEditIncome.onclick = function(){
-    //    modal.style.display = "block";
-    //}
-
-    //btnSaveIncome.onclick = function(){
-
-    //    var isIncomeValid = true;
-    //    var InvalidFocus = null;
-    //    var MessString = 'Congrats, you have ';
-
-    //    const StartingBalance = document.getElementById("StartingBalance").value;
-
-
-    //    if (StartingBalance == "")
-    //    {
-    //        isIncomeValid = false;
-    //        document.getElementById("valStartingBalance").style.display = 'block';
-    //        InvalidFocus = document.getElementById("StartingBalance");
-    //    }
-    //    else
-    //    {
-    //        document.getElementById("valStartingBalance").style.display = 'none';
-    //        MessString += '<strong class="text-dark">' + document.getElementById('CurrencySymbol').innerHTML + document.getElementById('StartingBalance').value + '</strong>';
-    //    }
-
-    //    const NextIncomeDate = document.getElementById("NextIncomeDate").value;
-    //    const currentTime = new Date();
-    //    MessString += ' in the bank. This has to last you until your next payday which is on the ';
-
-    //    if (NextIncomeDate <= currentTime) 
-    //    {
-    //        isIncomeValid = false;
-    //        document.getElementById("valNextIncomeDate").style.display = 'block';
-    //        if (InvalidFocus == null)
-    //        {
-    //            InvalidFocus = document.getElementById("NextIncomeDate");                
-    //        }
-    //    }
-    //    else
-    //    {
-    //        document.getElementById("valNextIncomeDate").style.display = 'none';
-    //        MessString += '<strong class="text-dark">' + document.getElementById('NextIncomeDate').value + '</strong>' + '.';
-    //    }
-
-    //    const PayTypeRadioButtons = document.querySelectorAll('[name="optionsRadios"]');
-    //    var isChecked = false;
-    //    var RadioChecked = 'none';
-
-    //    for (var i = 0; i < PayTypeRadioButtons.length; i++)
-    //    {
-    //        if(PayTypeRadioButtons[i].checked)
-    //        {
-    //            isChecked = true;
-    //            RadioChecked = PayTypeRadioButtons[i].id
-    //        }
-    //    }
-
-
-    //    if (!isChecked) 
-    //    {
-    //        isIncomeValid = false;
-    //        document.getElementById("valPayTypeRadioButtons").style.display = 'block';
-    //        if (InvalidFocus == null)
-    //        {
-    //            InvalidFocus = document.getElementById("PayRadioButtons");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        document.getElementById("valPayTypeRadioButtons").style.display = 'none';
-    //    }
-
-    //    var MessStringTwo = 'Apparently you get paid ';
-
-    //    if (RadioChecked == 'optionsRadios1') 
-    //    {
-    //        if (document.getElementById('PeriodicPayPeriod').value == '' || document.getElementById('PeriodicPayDuration').value == '') 
-    //        {
-    //            isIncomeValid = false;
-    //            document.getElementById("valPayOptions").style.display = 'block';
-    //            if (InvalidFocus == null)
-    //            {
-    //                InvalidFocus = document.getElementById("PeriodicPayPeriod");
-    //            }
-    //        }
-    //        else 
-    //        {
-    //            document.getElementById("valPayOptions").style.display = 'none';
-    //            MessStringTwo += ' every ' + '<strong class="text-dark">' + document.getElementById('PeriodicPayPeriod').value + ' ' + document.getElementById('PeriodicPayDuration').value + '</strong>';
-    //        }
-    //    }
-    //    else if (RadioChecked == 'optionsRadios2') 
-    //    {
-    //        if (document.getElementById('LastDayOfMonthPayPeriod').value == '') 
-    //        {
-    //            isIncomeValid = false;
-    //            document.getElementById("valPayOptions").style.display = 'block';
-    //            if (InvalidFocus == null)
-    //            {
-    //                InvalidFocus = document.getElementById("LastDayOfMonthPayPeriod");
-    //            }
-    //        }
-    //        else 
-    //        {
-    //            document.getElementById("valPayOptions").style.display = 'none';
-    //            MessStringTwo += '<strong class="text-dark">' + document.getElementById('LastDayOfMonthPayPeriod').value + ' < /strong>' + ' working days before the end of the month';
-    //        }
-    //    }
-    //    else if (RadioChecked == 'optionsRadios3') 
-    //    {
-    //        if (document.getElementById('GivenDayOfMonthPayPeriod').value == '') 
-    //        {
-    //            isIncomeValid = false;
-    //            document.getElementById("valPayOptions").style.display = 'block';
-    //            if (InvalidFocus == null)
-    //            {
-    //                InvalidFocus = document.getElementById("GivenDayOfMonthPayPeriod");
-    //            }
-    //        }
-    //        else 
-    //        {
-    //            document.getElementById("valPayOptions").style.display = 'none';
-    //            MessStringTwo += ' on the ' + '<strong class="text-dark">' + document.getElementById('GivenDayOfMonthPayPeriod').value + document.getElementById('OrdinalIndicatorGiven').innerHTML + '</strong>' + ' of every month.';
-    //        }
-    //    }
-    //    else if (RadioChecked == 'optionsRadios4') 
-    //    {
-    //        if (document.getElementById('LastGivenDayOfWeekPay').value == '') 
-    //        {
-    //            isIncomeValid = false;
-    //            document.getElementById("valPayOptions").style.display = 'block';
-    //            if (InvalidFocus == null)
-    //            {
-    //                InvalidFocus = document.getElementById("LastGivenDayOfWeekPay");
-    //            }
-    //        }
-    //        else 
-    //        {
-    //            document.getElementById("valPayOptions").style.display = 'none';
-    //            MessStringTwo += ' on the Last ' + '<strong class="text-dark">' + document.getElementById('LastGivenDayOfWeekPay').value + '</strong>' + ' of the month';
-    //        }
-    //    }
-
-    //    MessStringTwo += ' ... Seems Likely';
-
-    //    if (isIncomeValid)
-    //    {
-    //        modal.style.display = "none";
-    //        summary.style.display = "block";
-    //        open.style.display = "none";  
-    //        document.getElementById('divMessageStringOne').innerHTML = MessString;
-    //        document.getElementById('divMessageStringTwo').innerHTML = MessStringTwo;
-    //    }
-    //    else
-    //    {
-    //        InvalidFocus.focus();
-    //    }
-
-    //    //modal.style.display = "none";
-    //    //summary.style.display = "block";
-    //    //open.style.display = "none";
-    //}
-    
-    //btnOpen.onclick = function () {
-    //    modal.style.display = "block";
-    //    document.getElementById("StartingBalance").focus();
-    //    document.getElementById("optionsRadios1").checked = false;
-    //}
-
-    //btnCloseModal.onclick = function(){
-    //    modal.style.display = "none";
-    //}
-
-    //btnCancel.onclick = function(){
-    //    modal.style.display = "none";
-    //    document.getElementById("StartingBalance").value = null;
-    //    document.getElementById("NextIncomeDate").value = null;
-    //    document.getElementById("PeriodicPayPeriod").value = null;
-    //    document.getElementById("LastDayOfMonthPayPeriod").value = null;
-    //    document.getElementById("GivenDayOfMonthPayPeriod").value = null;
-    //    document.getElementById("optionsRadios1").checked = false;
-    //    document.getElementById("optionsRadios2").checked = false;
-    //    document.getElementById("optionsRadios3").checked = false;
-    //    document.getElementById("optionsRadios4").checked = false;
-    //    PeriodicPay.style.display = 'none';
-    //    LastPay.style.display = 'none';
-    //    GivenPay.style.display = 'none';
-    //    document.getElementById('divPlaceholder').style.display = 'block';
-    //    document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
-    //    document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
-    //    document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
-    //    document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
-    //    document.getElementById("valPayOptions").style.display = 'none';
-    //    document.getElementById("valPayTypeRadioButtons").style.display = 'none';
-    //    document.getElementById("valNextIncomeDate").style.display = 'none';
-    //    document.getElementById("valStartingBalance").style.display = 'none';
-    //}
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal || event.target == SavingsModal) {
+        if (event.target == modal || event.target == SavingsModal || event.target == BillsModal) {
             //modal.style.display = "none";
             SavingsModal.style.display = "none";
+            BillsModal.style.display = "none";
         }
     }
 

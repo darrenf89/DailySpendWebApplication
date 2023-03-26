@@ -23,6 +23,21 @@ namespace DailySpendBudgetWebApp.Controllers
             _db = db;
         }
 
+        public IActionResult AddSavingPV()
+        {
+            TempData["NickName"] = HttpContext.Session.GetString("_Name");
+            TempData["PageHeading"] = "Add A New Saving!";
+
+            var BudgetList = _db.Budgets?
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+            Budgets? Budget = BudgetList?.FirstOrDefault();
+
+            ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
+            ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
+
+            return PartialView("_SavingsModalPV");
+        }
+
         public IActionResult CreateFirstBudget() 
         {
             return View();
