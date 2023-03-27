@@ -222,7 +222,7 @@
         </div>
     </footer>
 </form>
-<form method="Post">
+<form method="post">
     <div class="modal" id="SavingsModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -237,7 +237,7 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                    <button type="button" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
+                    <button asp-controller="Home" asp-action="AddSaving" type="submit" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
                     <button type="button" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
                 </div>
             </div>
