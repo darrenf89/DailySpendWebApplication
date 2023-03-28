@@ -46,7 +46,7 @@
 		<None Include="Views\Accounts\Logout.cshtml" />
 		<None Include="Views\Accounts\Register.cshtml" />
 		<None Include="Views\Accounts\VerifyEmail.cshtml" />
-		<None Include="Views\Budgets\CreateFirstBudget.cshtml" />
+		<None Include="Views\Budgets\CreateNewBudget.cshtml" />
 		<None Include="Views\Budgets\EditBudgetDetails.cshtml" />
 		<None Include="Views\Budgets\EnterBudgetDetails.cshtml" />
 		<None Include="wwwroot\css\DropDownMenus.css" />

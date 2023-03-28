@@ -49,6 +49,8 @@ public class HomeController : Controller
             if (UserAccount.DefaultBudgetID.HasValue)
             {
                 HttpContext.Session.SetInt32("_DefaultBudgetID", (int)UserAccount.DefaultBudgetID);
+                //Remove after enterbudgetdetailstested
+                HttpContext.Session.SetInt32("_NewBudgetID", (int)UserAccount.DefaultBudgetID);
                 TempData["PageHeading"] = "Good Morning " + obj.NickName;
                 TempData["NickName"] = HttpContext.Session.GetString("_Name");
 
@@ -80,7 +82,7 @@ public class HomeController : Controller
             else
             {
                 //return View(obj);
-                return RedirectToAction("CreateFirstBudget", "Budgets");
+                return RedirectToAction("CreateNewBudget", "Budgets");
             }
 
         }

@@ -34,7 +34,10 @@ namespace DailySpendBudgetWebApp.Models
         public int LastDayOfMonthPayPeriod { get; set; }
         public int GivenDayOfMonthPayPeriod { get; set; }
         public string? LastGivenDayOfWeekPay { get; set; }
-        public List<Savings>? AdditionalSaving { get; set; }
+        public bool Everynth { get; set; } = false;
+        public bool WorkingDays { get; set; } = false;
+        public bool OfEveryMonth { get; set; } = false;
+        public bool LastOfTheMonth { get; set; } = false;
 
     }
 }
