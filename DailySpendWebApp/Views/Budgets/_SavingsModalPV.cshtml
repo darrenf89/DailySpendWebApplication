@@ -326,7 +326,7 @@
             var DailySavingsAmount = Number((document.getElementById('txtRegularSavingValue').value).replace(/[^0-9.-]+/g, ""));
         }
         else if (document.getElementById('ddlSavingsPeriod').value = 'PerPayPeriod') {
-            var DailySavingsAmount = Number((document.getElementById('txtRegularSavingValue').value).replace(/[^0-9.-]+/g, "")) / @ViewBag.PaymentPeriod;
+            var DailySavingsAmount = Number((document.getElementById('txtRegularSavingValue').value).replace(/[^0-9.-]+/g, "")) / (document.getElementById('hdnPaymentPeriod').value);
         }
         var CurrentDateString = (document.getElementById('hdnServerDate').value);
         var CurrentDateStringSplit = CurrentDateString.split(' ');
@@ -381,7 +381,7 @@
 
             var txtSavingsGoal = document.getElementById('txtRegularSavingValue').value;
             var numSavingsGoal = txtSavingsGoal.replace('£', '').replace(',', '');
-            var numSavingsGoal = numSavingsGoal / @ViewBag.PaymentPeriod
+            var numSavingsGoal = numSavingsGoal / document.getElementById('hdnPaymentPeriod').value
                 document.getElementById('RegularSavingValue').value = numSavingsGoal;
 
         }

@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_LayoutNoFotter.cshtml";
 }
 
+<input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
+<input type="hidden" id="hdnPaymentPeriod" value="@ViewBag.PaymentPeriod" />
 <form method="Post">
     <div class="bg-transparent" style="min-height: 82vh;">
         <div class="mt-4 row justify-content-center p-2">
@@ -91,9 +93,9 @@
                             <div class="ps-4 pe-4">
                                 <div id="divPeriodicPay" style="display: none">
                                     <span>Every</span>
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod"/>
+                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" onchange="UpdatePayPeriod('PeriodicPayPeriod');"/>
                                     <div class="DropDown">
-                                        <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="">
+                                        <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="" onchange="UpdatePayPeriod('PeriodicPayPeriod');">
                                             <option>days</option>
                                             <option>weeks</option>
                                             <option>months</option>
@@ -101,19 +103,19 @@
                                     </div>
                                 </div>
                                 <div id="divLastDayOfMonthPay" style="display: none">
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" />
+                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" onchange="UpdatePayPeriod('LastDayOfMonthPayPeriod');"/>
                                     <span id="OrdinalIndicatorLast"></span>
                                     <span>Working days before end of the month</span>
                                 </div>
                                 <div id="divGivenDayOfMonthPay" style="display: none">
                                     <span>On the </span>
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" />
+                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" onchange="UpdatePayPeriod('GivenDayOfMonthPayPeriod');"/>
                                     <span id="OrdinalIndicatorGiven"></span>
                                     <span> of every month</span>
                                 </div>
                                 <div id="divLastGivenDayOfWeekPay" style="display: none" class="DropDown">
                                     <span>On the Last</span>
-                                    <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="">
+                                    <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="" onchange="UpdatePayPeriod('LastGivenDayOfWeekPay');">
                                         <option>Monday</option>
                                         <option>Tuesday</option>
                                         <option>Wednesday</option>
@@ -237,7 +239,7 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                    <button asp-controller="Home" asp-action="AddSaving" type="submit" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
+                    <button asp-controller="Budgets" asp-action="AddSavingBudget" type="submit" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
                     <button type="button" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
                 </div>
             </div>
@@ -268,6 +270,9 @@
 </form>
 
 <script>
+     const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const monthlist = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'];
+    const NoOfDaysMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
 
     const modal = document.getElementById("modal");
     const SavingsModal = document.getElementById("SavingsModal");
@@ -282,6 +287,61 @@
     const btnNoSavings = document.getElementById("btnNoSavings");
     const btnSaveSavings = document.getElementById("btnSaveSavings");
     const btnCancelSavings = document.getElementById("btnCancelSavings");
+
+    function UpdatePayPeriod(type)
+    {
+        if (type = 'PeriodicPayPeriod')
+        {
+            var Quantiy = document.getElementById('PeriodicPayPeriod').value
+            if (document.getElementById('PeriodicPayDuration').value == 'days')
+            {
+                var Period = 1
+            }
+            else if (document.getElementById('PeriodicPayDuration').value == 'weeks')
+            {
+                var Period = 7
+            }
+            else if (document.getElementById('PeriodicPayDuration').value == 'months')
+            {
+                var Period = 30
+            }
+
+            doocument.getElementById('hdnPaymentPeriod').Value = Quantiy * Period
+        }
+        else if (type == 'LastDayOfMonthPayPeriod')
+        {
+            var CurrentDate = document.getElementById('hdnServerDate').value
+
+            var DateStringSplit = CurrentDate.split(' ');
+            var DateCurrentDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DateStringSplit[0].split('/')[0]);
+            var CurrentDay = DateStringSplit[0].split('/')[0]
+            var NoOfDaysInMonth = NoOfDaysMonth[DateCurrentDate.getMonth()];
+
+            NumberofDays = document.getElementById('LastDayOfMonthPayPeriod').Value
+
+            DayDateOfPayDay = NoOfDaysInMonth - NumberofDays
+            var NextPayDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DayDateOfPayDay);
+            day = weekday[NextPayDate.getDay()];
+
+            while (day == 'Saturday' || day == 'Sunday')
+            {
+                DayDateOfPayDay = DayDateOfPayDay - 1
+                var NextPayDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DayDateOfPayDay);
+                day = weekday[NextPayDate.getDay()];
+            }
+
+            doocument.getElementById('hdnPaymentPeriod').Value = DayDateOfPayDay - CurrentDay
+
+        }
+        else if (type == 'GivenDayOfMonthPayPeriod')
+        {
+            
+        }
+        else if (type == 'LastGivenDayOfWeekPay')
+        {
+            
+        }
+    }
 
     function ChangeDivBudgetNameBorder()
     {
