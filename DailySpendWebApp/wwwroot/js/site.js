@@ -1,12 +1,4 @@
-﻿$("input[data-type='currency']").on({
-    keyup: function () {
-        formatCurrency($(this));
-    },
-    blur: function () {
-        formatCurrency($(this), "blur");
-    }
-});
-
+﻿
 //function ShowSnackBar(Message, Type) {
 
 //    var x = document.getElementById("SnackBarMessage");
@@ -44,6 +36,7 @@
 //    setTimeout(function () { x.className = x.className.replace("show", ""); }, 10900);
 //}
 
+
 function formatNumber(n) {
     // format number 1000000 to 1,234,567
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -61,6 +54,15 @@ function ShowHideInfo(DivName, Icon) {
         y.className = "bi bi-arrow-bar-right text-white";
     }
 }
+
+$("input[data-type='currency']").on({
+    keyup: function () {
+        formatCurrency($(this));
+    },
+    blur: function () {
+        formatCurrency($(this), "blur");
+    }
+});
 
 
 function formatCurrency(input, blur) {
