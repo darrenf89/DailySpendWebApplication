@@ -12,18 +12,18 @@ namespace DailySpendBudgetWebApp.Models
         public int? BudgetID { get; set; }
         public Budgets? Budget { get; set; }
         [MaxLength(5)]
-        public string? CurrencyPattern { get; set; } = "$n";
+        public int? CurrencyPattern { get; set; } = 1;
         [MaxLength(5)]
-        public string? CurrencySymbol { get; set; } = "£";
+        public int? CurrencySymbol { get; set; } = 1;
         public int? CurrencyDecimalDigits { get; set; } = 2;
         [MaxLength(5)]
-        public string? CurrencyDecimalSeparator { get; set; } = ".";
+        public int? CurrencyDecimalSeparator { get; set; } = 1;
         [MaxLength(5)]
-        public string? CurrencyGroupSeparator { get; set; } = ",";
+        public int? CurrencyGroupSeparator { get; set; } = 1;
         [MaxLength(5)]
-        public string? DateSeperator { get; set; } = "/";
+        public int? DateSeperator { get; set; } = 1;
         [MaxLength(10)]
-        public string? ShortDatePattern { get; set; } = "dd/mm/yyyy";
+        public int? ShortDatePattern { get; set; } = 1;
 
     }
 }

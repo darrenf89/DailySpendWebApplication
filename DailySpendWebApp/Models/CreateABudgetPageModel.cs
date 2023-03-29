@@ -14,8 +14,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? BudgetName { get; set; }
         [Required]
         [DisplayName("What's in the 'BANK'")]
-        [DataType(DataType.Currency)]
-        public int StartingBalance { get; set; }
+        public string? StartingBalance { get; set; }
         [Required]
         public int BudgetID { get; set; }
         [DisplayName("Currency")]
@@ -28,7 +27,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? DateFormatDDL { get; set; }
         [Required]
         [DisplayName("When's PAYDAY?")]
-        public DateOnly NextIncomeDate { get; set; }
+        public DateOnly? NextIncomeDate { get; set; }
         public string? PeriodicPayDuration { get; set; }
         public int PeriodicPayPeriod { get; set; }
         public int LastDayOfMonthPayPeriod { get; set; }
@@ -38,6 +37,7 @@ namespace DailySpendBudgetWebApp.Models
         public bool WorkingDays { get; set; } = false;
         public bool OfEveryMonth { get; set; } = false;
         public bool LastOfTheMonth { get; set; } = false;
+        
 
     }
 }

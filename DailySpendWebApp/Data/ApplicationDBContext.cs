@@ -19,6 +19,16 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<Transactions>? Transactions { get; set; }
         public DbSet<BudgetSettings>? BudgetSettings { get; set; }
         public DbSet<BudgetSettings>? BudgetHistory { get; set; }
+        public DbSet<lut_CurrencySymbol> lut_CurrencySymbols {get; set;}
+        public DbSet<lut_CurrencyDecimalDigits> lut_CurrencyDecimalDigits {get; set;}
+        public DbSet<lut_CurrencyDecimalSeparator> lut_CurrencyDecimalSeparators {get; set;}
+        public DbSet<lut_CurrencyGroupSeparator> lut_CurrencyGroupSeparators {get; set;}
+        public DbSet<lut_DateSeperator> lut_DateSeperators {get; set;}
+        public DbSet<lut_ShortDatePattern> lut_ShortDatePatterns {get; set;}
+        public DbSet<lut_DateFormat> lut_DateFormats {get; set;}
+        public DbSet<lut_NumberFormat> lut_NumberFormats {get; set;}
+        public DbSet<lut_CurrencyPlacement> lut_CurrencyPlacements {get; set;}
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

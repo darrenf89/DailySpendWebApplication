@@ -162,20 +162,54 @@ namespace DailySpendBudgetWebApp.Controllers
                 ViewBag.hasBudgetName = true;
                 ViewBag.BudgetName = Budget?.BudgetName;
 
+                if (Budget.NextIncomePayday != null)
+                {
+                    obj.NextIncomeDate = DateOnly.FromDateTime((DateTime)Budget.NextIncomePayday);
+                }
+                else
+                {
+                    obj.NextIncomeDate = null;
+                }
+
+                if (Budget.BankBalance != null | Budget.BankBalance != 0)
+                {
+                    obj.StartingBalance = String.Format("{0:c}", Budget.BankBalance);
+                }
+                else
+                {
+                    obj.StartingBalance = null;
+                }
+
+                var BudgetSetting = _db.BudgetSettings.Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
+                BudgetSettings? BS = BudgetSetting.FirstOrDefault();
+
+                if (BS == null)
+                {
+                    
+                }
+                else
+                {
+                    obj.CurrencyDDL = BS.CurrencySymbol.ToString();
+                    obj.CurrencyPlacementDDL = BS.CurrencyPattern.ToString();
+                }
+
                 TempData["PageHeading"] = "Time to create " + Budget?.BudgetName;
 
                 List<CurrencySelector> DDL = GetCurrencyDDL();
                 List<SelectListItem> Currencylist = new List<SelectListItem>();
-
+                
+                var i = 1;
                 foreach (CurrencySelector currency in DDL)
                 {
-                    SelectListItem item = new SelectListItem(currency.code + " - " + currency.name, currency.symbol);
+                    string value = i.ToString();
+                    SelectListItem item = new SelectListItem( currency.symbol+ ": " + currency.code + " - " + currency.name, value);
                     Currencylist.Add(item);
+                    i += 1;
                 }
 
                 ViewBag.CurrencyDDL = Currencylist;
                 ViewBag.NumberFormatDDL = GetNumberFormatDDL();
-                ViewBag.CurrencyPlacementDDL = GetCurrencyPlacementDDL();
+                ViewBag.CurrencyPlacementDDL = GetCurrencyPlacementDDL(obj.CurrencyPlacementDDL);
                 ViewBag.DateFormatDDL = GetDateFormatDDL();
                 ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
 
@@ -298,24 +332,40 @@ namespace DailySpendBudgetWebApp.Controllers
             return NumberFormatDDL;
         }
 
-        public List<SelectListItem> GetCurrencyPlacementDDL()
+        public List<SelectListItem> GetCurrencyPlacementDDL(string? SelectedValue)
         {
-            List<SelectListItem> NumberFormatDDL = new List<SelectListItem>()
-        {
-            new SelectListItem {
-            Text = "$n", Value = "1"
-            },
-            new SelectListItem {
-            Text = "n$", Value = "2"
-            },
-            new SelectListItem {
-            Text = "$ n", Value = "3"
-            },
-            new SelectListItem {
-            Text = "n $", Value = "4"
-            },
-        };
+            if (SelectedValue == null)
+            {
+                SelectedValue = "1";
+            }
 
+            List<SelectListItem> NumberFormatDDL = new List<SelectListItem>()
+            {
+                new SelectListItem {
+                Text = "$n", Value = "1",
+                },
+                new SelectListItem {
+                Text = "n$", Value = "2"
+                },
+                new SelectListItem {
+                Text = "$ n", Value = "3"
+                },
+                new SelectListItem {
+                Text = "n $", Value = "4"
+                },
+            };
+
+            foreach (var item in NumberFormatDDL)
+            {
+                if (item.Value == SelectedValue)
+                {
+                    item.Selected = true;
+                }
+                else
+                {
+                    item.Selected = false;
+                }
+            }
 
             return NumberFormatDDL;
         }

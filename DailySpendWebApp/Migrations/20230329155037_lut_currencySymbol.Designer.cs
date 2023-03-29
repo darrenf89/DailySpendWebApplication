@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendBudgetWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230329155037_lut_currencySymbol")]
+    partial class lut_currencySymbol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,74 +311,6 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.ToTable("IncomeEvents");
                 });
 
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyDecimalDigits", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("CurrencyDecimalDigits")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_CurrencyDecimalDigits");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyDecimalSeparator", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("CurrencyDecimalSeparator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_CurrencyDecimalSeparators");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyGroupSeparator", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("CurrencyGroupSeparator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_CurrencyGroupSeparators");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyPlacement", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("CurrencyPlacement")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_CurrencyPlacements");
-                });
-
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencySymbol", b =>
                 {
                     b.Property<int>("id")
@@ -392,89 +326,6 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.HasKey("id");
 
                     b.ToTable("lut_CurrencySymbols");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_DateFormat", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("DateFormat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DateSeperatorID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShortDatePatternID")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_DateFormats");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_DateSeperator", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("DateSeperator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_DateSeperators");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_NumberFormat", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int>("CurrencyDecimalDigitsID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CurrencyDecimalSeparatorID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CurrencyGroupSeparatorID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NumberFormat")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_NumberFormats");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_ShortDatePattern", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("ShortDatePattern")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("lut_ShortDatePatterns");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Savings", b =>
