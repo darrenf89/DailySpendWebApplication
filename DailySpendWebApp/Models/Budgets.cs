@@ -14,7 +14,7 @@ namespace DailySpendBudgetWebApp.Models
         [DataType(DataType.Currency)]
         public decimal? MoneyAvailableBalance { get; set; }
         [DataType(DataType.Currency)]
-        public decimal? LeftToSPendBalance { get; set; }
+        public decimal? LeftToSpendBalance { get; set; }
         public DateTime? NextIncomePayday { get; set; }
         public decimal? PaydayAmount { get; set; }
         public string? PaydayType { get; set; }

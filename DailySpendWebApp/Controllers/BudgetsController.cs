@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.Json;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using DailySpendBudgetWebApp.Migrations;
 
 namespace DailySpendBudgetWebApp.Controllers
 {
@@ -28,7 +29,13 @@ namespace DailySpendBudgetWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SaveBudgetDetails(CreateABudgetPageModel obj)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+
+
+            }
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+            return View("EnterBudgetDetails", obj);
         }
 
         [HttpPost]
@@ -154,66 +161,9 @@ namespace DailySpendBudgetWebApp.Controllers
         {
             if (HttpContext.Session.GetInt32("_NewBudgetID") != null)
             {
-                var BudgetList = _db.Budgets
-                    .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
-                Budgets Budget = BudgetList.FirstOrDefault();
 
-                ViewBag.PaymentPeriod = Budget?.AproxDaysBetweenPay;
-                ViewBag.hasBudgetName = true;
-                ViewBag.BudgetName = Budget?.BudgetName;
-
-                if (Budget.NextIncomePayday != null)
-                {
-                    obj.NextIncomeDate = DateOnly.FromDateTime((DateTime)Budget.NextIncomePayday);
-                }
-                else
-                {
-                    obj.NextIncomeDate = null;
-                }
-
-                if (Budget.BankBalance != null | Budget.BankBalance != 0)
-                {
-                    obj.StartingBalance = String.Format("{0:c}", Budget.BankBalance);
-                }
-                else
-                {
-                    obj.StartingBalance = null;
-                }
-
-                var BudgetSetting = _db.BudgetSettings.Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
-                BudgetSettings? BS = BudgetSetting.FirstOrDefault();
-
-                if (BS == null)
-                {
-                    
-                }
-                else
-                {
-                    obj.CurrencyDDL = BS.CurrencySymbol.ToString();
-                    obj.CurrencyPlacementDDL = BS.CurrencyPattern.ToString();
-                }
-
-                TempData["PageHeading"] = "Time to create " + Budget?.BudgetName;
-
-                List<CurrencySelector> DDL = GetCurrencyDDL();
-                List<SelectListItem> Currencylist = new List<SelectListItem>();
-                
-                var i = 1;
-                foreach (CurrencySelector currency in DDL)
-                {
-                    string value = i.ToString();
-                    SelectListItem item = new SelectListItem( currency.symbol+ ": " + currency.code + " - " + currency.name, value);
-                    Currencylist.Add(item);
-                    i += 1;
-                }
-
-                ViewBag.CurrencyDDL = Currencylist;
-                ViewBag.NumberFormatDDL = GetNumberFormatDDL();
-                ViewBag.CurrencyPlacementDDL = GetCurrencyPlacementDDL(obj.CurrencyPlacementDDL);
-                ViewBag.DateFormatDDL = GetDateFormatDDL();
-                ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
-
-                return View();
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+                return View(obj);
             }
             else
             {
@@ -289,73 +239,153 @@ namespace DailySpendBudgetWebApp.Controllers
             }
         }
 
-        public List<CurrencySelector> GetCurrencyDDL()
+        public CreateABudgetPageModel UpdateEnterBudgetDetailsPageFromModel(CreateABudgetPageModel obj)
         {
-            string fileName = "wwwroot/JSON/Common-Currency.json";
-            string jsonString = System.IO.File.ReadAllText(fileName, Encoding.UTF8);
-            List<CurrencySelector> CurrencyDDL = JsonSerializer.Deserialize<List<CurrencySelector>>(jsonString)!;
+            var BudgetList = _db.Budgets
+                    .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
+            Budgets Budget = BudgetList.FirstOrDefault();
 
-            return CurrencyDDL;
+            ViewBag.PaymentPeriod = Budget?.AproxDaysBetweenPay;
+            ViewBag.hasBudgetName = true;
+            ViewBag.BudgetName = Budget?.BudgetName;
+
+            if (obj.NextIncomeDate == null)
+            {
+                if (Budget.NextIncomePayday != null)
+                {
+                    DateTime dt = Budget.NextIncomePayday.GetValueOrDefault();
+                    obj.NextIncomeDate = dt.ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    obj.NextIncomeDate = null;
+                }
+            }
+
+            if (obj.StartingBalance == null)
+            {
+                if (Budget.BankBalance != null & Budget.BankBalance != 0)
+                {
+                    obj.StartingBalance = String.Format("{0:c}", Budget.BankBalance);
+                }
+                else
+                {
+                    obj.StartingBalance = null;
+                }
+            }
+
+            if (obj.Everynth == null & obj.WorkingDays == null & obj.OfEveryMonth == null & obj.LastOfTheMonth == null)
+            {
+                if (Budget.PaydayType != null)
+                {
+                    switch (Budget.PaydayType)
+                    {
+                        case "Everynth":
+                            obj.Everynth = true;
+                            obj.WorkingDays = false;
+                            obj.OfEveryMonth = false;
+                            obj.LastOfTheMonth = false;
+
+                            obj.PeriodicPayPeriod = Budget.PaydayValue.GetValueOrDefault();
+                            obj.PeriodicPayPeriodDDL = Budget.PaydayDuration;
+                            break;
+                        case "WorkingDays":
+                            obj.Everynth = false;
+                            obj.WorkingDays = false;
+                            obj.OfEveryMonth = true;
+                            obj.LastOfTheMonth = false;
+
+                            obj.LastDayOfMonthPayPeriod = Budget.PaydayValue.GetValueOrDefault();
+                            break;
+                        case "OfEveryMonth":
+                            obj.Everynth = false;
+                            obj.WorkingDays = true;
+                            obj.OfEveryMonth = false;
+                            obj.LastOfTheMonth = false;
+
+                            obj.GivenDayOfMonthPayPeriod = Budget.PaydayValue.GetValueOrDefault();
+                            break;
+                        case "LastOfTheMonth":
+                            obj.Everynth = false;
+                            obj.WorkingDays = false;
+                            obj.OfEveryMonth = false;
+                            obj.LastOfTheMonth = true;
+
+                            obj.LastGivenDayOfWeekPay = Budget.PaydayDuration;
+                            break;
+                    }
+                }
+                else
+                {
+                    obj.Everynth = false;
+                    obj.WorkingDays = false;
+                    obj.OfEveryMonth = true;
+                    obj.LastOfTheMonth = false;
+
+                    obj.GivenDayOfMonthPayPeriod = 28;
+                }
+            }
+
+            if (obj.CurrencyDDL == null & obj.CurrencyPlacementDDL == null & obj.DateFormatDDL == null & obj.NumberFormatDDL == null)
+            {
+                var BudgetSetting = _db.BudgetSettings.Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
+                BudgetSettings? BS = BudgetSetting.FirstOrDefault();
+
+                if (BS == null)
+                {
+                    obj.CurrencyDDL = "1";
+                    obj.CurrencyPlacementDDL = "1";
+                    obj.DateFormatDDL = "1";
+                    obj.NumberFormatDDL = "1";
+                }
+                else
+                {
+                    obj.CurrencyDDL = BS.CurrencySymbol.ToString();
+                    obj.CurrencyPlacementDDL = BS.CurrencyPattern.ToString();
+
+                    var DateFormats = _db.lut_DateFormats.Where(x => x.DateSeperatorID == BS.DateSeperator && x.ShortDatePatternID == BS.ShortDatePattern);
+                    lut_DateFormat DateFormat = DateFormats.FirstOrDefault();
+                    obj.DateFormatDDL = DateFormat.id.ToString();
+
+                    var NumberFormats = _db.lut_NumberFormats.Where(x => x.CurrencyDecimalDigitsID == BS.CurrencyDecimalDigits && x.CurrencyDecimalDigitsID == BS.CurrencyDecimalDigits && x.CurrencyGroupSeparatorID == BS.CurrencyGroupSeparator);
+                    lut_NumberFormat NumberFormat = NumberFormats.FirstOrDefault();
+                    obj.NumberFormatDDL = NumberFormat.id.ToString();
+                }
+            }
+
+            TempData["PageHeading"] = "Time to create " + Budget?.BudgetName;
+
+            ViewBag.CurrencyDDL = GetCurrencyDDL(obj.CurrencyDDL);
+            ViewBag.NumberFormatDDL = GetNumberFormatDDL(obj.NumberFormatDDL);
+            ViewBag.CurrencyPlacementDDL = GetCurrencyPlacementDDL(obj.CurrencyPlacementDDL);
+            ViewBag.DateFormatDDL = GetDateFormatDDL(obj.DateFormatDDL);
+            ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
+
+            return obj;
         }
 
-        public List<SelectListItem> GetNumberFormatDDL()
+        public List<SelectListItem> GetCurrencyDDL(string? SelectedValue)
         {
-            List<SelectListItem> NumberFormatDDL = new List<SelectListItem>()
-        {
-            new SelectListItem {
-            Text = "123.456,78", Value = "1"
-            },
-            new SelectListItem {
-            Text = "123,456.78", Value = "2"
-            },
-            new SelectListItem {
-            Text = "123.456", Value = "3"
-            },
-            new SelectListItem {
-            Text = "123,456", Value = "4"
-            },
-            new SelectListItem {
-            Text = "123 456-78", Value = "5"
-            },
-            new SelectListItem {
-            Text = "123 456/78", Value = "6"
-            },
-            new SelectListItem {
-            Text = "123 456/78", Value = "7"
-            },
-            new SelectListItem {
-            Text = "123 456", Value = "8"
-            },
-        };
+            //string fileName = "wwwroot/JSON/Common-Currency.json";
+            //string jsonString = System.IO.File.ReadAllText(fileName, Encoding.UTF8);
+            //List<CurrencySelector> CurrencyDDL = JsonSerializer.Deserialize<List<CurrencySelector>>(jsonString)!;
 
-
-            return NumberFormatDDL;
-        }
-
-        public List<SelectListItem> GetCurrencyPlacementDDL(string? SelectedValue)
-        {
             if (SelectedValue == null)
             {
                 SelectedValue = "1";
             }
 
-            List<SelectListItem> NumberFormatDDL = new List<SelectListItem>()
-            {
-                new SelectListItem {
-                Text = "$n", Value = "1",
-                },
-                new SelectListItem {
-                Text = "n$", Value = "2"
-                },
-                new SelectListItem {
-                Text = "$ n", Value = "3"
-                },
-                new SelectListItem {
-                Text = "n $", Value = "4"
-                },
-            };
+            List<lut_CurrencySymbol> CurrencyDDL = _db.lut_CurrencySymbols.ToList();
 
-            foreach (var item in NumberFormatDDL)
+            List<SelectListItem> Currencylist = new List<SelectListItem>();
+
+            foreach (lut_CurrencySymbol currency in CurrencyDDL)
+            {
+                SelectListItem item = new SelectListItem("[" + currency.CurrencySymbol + "] - " + currency.Code + ": " + currency.Name, currency.id.ToString());
+                Currencylist.Add(item);
+            }
+
+            foreach (var item in Currencylist)
             {
                 if (item.Value == SelectedValue)
                 {
@@ -367,50 +397,99 @@ namespace DailySpendBudgetWebApp.Controllers
                 }
             }
 
-            return NumberFormatDDL;
+            return Currencylist;
         }
 
-        public List<SelectListItem> GetDateFormatDDL()
+        public List<SelectListItem> GetNumberFormatDDL(string? SelectedValue)
         {
-            List<SelectListItem> NumberFormatDDL = new List<SelectListItem>()
-        {
-            new SelectListItem {
-            Text = "yyyy/mm/dd", Value = "1"
-            },
-            new SelectListItem {
-            Text = "yyyy-mm-dd", Value = "2"
-            },
-            new SelectListItem {
-            Text = "dd/mm/yyyy", Value = "3"
-            },
-            new SelectListItem {
-            Text = "dd-mm-yyyy", Value = "4"
-            },
-            new SelectListItem {
-            Text = "mm/dd/yyyy", Value = "5"
-            },
-            new SelectListItem {
-            Text = "mm-dd-yyyy", Value = "6"
-            },
-        };
 
+            if (SelectedValue == null)
+            {
+                SelectedValue = "1";
+            }
 
-            return NumberFormatDDL;
+            List<lut_NumberFormat> NumberFormat = _db.lut_NumberFormats.ToList();
+            List<SelectListItem> NumberFormatList = new List<SelectListItem>();
+            foreach (lut_NumberFormat Format in NumberFormat)
+            {
+                SelectListItem item = new SelectListItem(Format.NumberFormat, Format.id.ToString());
+                NumberFormatList.Add(item);
+            }           
+
+            foreach (var item in NumberFormatList)
+            {
+                if (item.Value == SelectedValue)
+                {
+                    item.Selected = true;
+                }
+                else
+                {
+                    item.Selected = false;
+                }
+            }
+
+            return NumberFormatList;
         }
 
-        //public List<SelectListItem> GetCurrencyDDL()
-        //{
-        //    List<SelectListItem> CurrencyDDL = new List<SelectListItem>()
-        //    {
-        //        new SelectListItem {
-        //            Text = "C#", Value = "9"
-        //        },
-        //        new SelectListItem {
-        //            Text = "AED - UAE dirham", Value = "\u062f"
-        //        },
-        //    };
+        public List<SelectListItem> GetCurrencyPlacementDDL(string? SelectedValue)
+        {
+            if (SelectedValue == null)
+            {
+                SelectedValue = "1";
+            }
 
-        //    return CurrencyDDL;
-        //}
+            List<lut_CurrencyPlacement> CurrencyPlacement = _db.lut_CurrencyPlacements.ToList();
+            List<SelectListItem> CurrencyPlacementList = new List<SelectListItem>();
+            foreach (lut_CurrencyPlacement Placement in CurrencyPlacement)
+            {
+                SelectListItem item = new SelectListItem(Placement.CurrencyPlacement, Placement.id.ToString());
+                CurrencyPlacementList.Add(item);
+            }
+
+            foreach (var item in CurrencyPlacementList)
+            {
+                if (item.Value == SelectedValue)
+                {
+                    item.Selected = true;
+                }
+                else
+                {
+                    item.Selected = false;
+                }
+            }
+
+            return CurrencyPlacementList;
+        }
+
+        public List<SelectListItem> GetDateFormatDDL(string? SelectedValue)
+        {
+            if (SelectedValue == null)
+            {
+                SelectedValue = "1";
+            }
+
+            List<lut_DateFormat> DateFormat = _db.lut_DateFormats.ToList();
+            List<SelectListItem> DateFormatList = new List<SelectListItem>();
+            foreach (lut_DateFormat Format in DateFormat)
+            {
+                SelectListItem item = new SelectListItem(Format.DateFormat, Format.id.ToString());
+                DateFormatList.Add(item);
+            }
+
+            foreach (var item in DateFormatList)
+            {
+                if (item.Value == SelectedValue)
+                {
+                    item.Selected = true;
+                }
+                else
+                {
+                    item.Selected = false;
+                }
+            }
+
+            return DateFormatList;
+        }
+
     }
 }

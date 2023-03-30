@@ -7,16 +7,13 @@ namespace DailySpendBudgetWebApp.Models
     public class CreateABudgetPageModel
     {
 
-        [Required]
         [DisplayName("Budget Name")]
         [MaxLength(20)]
         [MinLength(5)]
         public string? BudgetName { get; set; }
-        [Required]
         [DisplayName("What's in the 'BANK'")]
         public string? StartingBalance { get; set; }
-        [Required]
-        public int BudgetID { get; set; }
+        public int? BudgetID { get; set; }
         [DisplayName("Currency")]
         public string? CurrencyDDL { get; set; }
         [DisplayName("Number Format")]
@@ -25,18 +22,18 @@ namespace DailySpendBudgetWebApp.Models
         public string? CurrencyPlacementDDL { get; set; }
         [DisplayName("Date Format")]
         public string? DateFormatDDL { get; set; }
-        [Required]
         [DisplayName("When's PAYDAY?")]
-        public DateOnly? NextIncomeDate { get; set; }
+        public string? NextIncomeDate { get; set; }
         public string? PeriodicPayDuration { get; set; }
-        public int PeriodicPayPeriod { get; set; }
-        public int LastDayOfMonthPayPeriod { get; set; }
-        public int GivenDayOfMonthPayPeriod { get; set; }
+        public int? PeriodicPayPeriod { get; set; }
+        public string? PeriodicPayPeriodDDL { get; set; }
+        public int? LastDayOfMonthPayPeriod { get; set; }
+        public int? GivenDayOfMonthPayPeriod { get; set; }
         public string? LastGivenDayOfWeekPay { get; set; }
-        public bool Everynth { get; set; } = false;
-        public bool WorkingDays { get; set; } = false;
-        public bool OfEveryMonth { get; set; } = false;
-        public bool LastOfTheMonth { get; set; } = false;
+        public bool? Everynth { get; set; }
+        public bool? WorkingDays { get; set; }
+        public bool? OfEveryMonth { get; set; }
+        public bool? LastOfTheMonth { get; set; }
         
 
     }

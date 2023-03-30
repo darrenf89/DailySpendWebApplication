@@ -48,13 +48,13 @@
                                 <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalance"></label>
                                 <div class="input-group w-75">
                                     <span style="width: 5%" class="input-group-text" id="CurrencySymbol">£</span>
-                                    <input style="width: 45%" asp-for="StartingBalance" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="StartingBalance" />
+                                    <input style="width: 45%" asp-for="StartingBalance" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="StartingBalance" value="@Model.StartingBalance" />
                                 </div>
                             </div>
                             <p id="valStartingBalance" class="text-danger m-2" style="font-size: 8pt; display: none;">* You have to enter a current balance, or you'll have no money to spend!'</p>
                             <div id="payinfo" class="ps-4 pe-4 mt-4">
                                 <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-primary"></label>
-                                <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomeDate"/>
+                                <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomeDate" value="@Model.NextIncomeDate"/>
                             </div>
                             <p id="valNextIncomeDate" class="text-danger m-2" style="font-size: 8pt; display: none;">* Please select a date for your next pay day, and make sure it is in the future ... obviously!'</p>
                             <div class="ms-4 mb-1 mt-4 ps-2 text-primary">
@@ -63,25 +63,25 @@
                             <fieldset class="form-group">
                                 <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="PayRadioButtons">
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" asp-for="Everynth" />
+                                        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" asp-for="Everynth" checked="@Model.Everynth" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios1" id="lblOptionsRadios1">
                                             Every nth ...
                                         </label>
                                     </div>
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" asp-for="WorkingDays" value="option2" />
+                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" asp-for="WorkingDays" value="option2" checked="@Model.WorkingDays" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios2" id="lblOptionsRadios2">
                                             ... Working days before end of month
                                         </label>
                                     </div>
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" asp-for="OfEveryMonth" value="option3" checked="True" />
+                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" asp-for="OfEveryMonth" value="option3" checked="@Model.OfEveryMonth" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios3" id="lblOptionsRadios3">
                                             on the ... of every month
                                         </label>
                                     </div>
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" asp-for="LastOfTheMonth" value="option3" />
+                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" asp-for="LastOfTheMonth" value="option3" checked="@Model.LastOfTheMonth" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios4" id="lblOptionsRadios4">
                                            on the last ... of the month
                                         </label>
@@ -92,9 +92,9 @@
                             <div class="ps-4 pe-4">
                                 <div id="divPeriodicPay" style="display: none">
                                     <span>Every</span>
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod"/>
+                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" value="@Model.PeriodicPayPeriod" />
                                     <div class="DropDown">
-                                        <select class="form-select text-secondary" id="PeriodicPayDuration" data-form-type="">
+                                        <select class="form-select text-secondary" id="PeriodicPayPeriodDDL" data-form-type="" asp-for="PeriodicPayPeriodDDL" value="@Model.PeriodicPayPeriodDDL">
                                             <option>days</option>
                                             <option>weeks</option>
                                             <option>months</option>
@@ -102,19 +102,19 @@
                                     </div>
                                 </div>
                                 <div id="divLastDayOfMonthPay" style="display: none">
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod"/>
+                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" value="@Model.LastDayOfMonthPayPeriod" />
                                     <span id="OrdinalIndicatorLast"></span>
                                     <span>Working days before end of the month</span>
                                 </div>
                                 <div id="divGivenDayOfMonthPay" style="display: block">
                                     <span>On the </span>
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod"/>
+                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" value="@Model.GivenDayOfMonthPayPeriod" />
                                     <span id="OrdinalIndicatorGiven"></span>
                                     <span> of every month</span>
                                 </div>
                                 <div id="divLastGivenDayOfWeekPay" style="display: none" class="DropDown">
                                     <span>On the Last</span>
-                                    <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="">
+                                    <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="" value="@Model.LastGivenDayOfWeekPay">
                                         <option>Monday</option>
                                         <option>Tuesday</option>
                                         <option>Wednesday</option>
