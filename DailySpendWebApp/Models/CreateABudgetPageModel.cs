@@ -13,6 +13,8 @@ namespace DailySpendBudgetWebApp.Models
         public string? BudgetName { get; set; }
         [DisplayName("What's in the 'BANK'")]
         public string? StartingBalance { get; set; }
+        [DisplayName("How much do you get paid?!")]
+        public string? NextPayDayAmount { get; set; }
         public int? BudgetID { get; set; }
         [DisplayName("Currency")]
         public string? CurrencyDDL { get; set; }

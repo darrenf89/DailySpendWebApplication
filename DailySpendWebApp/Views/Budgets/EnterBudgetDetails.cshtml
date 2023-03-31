@@ -44,7 +44,7 @@
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
                         <div class="accordion-body p-1">
-                            <div class="ps-4 pe-4 mt-2">
+                            <div class="ps-4 pe-4 mt-3">
                                 <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalance"></label>
                                 <div class="input-group w-75">
                                     <span style="width: 5%" class="input-group-text" id="CurrencySymbol">£</span>
@@ -52,7 +52,15 @@
                                 </div>
                             </div>
                             <p id="valStartingBalance" class="text-danger m-2" style="font-size: 8pt; display: none;">* You have to enter a current balance, or you'll have no money to spend!'</p>
-                            <div id="payinfo" class="ps-4 pe-4 mt-4">
+                            <div class="ps-4 pe-4 mt-3">
+                                <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="NextPayDayAmount"></label>
+                                <div class="input-group w-75">
+                                    <span style="width: 5%" class="input-group-text" id="CurrencySymbolPay">£</span>
+                                    <input style="width: 45%" asp-for="NextPayDayAmount" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="NextPayDayAmount" value="@Model.NextPayDayAmount" />
+                                </div>
+                            </div>
+                            <span asp-validation-for="NextPayDayAmount" style="font-size:10px" class="text-danger"></span>
+                            <div id="payinfo" class="ps-4 pe-4 mt-3">
                                 <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-primary"></label>
                                 <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomeDate" value="@Model.NextIncomeDate"/>
                             </div>
@@ -63,25 +71,29 @@
                             <fieldset class="form-group">
                                 <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="PayRadioButtons">
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" asp-for="Everynth" checked="@Model.Everynth" />
+                                        <input type="hidden" asp-for="Everynth" value="@Model.Everynth" />
+                                        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="@Model.Everynth" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios1" id="lblOptionsRadios1">
                                             Every nth ...
                                         </label>
                                     </div>
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" asp-for="WorkingDays" value="option2" checked="@Model.WorkingDays" />
+                                        <input type="hidden" asp-for="WorkingDays" value="@Model.WorkingDays" />
+                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" checked="@Model.WorkingDays" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios2" id="lblOptionsRadios2">
                                             ... Working days before end of month
                                         </label>
                                     </div>
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" asp-for="OfEveryMonth" value="option3" checked="@Model.OfEveryMonth" />
+                                        <input type="hidden" asp-for="OfEveryMonth" value="@Model.OfEveryMonth" />
+                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3" checked="@Model.OfEveryMonth" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios3" id="lblOptionsRadios3">
                                             on the ... of every month
                                         </label>
                                     </div>
                                     <div class="form-check col-10 p-0">
-                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" asp-for="LastOfTheMonth" value="option3" checked="@Model.LastOfTheMonth" />
+                                        <input type="hidden" asp-for="LastOfTheMonth" value="@Model.LastOfTheMonth" />
+                                        <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" value="option3" checked="@Model.LastOfTheMonth" />
                                         <label class="form-check-label align-self-center text-secondary" for="optionsRadios4" id="lblOptionsRadios4">
                                            on the last ... of the month
                                         </label>
@@ -89,45 +101,71 @@
                                 </div>
                             </fieldset>
                             <p id="valPayTypeRadioButtons" class="text-danger m-2" style="font-size: 8pt; display: none;">* Make sure to tell us how ofetn you get paid :)</p>
-                            <div class="ps-4 pe-4">
-                                <div id="divPeriodicPay" style="display: none">
-                                    <span>Every</span>
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" value="@Model.PeriodicPayPeriod" />
-                                    <div class="DropDown">
-                                        <select class="form-select text-secondary" id="PeriodicPayPeriodDDL" data-form-type="" asp-for="PeriodicPayPeriodDDL" value="@Model.PeriodicPayPeriodDDL">
-                                            <option>days</option>
-                                            <option>weeks</option>
-                                            <option>months</option>
-                                        </select>
+                            <div class="mt-2 mb-1 pb-3 border-bottom border-secondary">
+                                <div id="divPeriodicPay" style="display: none; width:70%; margin-left: auto; margin-right: 0;" class="ps-2 pe-2">
+                                    <div style="display:inline-block; width: 20%; margin-right: 5%;" class="text-center">
+                                        <span class="text-primary form-label mb-0">Every</span>
+                                    </div>
+                                    <div style="display:inline-block; width: 30%; margin-right: 5%;">
+                                        <input class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" value="@Model.PeriodicPayPeriod" />
+                                    </div>
+                                    <div style="display:inline-block; width: 35%;">
+                                        <div class="DropDown">
+                                            <select class="form-select text-primary" id="PeriodicPayPeriodDDL" data-form-type="" asp-for="PeriodicPayPeriodDDL" value="@Model.PeriodicPayPeriodDDL">
+                                                <option>days</option>
+                                                <option>weeks</option>
+                                                <option>months</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div id="divLastDayOfMonthPay" style="display: none">
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" value="@Model.LastDayOfMonthPayPeriod" />
-                                    <span id="OrdinalIndicatorLast"></span>
-                                    <span>Working days before end of the month</span>
+                                <div id="divLastDayOfMonthPay" style="display: none; width:80%; margin-left: auto; margin-right: 0;" class="ps-2 pe-2">
+                                    <div style="display:inline-block; width: 17%; margin-right: 3%;">
+                                        <input class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" value="@Model.LastDayOfMonthPayPeriod" />
+                                    </div>
+                                    <div style="display:inline-block;">
+                                        <span  id="OrdinalIndicatorLast"></span>
+                                    </div>
+                                    <div style="display:inline-block; width: 75%;" class="text-center align-middle">
+                                        <span class="text-primary form-label mb-0" style="font-size:13px">Working days before end of month</span>
+                                    </div>
                                 </div>
-                                <div id="divGivenDayOfMonthPay" style="display: block">
-                                    <span>On the </span>
-                                    <input class="form-control text-secondary" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" value="@Model.GivenDayOfMonthPayPeriod" />
-                                    <span id="OrdinalIndicatorGiven"></span>
-                                    <span> of every month</span>
+                                <div id="divGivenDayOfMonthPay" style="display: block; width:65%; margin-left: auto; margin-right: 0;" class="ps-2 pe-2">
+                                    <div style="display:inline-block; width: 20%; margin-right: 2%;">
+                                        <span class="text-primary form-label mb-0">On the </span>
+                                    </div>
+                                    <div style="display:inline-block; width: 20%; margin-right: 2%;">
+                                        <input class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" value="@Model.GivenDayOfMonthPayPeriod" />
+                                    </div>
+                                    <div style="display:inline-block;">
+                                        <span id="OrdinalIndicatorGiven" class="text-primary form-label mb-0"></span>
+                                    </div>
+                                    <div style="display:inline-block; width: 45%;">
+                                        <span class="text-primary form-label mb-0"> of every month</span>
+                                    </div>
                                 </div>
-                                <div id="divLastGivenDayOfWeekPay" style="display: none" class="DropDown">
-                                    <span>On the Last</span>
-                                    <select class="form-select text-secondary" asp-for="LastGivenDayOfWeekPay" data-form-type="" value="@Model.LastGivenDayOfWeekPay">
-                                        <option>Monday</option>
-                                        <option>Tuesday</option>
-                                        <option>Wednesday</option>
-                                        <option>Thursday</option>
-                                        <option>Friday</option>
-                                        <option>Saturday</option>
-                                        <option>Sunday</option>
-                                    </select>
-                                    <span> of the month</span>
+                                <div id="divLastGivenDayOfWeekPay" style="display: none; width:80%; margin-left: auto; margin-right: 0;" >
+                                    <div style="display:inline-block; width: 28%;">
+                                        <span class="text-primary form-label mb-0">On the Last</span>
+                                    </div>
+                                    <div style="display:inline-block; width: 35%; margin-right: 2%;" class="DropDown">
+                                        <select class="form-select text-primary" asp-for="LastGivenDayOfWeekPay" data-form-type="" value="@Model.LastGivenDayOfWeekPay">
+                                            <option>Monday</option>
+                                            <option>Tuesday</option>
+                                            <option>Wednesday</option>
+                                            <option>Thursday</option>
+                                            <option>Friday</option>
+                                            <option>Saturday</option>
+                                            <option>Sunday</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:inline-block; width: 30%;">
+                                        <span class="text-primary form-label mb-0"> of the month</span>
+                                    </div>
                                 </div>
                             </div>
                             <p id="valPayOptions" class="text-danger m-2" style="font-size: 8pt; display: none;">* Provide the details of how often you're paid, OR ELSE!'</p>
-                            <div id="divSaveBudgetDetails" class="d-flex align-items-center justify-content-end p-1">
+                            <div id="divSaveBudgetDetails" class="d-flex align-items-center justify-content-end">
                                 <button type="submit" asp-action="SaveBudgetDetails" asp-controller="Budgets" id="btnSaveBudgetDetails" class="btn btn-primary">Save Budget Details</button>
                                 <button type="button" id="btnEditBudgetDetails" class="btn btn-dark" style="display: none;">Edit Details</button>
                             </div>
@@ -356,8 +394,12 @@
             document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
-            
-        } 
+            document.getElementById('Everynth').value = "True"
+            document.getElementById('WorkingDays').value = "False"
+            document.getElementById('OfEveryMonth').value = "False"
+            document.getElementById('LastOfTheMonth').value = "False"
+
+            } 
         else if (document.getElementById('optionsRadios2').checked) 
         {
             PeriodicPay.style.display = 'none';
@@ -368,6 +410,10 @@
             document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-primary"
             document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('Everynth').value = "False"
+            document.getElementById('WorkingDays').value = "True"
+            document.getElementById('OfEveryMonth').value = "False"
+            document.getElementById('LastOfTheMonth').value = "False"
         }
         else if (document.getElementById('optionsRadios3').checked) 
         {
@@ -379,6 +425,10 @@
             document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-primary"
             document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('Everynth').value = "False"
+            document.getElementById('WorkingDays').value = "False"
+            document.getElementById('OfEveryMonth').value = "True"
+            document.getElementById('LastOfTheMonth').value = "False"
         }
         else if (document.getElementById('optionsRadios4').checked) 
         {
@@ -390,6 +440,10 @@
             document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-primary"
+            document.getElementById('Everynth').value = "False"
+            document.getElementById('WorkingDays').value = "False"
+            document.getElementById('OfEveryMonth').value = "False"
+            document.getElementById('LastOfTheMonth').value = "True"
         }
     }
 

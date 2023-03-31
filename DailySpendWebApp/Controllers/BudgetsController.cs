@@ -31,10 +31,67 @@ namespace DailySpendBudgetWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                //ModelState.AddModelError("NextPayDayAmount", "");
 
+                var Budgets = _db.Budgets?
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+
+                Budgets? Budget = Budgets.FirstOrDefault();
+
+                Decimal Balance;
+                Decimal.TryParse(obj.StartingBalance, out Balance);
+
+                Budget.BankBalance = Balance;
+
+                Decimal Pay;
+                Decimal.TryParse(obj.NextPayDayAmount, out Pay);
+
+                Budget.BankBalance = Balance;
+
+
+                int year;
+                int.TryParse(obj.NextIncomeDate.Split("-")[0], out year);
+                int month;
+                int.TryParse(obj.NextIncomeDate.Split("-")[1], out month);
+                int day;
+                int.TryParse(obj.NextIncomeDate.Split("-")[2], out day);
+
+                Budget.NextIncomePayday = new DateTime(year, month, day);
+
+                bool Everynth = obj.Everynth ?? false;
+                bool WorkingDays = obj.WorkingDays ?? false;
+                bool OfEveryMonth = obj.OfEveryMonth ?? false;
+                bool LastOfTheMonth = obj.LastOfTheMonth ?? false;
+
+                if (Everynth)
+                {
+                    Budget.PaydayType = "Everynth";
+                    Budget.PaydayValue = obj.PeriodicPayPeriod;
+                    Budget.PaydayDuration = obj.PeriodicPayPeriodDDL;
+                }
+                else if(WorkingDays)
+                {
+                    Budget.PaydayType = "WorkingDays";
+                    Budget.PaydayValue = obj.LastDayOfMonthPayPeriod;
+                    Budget.PaydayDuration = null;
+                }
+                else if (OfEveryMonth)
+                {
+                    Budget.PaydayType = "OfEveryMonth";
+                    Budget.PaydayValue = obj.GivenDayOfMonthPayPeriod;
+                    Budget.PaydayDuration = null;
+                }
+                else if (LastOfTheMonth)
+                {
+                    Budget.PaydayType = "LastOfTheMonth";
+                    Budget.PaydayValue = null;
+                    Budget.PaydayDuration = obj.LastGivenDayOfWeekPay;
+                }
 
             }
+
             obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+            ViewBag.Stage = "SaveBD";
             return View("EnterBudgetDetails", obj);
         }
 
@@ -163,6 +220,7 @@ namespace DailySpendBudgetWebApp.Controllers
             {
 
                 obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+                ViewBag.Stage = "Initial";
                 return View(obj);
             }
             else
@@ -322,7 +380,9 @@ namespace DailySpendBudgetWebApp.Controllers
                     obj.OfEveryMonth = true;
                     obj.LastOfTheMonth = false;
 
-                    obj.GivenDayOfMonthPayPeriod = 28;
+                    obj.GivenDayOfMonthPayPeriod = 26;
+                    obj.LastDayOfMonthPayPeriod = 3;
+                    obj.PeriodicPayPeriod = 14;
                 }
             }
 
