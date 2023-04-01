@@ -116,7 +116,9 @@ namespace DailySpendBudgetWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditBudgetDetailsStage(CreateABudgetPageModel obj)
         {
-            obj = UpdateEnterBudgetDetailsPageFromModel(obj, "EditBD");
+            obj.Stage.Add("EditBD");
+            obj.Stage.Remove("SaveBD");
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             return View("EnterBudgetDetails", obj);
         }
 
@@ -124,7 +126,9 @@ namespace DailySpendBudgetWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditBudgetSettingsStage(CreateABudgetPageModel obj)
         {
-            obj = UpdateEnterBudgetDetailsPageFromModel(obj, "EditBS");
+            obj.Stage.Add("EditBS");
+            obj.Stage.Remove("SaveBS");
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             return View("EnterBudgetDetails", obj);
         }
 
@@ -134,8 +138,9 @@ namespace DailySpendBudgetWebApp.Controllers
         {
 
             if (ModelState.IsValid)
-            {              
-
+            {
+                obj.Stage.Remove("EditBS");
+                obj.Stage.Add("SaveBS");
                 var BudgetsSetting = _db.BudgetSettings?
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
 
@@ -164,16 +169,18 @@ namespace DailySpendBudgetWebApp.Controllers
 
                 BS.CurrencyDecimalDigits = NumberFormat.CurrencyDecimalDigitsID;
                 BS.CurrencyDecimalSeparator = NumberFormat.CurrencyDecimalSeparatorID;
-                BS.CurrencyGroupSeparator = NumberFormat.CurrencyGroupSeparatorID;
-
+                BS.CurrencyGroupSeparator = NumberFormat.CurrencyGroupSeparatorID;                
 
                 _db.SaveChanges();
-                obj = UpdateEnterBudgetDetailsPageFromModel(obj, "SaveBS");
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             }
             else
             {
-                obj = UpdateEnterBudgetDetailsPageFromModel(obj, "Error");
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             }
+
+            ViewBag.SnackBarMess = "BudgetDetailsSaved";
+            ViewBag.SnackBarType = "success";
 
             return View("EnterBudgetDetails", obj);
         }
@@ -183,11 +190,14 @@ namespace DailySpendBudgetWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SaveBudgetDetails(CreateABudgetPageModel obj)
         {
-            obj = ValidateBudgetDetails(obj);            
+            obj = ValidateBudgetDetails(obj);
+
 
             if (ModelState.IsValid)
             {
-                
+                obj.Stage.Remove("EditBD");
+                obj.Stage.Add("SaveBD");
+
                 bool Everynth = obj.Everynth ?? false;
                 bool WorkingDays = obj.WorkingDays ?? false;
                 bool OfEveryMonth = obj.OfEveryMonth ?? false;
@@ -248,13 +258,16 @@ namespace DailySpendBudgetWebApp.Controllers
 
 
                 _db.SaveChanges();
-                obj = UpdateEnterBudgetDetailsPageFromModel(obj, "SaveBD");
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             }
             else
             {
-                obj = UpdateEnterBudgetDetailsPageFromModel(obj, "Error");
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             }
-                        
+
+            ViewBag.SnackBarMess = "BudgetSettingsSaved";
+            ViewBag.SnackBarType = "success";
+
             return View("EnterBudgetDetails", obj);
         }
 
@@ -381,8 +394,8 @@ namespace DailySpendBudgetWebApp.Controllers
         {
             if (HttpContext.Session.GetInt32("_NewBudgetID") != null)
             {
-
-                obj = UpdateEnterBudgetDetailsPageFromModel(obj, "Initial");
+                obj.Stage.Add("Initial");
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
                 return View(obj);
             }
             else
@@ -459,7 +472,7 @@ namespace DailySpendBudgetWebApp.Controllers
             }
         }
 
-        public CreateABudgetPageModel UpdateEnterBudgetDetailsPageFromModel(CreateABudgetPageModel obj, string Stage)
+        public CreateABudgetPageModel UpdateEnterBudgetDetailsPageFromModel(CreateABudgetPageModel obj)
         {
             var BudgetList = _db.Budgets
                     .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
@@ -594,7 +607,6 @@ namespace DailySpendBudgetWebApp.Controllers
             ViewBag.CurrencyPlacementDDL = GetCurrencyPlacementDDL(obj.CurrencyPlacementDDL);
             ViewBag.DateFormatDDL = GetDateFormatDDL(obj.DateFormatDDL);
             ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
-            ViewBag.Stage = Stage;
 
             return obj;
         }

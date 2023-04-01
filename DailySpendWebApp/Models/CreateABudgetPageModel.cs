@@ -36,7 +36,8 @@ namespace DailySpendBudgetWebApp.Models
         public bool? WorkingDays { get; set; }
         public bool? OfEveryMonth { get; set; }
         public bool? LastOfTheMonth { get; set; }
-        
+        public List<string?> Stage { get; set; } = new List<string?>();
+
 
     }
 }
