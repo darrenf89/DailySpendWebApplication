@@ -32,9 +32,9 @@ footer {
   margin-left: -47.5vw; /* Divide value of min-width by 2 */
   padding: 16px; /* Padding */
   position: fixed; /* Sit on top of the screen */
-  z-index: 5; /* Add a z-index if needed */
+  z-index: 999; /* Add a z-index if needed */
   left: 50%; /* Center the snackbar */
-  bottom: 8vh; /* 30px from the bottom */
+  top: 8vh; /* 30px from the bottom */
 }
 
 /* Show the snackbar when clicking on a button (class added with JavaScript) */
@@ -48,100 +48,57 @@ footer {
 
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 8vh; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 8vh; opacity: 1;}
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 8vh; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 8vh; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 8vh; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 8vh; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-  from {bottom: 8vh; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 8vh; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
-@media only screen and (max-width: 599px) {
-
-    .infoouter {
-        position: fixed;
-        top: 10vh;
-        width: 15vw;
-        /*    max-width: 60px;*/
-        height: 12.5vw;
-        /*    max-height: 50px;*/
-        z-index: 99;
-/*        border: 1px solid #aea79f;
-        border-left: none;*/
-    }
-
-    .infoinner {
-        width: 12.5vw;
-        /*    max-width: 50px;*/
-        height: 12.5vw;
-        /*    max-height: 50px;*/
-        padding: 0px;
-        margin: 0px;
-        z-index: 99;
-        background-color: #17a2b8;
-    }
-
-    .infobutton {
-        width: 5vw;
-        /*    max-width: 20px;*/
-        height: 12.5vw;
-        /*    max-height: 50px;*/
-        padding: 0px;
-        margin: 0px;
-        z-index: 99;
-        background-color: #17a2b8;
-        border-left: 1px solid white;
-        line-height: 12.5vw
-    }
+.infoouter {
+    position: fixed;
+    top: 10vh;
+    width: 60px;
+    /*    max-width: 60px;*/
+    height: 50px;
+    /*    max-height: 50px;*/
+    z-index: 99;
+    /*        border: 1px solid #aea79f;
+    border-left: none;*/
 }
 
-@media only screen and (min-width: 600px)
-{
-    .infoouter {
-        position: fixed;
-        top: 10vh;
-        width: 60px;
-        /*    max-width: 60px;*/
-        height: 50px;
-        /*    max-height: 50px;*/
-        z-index: 99;
-/*        border: 1px solid #aea79f;
-        border-left: none;*/
-    }
-
-    .infoinner {
-        width: 50px;
-        /*    max-width: 50px;*/
-        height: 50px;
-        /*    max-height: 50px;*/
-        padding: 0px;
-        margin: 0px;
-        z-index: 99;
-        background-color: #17a2b8;
-    }
-
-    .infobutton {
-        width: 20px;
-        /*    max-width: 20px;*/
-        height: 50px;
-        /*    max-height: 50px;*/
-        padding: 0px;
-        margin: 0px;
-        z-index: 99;
-        background-color: #17a2b8;
-        border-left: 1px solid white;
-        line-height: 50px;
-    }
+.infoinner {
+    width: 50px;
+    /*    max-width: 50px;*/
+    height: 50px;
+    /*    max-height: 50px;*/
+    padding: 0px;
+    margin: 0px;
+    z-index: 99;
+    background-color: #17a2b8;
 }
 
+.infobutton {
+    width: 20px;
+    /*    max-width: 20px;*/
+    height: 50px;
+    /*    max-height: 50px;*/
+    padding: 0px;
+    margin: 0px;
+    z-index: 99;
+    background-color: #17a2b8;
+    border-left: 1px solid white;
+    line-height: 50px;
+}

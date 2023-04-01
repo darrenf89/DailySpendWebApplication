@@ -51,7 +51,9 @@
                                     <input style="width: 45%" asp-for="StartingBalance" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="StartingBalance" value="@Model.StartingBalance" />
                                 </div>
                             </div>
-                            <p id="valStartingBalance" class="text-danger m-2" style="font-size: 8pt; display: none;">* You have to enter a current balance, or you'll have no money to spend!'</p>
+                            <div class="ps-4">
+                                <span asp-validation-for="StartingBalance" style="font-size:8pt" class="text-danger text-center"></span>
+                            </div>
                             <div class="ps-4 pe-4 mt-3">
                                 <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="NextPayDayAmount"></label>
                                 <div class="input-group w-75">
@@ -59,12 +61,16 @@
                                     <input style="width: 45%" asp-for="NextPayDayAmount" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="NextPayDayAmount" value="@Model.NextPayDayAmount" />
                                 </div>
                             </div>
-                            <span asp-validation-for="NextPayDayAmount" style="font-size:10px" class="text-danger"></span>
+                            <div class="ps-4">
+                                <span asp-validation-for="NextPayDayAmount" style="font-size:8pt" class="text-danger text-center"></span>
+                            </div>
                             <div id="payinfo" class="ps-4 pe-4 mt-3">
                                 <label asp-for="NextIncomeDate" class="d-flex form-label ms-2 mb-2 text-primary"></label>
                                 <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomeDate" value="@Model.NextIncomeDate"/>
                             </div>
-                            <p id="valNextIncomeDate" class="text-danger m-2" style="font-size: 8pt; display: none;">* Please select a date for your next pay day, and make sure it is in the future ... obviously!'</p>
+                            <div class="ps-4">
+                                <span asp-validation-for="NextIncomeDate" style="font-size:8pt" class="text-danger text-center"></span>
+                            </div>
                             <div class="ms-4 mb-1 mt-4 ps-2 text-primary">
                             </div>
                             <div class="text-primary mb-3 ps-3">I want my budgeting Period to be ...</div>
@@ -100,18 +106,20 @@
                                     </div>
                                 </div>
                             </fieldset>
-                            <p id="valPayTypeRadioButtons" class="text-danger m-2" style="font-size: 8pt; display: none;">* Make sure to tell us how ofetn you get paid :)</p>
-                            <div class="mt-2 mb-1 pb-3 border-bottom border-secondary">
-                                <div id="divPeriodicPay" style="display: none; width:70%; margin-left: auto; margin-right: 0;" class="ps-2 pe-2">
-                                    <div style="display:inline-block; width: 20%; margin-right: 5%;" class="text-center">
+                            <div class="ps-4">
+                                <span asp-validation-for="LastGivenDayOfWeekPay" style="font-size:8pt" class="text-danger text-center"></span>
+                            </div>
+                            <div class="mt-4 mb-1 pb-3 pe-1 border-bottom border-secondary d-flex">
+                                <div id="divPeriodicPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                                    <div class="text-center me-1" style="display: flex">
                                         <span class="text-primary form-label mb-0">Every</span>
                                     </div>
-                                    <div style="display:inline-block; width: 30%; margin-right: 5%;">
-                                        <input class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" value="@Model.PeriodicPayPeriod" />
+                                    <div class="text-center me-1" style="display: flex">
+                                        <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" value="@Model.PeriodicPayPeriod" />
                                     </div>
-                                    <div style="display:inline-block; width: 35%;">
+                                    <div class="" style="display: flex">
                                         <div class="DropDown">
-                                            <select class="form-select text-primary" id="PeriodicPayPeriodDDL" data-form-type="" asp-for="PeriodicPayPeriodDDL" value="@Model.PeriodicPayPeriodDDL">
+                                            <select class="form-select text-primary text-center" id="PeriodicPayPeriodDDL" data-form-type="" asp-for="PeriodicPayPeriodDDL" value="@Model.PeriodicPayPeriodDDL">
                                                 <option>days</option>
                                                 <option>weeks</option>
                                                 <option>months</option>
@@ -119,36 +127,30 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="divLastDayOfMonthPay" style="display: none; width:80%; margin-left: auto; margin-right: 0;" class="ps-2 pe-2">
-                                    <div style="display:inline-block; width: 17%; margin-right: 3%;">
-                                        <input class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" value="@Model.LastDayOfMonthPayPeriod" />
+                                <div id="divLastDayOfMonthPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                                    <div class="text-center me-1">
+                                        <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" value="@Model.LastDayOfMonthPayPeriod" />
                                     </div>
-                                    <div style="display:inline-block;">
-                                        <span  id="OrdinalIndicatorLast"></span>
-                                    </div>
-                                    <div style="display:inline-block; width: 75%;" class="text-center align-middle">
-                                        <span class="text-primary form-label mb-0" style="font-size:13px">Working days before end of month</span>
+                                    <div class="text-center">
+                                        <span class="text-primary form-label mb-0">Working days before end of month</span>
                                     </div>
                                 </div>
-                                <div id="divGivenDayOfMonthPay" style="display: block; width:65%; margin-left: auto; margin-right: 0;" class="ps-2 pe-2">
-                                    <div style="display:inline-block; width: 20%; margin-right: 2%;">
+                                <div id="divGivenDayOfMonthPay" style="display: flex;" class="ps-2 col-12 justify-content-end align-items-center">
+                                    <div class="text-center me-1">
                                         <span class="text-primary form-label mb-0">On the </span>
                                     </div>
-                                    <div style="display:inline-block; width: 20%; margin-right: 2%;">
-                                        <input class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" value="@Model.GivenDayOfMonthPayPeriod" />
+                                    <div class="text-center me-1">
+                                        <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" value="@Model.GivenDayOfMonthPayPeriod" />
                                     </div>
-                                    <div style="display:inline-block;">
-                                        <span id="OrdinalIndicatorGiven" class="text-primary form-label mb-0"></span>
-                                    </div>
-                                    <div style="display:inline-block; width: 45%;">
+                                    <div class="text-center">
                                         <span class="text-primary form-label mb-0"> of every month</span>
                                     </div>
                                 </div>
-                                <div id="divLastGivenDayOfWeekPay" style="display: none; width:80%; margin-left: auto; margin-right: 0;" >
-                                    <div style="display:inline-block; width: 28%;">
+                                <div id="divLastGivenDayOfWeekPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                                    <div class="text-center me-1">
                                         <span class="text-primary form-label mb-0">On the Last</span>
                                     </div>
-                                    <div style="display:inline-block; width: 35%; margin-right: 2%;" class="DropDown">
+                                    <div class="text-center me-1 dropdown">
                                         <select class="form-select text-primary" asp-for="LastGivenDayOfWeekPay" data-form-type="" value="@Model.LastGivenDayOfWeekPay">
                                             <option>Monday</option>
                                             <option>Tuesday</option>
@@ -159,15 +161,14 @@
                                             <option>Sunday</option>
                                         </select>
                                     </div>
-                                    <div style="display:inline-block; width: 30%;">
+                                    <div class="text-center">
                                         <span class="text-primary form-label mb-0"> of the month</span>
                                     </div>
                                 </div>
-                            </div>
-                            <p id="valPayOptions" class="text-danger m-2" style="font-size: 8pt; display: none;">* Provide the details of how often you're paid, OR ELSE!'</p>
+                            </div>                            
                             <div id="divSaveBudgetDetails" class="d-flex align-items-center justify-content-end">
+                                <button type="submit" asp-action="EditBudgetDetailsStage" asp-controller="Budgets" id="btnEditBudgetDetails" class="btn btn-dark" style="display: none;">Edit Details</button>
                                 <button type="submit" asp-action="SaveBudgetDetails" asp-controller="Budgets" id="btnSaveBudgetDetails" class="btn btn-primary">Save Budget Details</button>
-                                <button type="button" id="btnEditBudgetDetails" class="btn btn-dark" style="display: none;">Edit Details</button>
                             </div>
                         </div>
                     </div>
@@ -183,7 +184,7 @@
                         </div>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
-                        <div class="accordion-body">
+                        <div class="accordion-body p-1">
                             <div class="DropDown">
                                 <label asp-for="CurrencyDDL" id="lblCurrencyDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
                                 <select onchange="onSelectionChangeWLabel('CurrencyDDL');" asp-for="CurrencyDDL" asp-items=ViewBag.CurrencyDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
@@ -199,10 +200,14 @@
                                 <select onchange="onSelectionChangeWLabel('CurrencyPlacementDDL');" asp-for="CurrencyPlacementDDL" asp-items=ViewBag.CurrencyPlacementDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
                                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
                             </div>
-                            <div class="DropDown">
+                            <div class="DropDown mb-1 pb-3 pe-1 border-bottom border-secondary">
                                 <label asp-for="DateFormatDDL" id="lblDateFormatDDL" class="d-flex form-label ms-4 mb-0 text-secondary"></label>
                                 <select onchange="onSelectionChangeWLabel('DateFormatDDL');" asp-for="DateFormatDDL" asp-items=ViewBag.DateFormatDDL class="form-control w-75 ms-4 border-0 text-secondary p-0 ps-4"></select>
                                 <div class="border-bottom border-secondary m-2 ms-3 me-3"></div>
+                            </div>
+                            <div id="divSaveBudgetSettings" class="d-flex align-items-center justify-content-end">
+                                <button type="submit" asp-action="EditBudgetSettingsStage" asp-controller="Budgets" id="btnEditBudgetDetails" class="btn btn-dark" style="display: none;">Edit Settings</button>
+                                <button type="submit" asp-action="SaveBudgetSettings" asp-controller="Budgets" id="btnSaveBudgetDetails" class="btn btn-primary">Save Budget Settings</button>
                             </div>
                         </div>
                     </div>
@@ -309,9 +314,18 @@
         </div>
     </div>
 </form>
+<div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
+    <div class="d-flex">
+        <div id="SnackBarMessage" class="col-11 pe-1"></div>
+        <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>
+    </div>
+</div>
 
 <script>
-     const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const Stage = '@ViewBag.Stage'
+    document.addEventListener("load", CheckStage(Stage));
+
+    const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const monthlist = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'];
     const NoOfDaysMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
 
@@ -328,6 +342,66 @@
     const btnNoSavings = document.getElementById("btnNoSavings");
     const btnSaveSavings = document.getElementById("btnSaveSavings");
     const btnCancelSavings = document.getElementById("btnCancelSavings");
+
+    function CheckStage(Stage)
+    {
+        if (Stage == 'Initial')
+        {
+
+        }
+        else if (Stage == 'SaveBD') 
+        {
+            ShowSnackBar('BudgetDetailsSaved', 'success')
+            document.getElementById('btnSaveBudgetDetails').style.display = 'none'
+            document.getElementById('btnEditBudgetDetails').style.display = 'block'
+            document.getElementById('StartingBalance').disabled = 'true'
+            document.getElementById('NextPayDayAmount').disabled = 'true'
+            document.getElementById('NextIncomeDate').disabled = 'true'
+            document.getElementById('optionsRadios1').disabled = 'true'
+            document.getElementById('optionsRadios2').disabled = 'true'
+            document.getElementById('optionsRadios3').disabled = 'true'
+            document.getElementById('optionsRadios4').disabled = 'true'
+            document.getElementById('PeriodicPayPeriod').disabled = 'true'
+            document.getElementById('PeriodicPayPeriodDDL').disabled = 'true'
+            document.getElementById('LastDayOfMonthPayPeriod').disabled = 'true'
+            document.getElementById('GivenDayOfMonthPayPeriod').disabled = 'true'
+            document.getElementById('LastGivenDayOfWeekPay').disabled = 'true'            
+        }
+        else if (Stage == 'EditBD') {
+
+            document.getElementById('btnSaveBudgetDetails').style.display = 'block'
+            document.getElementById('btnEditBudgetDetails').style.display = 'none'
+            document.getElementById('StartingBalance').enabled = 'true'
+            document.getElementById('NextPayDayAmount').enabled = 'true'
+            document.getElementById('NextIncomeDate').enabled = 'true'
+            document.getElementById('optionsRadios1').enabled = 'true'
+            document.getElementById('optionsRadios2').enabled = 'true'
+            document.getElementById('optionsRadios3').enabled = 'true'
+            document.getElementById('optionsRadios4').enabled = 'true'
+            document.getElementById('PeriodicPayPeriod').enabled = 'true'
+            document.getElementById('PeriodicPayPeriodDDL').enabled = 'true'
+            document.getElementById('LastDayOfMonthPayPeriod').enabled = 'true'
+            document.getElementById('GivenDayOfMonthPayPeriod').enabled = 'true'
+            document.getElementById('LastGivenDayOfWeekPay').enabled = 'true'
+        }
+        else if (Stage == 'SaveBS') {
+            document.getElementById('btnSaveBudgetSettings').style.display = 'none'
+            document.getElementById('btnEditBudgetSettings').style.display = 'block'
+            document.getElementById('CurrencyDDL').disabled = 'true'
+            document.getElementById('NumberFormatDDL').disabled = 'true'
+            document.getElementById('CurrencyPlacementDDL').disabled = 'true'
+            document.getElementById('DateFormatDDL').disabled = 'true'
+        }
+        else if (Stage == 'EditBS') {
+            document.getElementById('btnSaveBudgetSettings').style.display = 'block'
+            document.getElementById('btnEditBudgetSettings').style.display = 'none'
+            document.getElementById('CurrencyDDL').enabled = 'true'
+            document.getElementById('NumberFormatDDL').enabled = 'true'
+            document.getElementById('CurrencyPlacementDDL').enabled = 'true'
+            document.getElementById('DateFormatDDL').enabled = 'true'
+        }
+
+    }
 
     function ChangeDivBudgetNameBorder()
     {
@@ -381,12 +455,12 @@
     const GivenPay = document.getElementById('divGivenDayOfMonthPay');
     const LastPay = document.getElementById('divLastDayOfMonthPay');
     const GivenDay = document.getElementById('divLastGivenDayOfWeekPay');
-    
+   
 
     function handleIncomeRadioClick() {
         if (document.getElementById('optionsRadios1').checked) 
         {
-            PeriodicPay.style.display = 'block';
+            PeriodicPay.style.display = 'flex';
             LastPay.style.display = 'none';
             GivenPay.style.display = 'none';
             GivenDay.style.display = 'none';
@@ -403,7 +477,7 @@
         else if (document.getElementById('optionsRadios2').checked) 
         {
             PeriodicPay.style.display = 'none';
-            LastPay.style.display = 'block';
+            LastPay.style.display = 'flex';
             GivenPay.style.display = 'none';
             GivenDay.style.display = 'none';
             document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
@@ -419,7 +493,7 @@
         {
             PeriodicPay.style.display = 'none';
             LastPay.style.display = 'none';
-            GivenPay.style.display = 'block';
+            GivenPay.style.display = 'flex';
             GivenDay.style.display = 'none';
             document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
@@ -435,7 +509,7 @@
             PeriodicPay.style.display = 'none';
             LastPay.style.display = 'none';
             GivenPay.style.display = 'none';
-            GivenDay.style.display = 'block';
+            GivenDay.style.display = 'flex';
             document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
             document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
@@ -472,5 +546,35 @@
             }
         }, 1);
     });
+
+    $(document).ready(handleIncomeRadioClick());
+
+    function ShowSnackBar(Message, Type) {
+
+        var x = document.getElementById("SnackBarMessage");
+
+        if (Message == 'BudgetDetailsSaved') {
+            x.innerHTML = "<div><strong>Congrats</strong> you have saved your <strong>Budgets</strong> Details"
+        }
+        else if (Message == 'BudgetSettingsSaved') {
+            x.innerHTML = "<div><strong>Congrats</strong> you have saved your <strong>Budgets</strong> Settings"
+        }
+
+        var y = document.getElementById("snackbar");
+        y.className = y.className.replace("alert-success", "");
+        y.className = y.className.replace("alert-danger", "");
+
+        if (Type == 'success') {
+            y.className = y.className + ' alert-success';
+        }
+        else if (Type == 'danger') {
+            y.className = y.className + ' alert-danger';
+        }
+
+        y.className = y.className + " show";
+
+        setTimeout(function () { y.className = y.className.replace("show", ""); }, 6900);
+    }
+
 
 </script>

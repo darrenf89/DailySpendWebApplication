@@ -47,7 +47,7 @@ function ShowHideInfo(DivName, Icon) {
     var y = document.getElementById(Icon);
 
     if (x.style.display === "none") {
-        x.style.display = "block";
+        x.style.display = "flex";
         y.className = "bi bi-arrow-bar-left text-white";
     } else {
         x.style.display = "none";

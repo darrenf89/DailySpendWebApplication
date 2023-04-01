@@ -13,14 +13,13 @@
     <link href="~/css/dropdownmenus.css" rel="stylesheet" />
     <link href="~/css/savings-type-toggle.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/js/site.js"></script>
 </head>
 
 <body class="m-0 p-0 vh-100 bg-white" >
     <div class="infoouter">
         <div class="d-flex">
-            <div id="infoinner" class="infoinner text-center align-items-center">
-                <button data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" class="btn btn-info btn-sm" style="margin: auto;"><i class="bi bi-info-circle text-white" style="font-size: 25px;"></i></button>
+            <div id="infoinner" style="display: flex;" class="infoinner text-center align-items-center">
+                <button data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" class="btn btn-info btn-sm" style="margin: auto;"><i class="bi bi-info-circle text-white align-self-center p-0" style="font-size: 25px;"></i></button>
             </div>
             <div class="infobutton text-center">
                 <a style="margin:auto;" class="h-100" id="btnCloseInfoSticky" onclick="ShowHideInfo('infoinner', 'IconInfoSticky');"><i id="IconInfoSticky" class="bi bi-arrow-bar-left text-white"></i></a>
