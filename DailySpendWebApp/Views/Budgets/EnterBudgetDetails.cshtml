@@ -56,8 +56,8 @@
                             <div class="ps-4 pe-4 mt-3">
                                 <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="StartingBalance"></label>
                                 <div class="input-group w-75">
-                                    <span style="width: 5%" class="input-group-text" id="CurrencySymbol">£</span>
-                                    <input style="width: 45%" asp-for="StartingBalance" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="StartingBalance" value="@Model.StartingBalance" />
+                                    <input id="txtStartingBalance" type="text" class="form-control rounded-3 pe-2 pt-2 pb-2" style="cursor: pointer; color: #38b44a; width: 50%" value="@Model.StartingBalance" data-type="currency" placeholder="£0.00" onfocus="this.placeholder = '';" onchange="UpdateHdnStartingBalance();" onblur="this.placeholder = '£0.00';" />
+                                    <input type="hidden" asp-for="StartingBalance" />
                                 </div>
                             </div>
                             <div class="ps-4">
@@ -66,8 +66,8 @@
                             <div class="ps-4 pe-4 mt-3">
                                 <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="NextPayDayAmount"></label>
                                 <div class="input-group w-75">
-                                    <span style="width: 5%" class="input-group-text" id="CurrencySymbolPay">£</span>
-                                    <input style="width: 45%" asp-for="NextPayDayAmount" type="Number" pattern="^\d*(\.\d{0,2})?$" step="0.01" class="form-control" placeholder="0,000" id="NextPayDayAmount" value="@Model.NextPayDayAmount" />
+                                    <input id="txtNextPayDayAmount" type="text" class="form-control rounded-3 pe-2 pt-2 pb-2" style="cursor: pointer; color: #38b44a; width: 50%" value="@Model.NextPayDayAmount" data-type="currency" placeholder="£0.00" onfocus="this.placeholder = '';" onchange="UpdateHdnNextPayDayAmount();" onblur="this.placeholder = '£0.00';" />
+                                    <input asp-for="NextPayDayAmount" type="hidden"/>
                                 </div>
                             </div>
                             <div class="ps-4">
@@ -237,18 +237,7 @@
                 </div>
             </div>
         </div>
-        <div id="SummarySavingsDetails" style="display: none;" class="card text-white bg-primary mt-3 mb-3 shadow">
-            <div class="card-header p-2">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="m-0">What ya Saving for?!</h5>
-                    <a href="#" id="EditSavingsDetails" class="text-white"><i class="bi bi-pencil-square text-white"></i></a>
-                </div>
-            </div>
-            <div class="card-body p-2">
-                <div class="card-text">
-                    <div id="divSavingsSummaryMessageString" class="pb-2"></div>
-                </div>
-            </div>
+        <div id="SavingsSummary" class="card text-white bg-primary mt-3 mb-3 shadow">
         </div>
         <div class="p-2">
             <div id="OpenSavingsDetails" class="p-2">
@@ -278,8 +267,6 @@
             <button type="submit" class="btn btn-lg btn-success rounded-1 mb-4 col-10"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
         </div>
     </footer>
-</form>
-<form method="post">
     <div class="modal" id="SavingsModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -300,8 +287,6 @@
             </div>
         </div>
     </div>
-</form>
-<form method="Post">
     <div class="modal" id="BillsModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -326,7 +311,7 @@
 <div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
     <div class="d-flex">
         <div id="SnackBarMessage" class="col-11 pe-1"></div>
-        <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close p-2 " data-bs-dismiss="alert"></button>
     </div>
 </div>
 
@@ -334,7 +319,7 @@
 
     var Stage = [];
     
-    document.addEventListener("load", CheckStage(), CheckSnackBarMess());
+    document.addEventListener("load", CheckStage(), CheckSnackBarMess(), UpdateHdnNextPayDayAmount(), UpdateHdnStartingBalance());
 
 
     const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -355,9 +340,24 @@
     const btnSaveSavings = document.getElementById("btnSaveSavings");
     const btnCancelSavings = document.getElementById("btnCancelSavings");
 
+    function UpdateHdnNextPayDayAmount() {
+        var txtNextPayDayAmount = document.getElementById('txtNextPayDayAmount').value;
+        var numNextPayDayAmount = txtNextPayDayAmount.replace('£', '').replace(',', '');
+        document.getElementById('NextPayDayAmount').value = numNextPayDayAmount;
+    }
+
+    function UpdateHdnStartingBalance() {
+        var txtStartingBalance = document.getElementById('txtStartingBalance').value;
+        var numStartingBalance = txtStartingBalance.replace('£', '').replace(',', '');
+        document.getElementById('StartingBalance').value = numStartingBalance;
+    }
+
     function CheckSnackBarMess()
     {
-        ShowSnackBar('@ViewBag.SnackBarMess', '@ViewBag.SnackBarType')
+        if ('@ViewBag.SnackBarMess' != null && '@ViewBag.SnackBarType' != null)
+        {
+            ShowSnackBar('@ViewBag.SnackBarMess', '@ViewBag.SnackBarType')
+        }
     }
 
     function CheckStage()
@@ -376,8 +376,8 @@
             
             document.getElementById('btnSaveBudgetDetails').style.display = 'none'
             document.getElementById('btnEditBudgetDetails').style.display = 'block'
-            document.getElementById('StartingBalance').disabled = 'true'
-            document.getElementById('NextPayDayAmount').disabled = 'true'
+            document.getElementById('txtStartingBalance').disabled = 'true'
+            document.getElementById('txtNextPayDayAmount').disabled = 'true'
             document.getElementById('NextIncomeDate').disabled = 'true'
             document.getElementById('optionsRadios1').disabled = 'true'
             document.getElementById('optionsRadios2').disabled = 'true'
@@ -395,8 +395,8 @@
 
             document.getElementById('btnSaveBudgetDetails').style.display = 'block'
             document.getElementById('btnEditBudgetDetails').style.display = 'none'
-            document.getElementById('StartingBalance').enabled = 'true'
-            document.getElementById('NextPayDayAmount').enabled = 'true'
+            document.getElementById('txtStartingBalance').enabled = 'true'
+            document.getElementById('txtNextPayDayAmount').enabled = 'true'
             document.getElementById('NextIncomeDate').enabled = 'true'
             document.getElementById('optionsRadios1').enabled = 'true'
             document.getElementById('optionsRadios2').enabled = 'true'
@@ -576,18 +576,18 @@
         lblChangeElement.className = "d-flex form-label ms-4 mb-0 text-primary"
     }
 
-    $(document).on('keydown', 'input[pattern]', function (e) {
-        var input = $(this);
-        var oldVal = input.val();
-        var regex = new RegExp(input.attr('pattern'), 'g');
+    //$(document).on('keydown', 'input[pattern]', function (e) {
+    //    var input = $(this);
+    //    var oldVal = input.val();
+    //    var regex = new RegExp(input.attr('pattern'), 'g');
 
-        setTimeout(function () {
-            var newVal = input.val();
-            if (!regex.test(newVal)) {
-                input.val(oldVal);
-            }
-        }, 1);
-    });
+    //    setTimeout(function () {
+    //        var newVal = input.val();
+    //        if (!regex.test(newVal)) {
+    //            input.val(oldVal);
+    //        }
+    //    }, 1);
+    //});
 
     $(document).ready(handleIncomeRadioClick());
 
@@ -703,7 +703,12 @@
                 Stage.push('SettingsAccordianClosed');
             }
         }
-    }
-
+    }    
 
 </script>
+
+@section Scripts{
+    <script>
+        $('#SavingsSummary').load("/Budgets/AddSavingsTable")
+    </script>
+}

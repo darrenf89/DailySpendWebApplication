@@ -117,7 +117,7 @@ public class HomeController : Controller
         {
             SavingsList.Add(saving);
         }
-        return PartialView("_SavingsTablePV",SavingsList);
+        return PartialView("SavingsTableBudget", SavingsList);
     }
 
 }

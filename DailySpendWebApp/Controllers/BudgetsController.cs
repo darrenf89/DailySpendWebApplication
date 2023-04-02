@@ -116,6 +116,7 @@ namespace DailySpendBudgetWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult EditBudgetDetailsStage(CreateABudgetPageModel obj)
         {
+
             obj.Stage.Add("EditBD");
             obj.Stage.Remove("SaveBD");
             obj = UpdateEnterBudgetDetailsPageFromModel(obj);
@@ -141,6 +142,14 @@ namespace DailySpendBudgetWebApp.Controllers
             {
                 obj.Stage.Remove("EditBS");
                 obj.Stage.Add("SaveBS");
+                if (obj.Stage.Contains("SettingsAccordianOpen"))
+                {
+                    obj.Stage[obj.Stage.IndexOf("SettingsAccordianOpen")] = "SettingsAccordianClosed";
+                }
+                else
+                {
+                    obj.Stage.Add("SettingsAccordianClosed");
+                }
                 var BudgetsSetting = _db.BudgetSettings?
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
 
@@ -179,7 +188,7 @@ namespace DailySpendBudgetWebApp.Controllers
                 obj = UpdateEnterBudgetDetailsPageFromModel(obj);
             }
 
-            ViewBag.SnackBarMess = "BudgetDetailsSaved";
+            ViewBag.SnackBarMess = "BudgetSettingsSaved";
             ViewBag.SnackBarType = "success";
 
             return View("EnterBudgetDetails", obj);
@@ -197,7 +206,14 @@ namespace DailySpendBudgetWebApp.Controllers
             {
                 obj.Stage.Remove("EditBD");
                 obj.Stage.Add("SaveBD");
-
+                if (obj.Stage.Contains("DetailsAccordianOpen"))
+                {
+                    obj.Stage[obj.Stage.IndexOf("DetailsAccordianOpen")] = "DetailsAccordianClosed";
+                }
+                else
+                {
+                    obj.Stage.Add("DetailsAccordianClosed");
+                }
                 bool Everynth = obj.Everynth ?? false;
                 bool WorkingDays = obj.WorkingDays ?? false;
                 bool OfEveryMonth = obj.OfEveryMonth ?? false;
@@ -273,7 +289,7 @@ namespace DailySpendBudgetWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddSavingBudget(Savings obj)
+        public IActionResult AddSavingBudget(CreateABudgetPageModel obj)
         {
             Savings? S = new();
 
@@ -290,6 +306,13 @@ namespace DailySpendBudgetWebApp.Controllers
                     break;
                 }
             }
+
+            if (DateTime.UtcNow.AddDays(1) >= obj.GoalDate)
+            {
+                ModelState.AddModelError("GoalDate", "* Please add a date in the future .. you know your next pay day!");
+            }
+   
+
 
             var BudgetList = _db.Budgets?
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
@@ -363,21 +386,12 @@ namespace DailySpendBudgetWebApp.Controllers
             }
             else
             {
-                if (obj.isRegularSaving == false)
-                {
-                    ViewBag.PageStatus = "Savings Name Error NotRegular";
-                }
-                else
-                {
-                    ViewBag.PageStatus = "Savings Name Error Regular";
-                }
-
-                return View();
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+                return View("EnterBudgetDetails", obj);
             }
 
-            ViewBag.PageStatus = "Confirmation";
-
-            return RedirectToAction("EnterBudgetDetails");
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+            return View("EnterBudgetDetails", obj);
         }
 
         public IActionResult AddSavingPV()
@@ -482,6 +496,13 @@ namespace DailySpendBudgetWebApp.Controllers
             ViewBag.hasBudgetName = true;
             ViewBag.BudgetName = Budget?.BudgetName;
 
+            NumberFormatInfo nfi = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
+            nfi.CurrencySymbol = "£";
+            nfi.CurrencyDecimalSeparator = ".";
+            nfi.CurrencyGroupSeparator = ",";
+            nfi.CurrencyDecimalDigits = 2;
+            nfi.CurrencyPositivePattern = 0;
+
             if (obj.NextIncomeDate == null)
             {
                 if (Budget.NextIncomePayday != null)
@@ -499,24 +520,35 @@ namespace DailySpendBudgetWebApp.Controllers
             {
                 if (Budget.BankBalance != null & Budget.BankBalance != 0)
                 {
-                    obj.StartingBalance = String.Format("{0}", Budget.BankBalance);
+
+                    obj.StartingBalance = String.Format(nfi, "{0:c}", Budget.BankBalance);
                 }
                 else
                 {
                     obj.StartingBalance = null;
                 }
             }
+            else
+            {
+                string PayAmountString = String.Format(nfi, "{0:c}", decimal.Parse(obj.StartingBalance));
+                obj.StartingBalance = PayAmountString;
+            }
 
             if (obj.NextPayDayAmount == null)
             {
                 if (Budget.PaydayAmount != null & Budget.PaydayAmount != 0)
                 {
-                    obj.NextPayDayAmount = String.Format("{0}", Budget.PaydayAmount);
+                    obj.NextPayDayAmount = String.Format(nfi, "{0:c}", Budget.PaydayAmount);
                 }
                 else
                 {
                     obj.NextPayDayAmount = null;
                 }
+            }
+            else
+            {
+                string PayAmountString = String.Format(nfi, "{0:c}", decimal.Parse(obj.NextPayDayAmount));
+                obj.NextPayDayAmount = PayAmountString;
             }
 
             if (obj.PeriodicPayPeriod == null & obj.PeriodicPayPeriodDDL == null & obj.LastDayOfMonthPayPeriod == null & obj.GivenDayOfMonthPayPeriod == null & obj.LastGivenDayOfWeekPay == null)
@@ -609,6 +641,21 @@ namespace DailySpendBudgetWebApp.Controllers
             ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
 
             return obj;
+        }
+
+        public IActionResult AddSavingsTable()
+        {
+            Budgets? BudgetSavingsList = _db.Budgets?
+                .Include(x => x.Savings)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
+                .FirstOrDefault();
+
+            List<Savings> SavingsList = new List<Savings>();
+            foreach (Savings saving in BudgetSavingsList.Savings)
+            {
+                SavingsList.Add(saving);
+            }
+            return PartialView("_SavingsTablePV", SavingsList);
         }
 
         public List<SelectListItem> GetCurrencyDDL(string? SelectedValue)

@@ -1,0 +1,42 @@
+﻿@model List<Savings>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if(Model == null)
+{
+    <div></div>
+}
+else
+{
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Column heading</th>
+                    <th scope="col">Column heading</th>
+                    <th scope="col">Column heading</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(Savings Saving in Model)
+            {
+                <tr class="table-primary">
+                    <td>@Saving.SavingsName</td>
+                    <td>@Saving.SavingsName</td>
+                    <td>@Saving.SavingsName</td>
+                    <td>@Saving.SavingsName</td>
+                    <td>@Saving.SavingsName</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+<script>
+
+</script>

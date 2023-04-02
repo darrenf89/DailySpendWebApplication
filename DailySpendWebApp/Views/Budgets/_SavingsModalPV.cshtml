@@ -1,8 +1,8 @@
-﻿@model DailySpendBudgetWebApp.Models.Savings
+﻿@model DailySpendBudgetWebApp.Models.CreateABudgetPageModel
 
 
 <div class="container">
-    <div id="divIsRegularSavingSelector" class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark">
+    <div id="divIsRegularSavingSelector" class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark p-1">
         <div>
             <h5 class="text-dark p-2 text-center">Do you want to set up a Regular Saving?</h5>
             <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Let us do the work for you. Set up a Saving goal and we will figure everything else out, well apart from what you should wear!</p>
@@ -31,8 +31,8 @@
             </div>
         </div>
         <div id="divCategoryExp" class="text-muted text-center p-1" Style="font-size: 12px;"></div>
-        <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divSavingDetails">
-            <div class="Saving-Type-Toggle">
+        <div class="container d-flex flex-column mb-1 ps-3 pe-3" >
+            <div class="Saving-Type-Toggle" id="divSavingDetails">
                 <div class="d-flex justify-content-center align-items-center text-center">
                     <div class="col-4 justify-content-center" id="divTargetDate">
                         <input type="radio" id="rdbTargetDate" name="SavingTypeToggleOption" value="TargetDate" />
@@ -63,26 +63,26 @@
         <div id="divSpacerTop2" class="mt-4"></div>
         <div id="divSavingTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
             <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="SavingsGoal"></label>
-            <input id="txtSavingsGoal" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
+            <input id="txtSavingsGoal" type="text" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingGoal();" />
             <input asp-for="SavingsGoal" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="SavingsGoal"></span>
         </div>
         <div id="divCurrentBalance" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
             <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="CurrentBalance"></label>
-            <input id="txtCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onchange="UpdateHdnCurrentBalance();" onblur="this.placeholder = '£0.00';" />
+            <input id="txtCurrentBalance" type="text" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = '';" onchange="UpdateHdnCurrentBalance();" onblur="this.placeholder = '£0.00';" />
             <input asp-for="CurrentBalance" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="CurrentBalance"></span>
         </div>
         <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
             <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="GoalDate">Goal Date</label>
             <input asp-for="GoalDate" id="GoalDate" type="date" onblur="CheckDateFuture(), UpdateValues(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
-            <span class="text-danger" asp-validation-for="GoalDate" id="valGoalDate"></span>
+            <span class="text-danger" asp-validation-for="GoalDate"></span>
         </div>
         <div id="divSavingValue" class="row justify-content-between align-items-center ms-2 me-2 mt-2 text-dark">
             <label class="form-label col-4 ps-2 pe-1 m-0" asp-for="RegularSavingValue"></label>
             <div style="width: 65%; border-left: 1px solid #772953; " class="d-flex text-dark justify-content-between ps-1 pe-1">
-                <input id="txtRegularSavingValue" type="text" pattern="^\d*(\.\d{0,2})?£" style=" color: #38b44a; width: 40%; text-align: right; border: none; outline: none; cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingAmount();" />
-                <input asp-for="RegularSavingValue" type="number" style="display:none;" />
+                <input id="txtRegularSavingValue" type="text" style=" color: #38b44a; width: 40%; text-align: right; border: none; outline: none; cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingAmount();" />
+                <input asp-for="RegularSavingValue" type="hidden" />
                 <div class="d-flex text-dark align-items-center" style="width: 55%">
                     <select name="ddlSavingsPeriod" id="ddlSavingsPeriod" class="form-select form-select-sm">
                         <option value="PerDay">Every Day</option>
@@ -94,7 +94,7 @@
         </div>
         <div id="divSpacerTop" class="mt-4"></div>
         <div id="divCanExceedGoal" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
-            <input asp-for="canExceedGoal" id="canExceedGoal" type="checkbox" class="pe-4 pt-1 pb-1" style="width: 15%; border: none; outline: none; color: #772953; cursor: pointer;" />
+            <input asp-for="canExceedGoal" type="checkbox" class="pe-4 pt-1 pb-1" style="width: 15%; border: none; outline: none; color: #772953; cursor: pointer;" />
             <label style="font-size: 8pt;" class="form-label col-10 ps-1 pt-1 pb-1 m-0 text-dark text-end" asp-for="GoalDate">Don't allow Goal Value to be exceeded?</label>
             <span class="text-danger" asp-validation-for="canExceedGoal"></span>
         </div>
@@ -108,6 +108,15 @@
 </div>
 
 <script>
+
+    $("input[data-type='currency']").on({
+        keyup: function () {
+            formatCurrency($(this));
+        },
+        blur: function () {
+            formatCurrency($(this), "blur");
+        }
+    });
 
     function UpdateHdnSavingGoal() {
         var txtSavingsGoal = document.getElementById('txtSavingsGoal').value;
@@ -123,7 +132,7 @@
 
     function LoadRegularSavingNo() {
         document.getElementById('divIsRegularSavingSelector').style.display = 'none';
-        document.getElementById('divSavingDetails').style.visibility = 'collapse';
+        document.getElementById('divSavingDetails').style.display = 'none';
         document.getElementById('divSavingsTypeSelector').style.display = 'flex';
         document.getElementById('divCategoryExp').style.display = 'none';
         document.getElementById('SavingsDetails').style.display = 'block';
@@ -144,6 +153,7 @@
         document.getElementById('SavingsDetails').style.display = 'none';
         //document.getElementById('btnSubmit').style.display = 'block';
         document.getElementById('isRegularSaving').value = 'True';
+        document.getElementById('divSavingDetails').style.display = 'block';
     }
 
     function LoadSavingTypeTargetDate() {
@@ -311,10 +321,10 @@
         if (!(year <= 9)) {
             if (CurrentDate > TargetDate) {
                 document.getElementById('GoalDate').value = '';
-                document.getElementById('valGoalDate').innerHTML = '<span id="GoalDate-error" style="font-size:8pt" class> * The Date must be in the future</span>'
+                document.getElementById('GoalDate').innerHTML = '<span id="GoalDate-error" style="font-size:8pt" class> * The Date must be in the future</span>'
             }
             else {
-                document.getElementById('valGoalDate').innerHTML = ''
+                document.getElementById('GoalDate').innerHTML = ''
             }
         }
     }
