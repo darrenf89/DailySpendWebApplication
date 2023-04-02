@@ -4,31 +4,48 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-@if(Model == null)
+@if(Model.Count == 0)
 {
     <div></div>
 }
 else
 {
-    <div>
-        <table class="table table-hover">
+    <div class="card text-white shadow">
+        <table class="table table-hover mb-0">
             <thead>
-                <tr>
-                    <th scope="col">Type</th>
-                    <th scope="col">Column heading</th>
-                    <th scope="col">Column heading</th>
-                    <th scope="col">Column heading</th>
+                <tr class="text-center">
+                    <th style="font-size: 10pt; width: 35%;" scope="col">Name</th>
+                    <th style="font-size: 10pt; width: 35%;" scope="col">Type</th>
+                    <th style="font-size: 10pt; width: 20%;" scope="col">Goal</th>
+                    <th style="font-size: 10pt; width: 5%;" scope="col"></th>
+                    <th style="font-size: 10pt; width: 5%;" scope="col"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody >
             @foreach(Savings Saving in Model)
             {
-                <tr class="table-primary">
-                    <td>@Saving.SavingsName</td>
-                    <td>@Saving.SavingsName</td>
-                    <td>@Saving.SavingsName</td>
-                    <td>@Saving.SavingsName</td>
-                    <td>@Saving.SavingsName</td>
+                var parms = new Dictionary<string, string>{{ "id", Saving.SavingID.ToString() }};
+
+                    <tr style="font-size: 9pt; vertical-align: middle;" class="table-primary text-center">
+                    <td >@Saving.SavingsName</td>
+                    @if(Saving.isRegularSaving)
+                    {
+                        <td>@Saving.SavingsType</td>
+                    }
+                    else
+                    {
+                        <td>Manual Savings</td>
+                    }
+                    @if (Saving.SavingsGoal == null)
+                    {
+                        <td>@Saving.RegularSavingValue</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">@Saving.SavingsGoal</td>
+                    } 
+                    <td><button type="submit" asp-action="EditSaving" asp-controller="Budgets" asp-all-route-data="@parms"></button></td>
+                    <td><button type="submit" asp-action="DeleteSaving" asp-controller="Budgets" asp-all-route-data="@parms"></button></td>
                 </tr>
             }
             </tbody>

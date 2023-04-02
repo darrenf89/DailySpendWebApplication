@@ -655,7 +655,7 @@ namespace DailySpendBudgetWebApp.Controllers
             {
                 SavingsList.Add(saving);
             }
-            return PartialView("_SavingsTablePV", SavingsList);
+            return PartialView("SavingsTableBudget", SavingsList);
         }
 
         public List<SelectListItem> GetCurrencyDDL(string? SelectedValue)
