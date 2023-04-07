@@ -289,6 +289,24 @@ namespace DailySpendBudgetWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Budgets/DeleteSaving/{id}")]
+        public IActionResult DeleteSaving(CreateABudgetPageModel obj, int id)
+        {
+
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Budgets/EditSaving/{id}")]
+        public IActionResult EditSaving(CreateABudgetPageModel obj, int id)
+        {
+
+            return View("EditSaving", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddSavingBudget(CreateABudgetPageModel obj)
         {
             Savings? S = new();
