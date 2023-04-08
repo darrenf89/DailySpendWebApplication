@@ -9,25 +9,28 @@
     <div></div>
 }
 else
-{
+{   
+    <div class="d-flex justify-content-end">
+        <span style="font-size: 10pt" class="badge bg-dark p-2 mb-2">Savings</span>
+    </div>
     <div class="card text-white shadow">
         <table class="table table-hover mb-0">
             <thead>
-                <tr class="text-center">
-                    <th style="font-size: 10pt; width: 35%;" scope="col">Name</th>
-                    <th style="font-size: 10pt; width: 35%;" scope="col">Type</th>
-                    <th style="font-size: 10pt; width: 20%;" scope="col">Goal</th>
-                    <th style="font-size: 10pt; width: 5%;" scope="col"></th>
-                    <th style="font-size: 10pt; width: 5%;" scope="col"></th>
+                <tr>
+                    <th style="font-size: 10pt; width: 8%;" scope="col"></th>
+                    <th style="font-size: 10pt; width: 8%;" scope="col"></th>
+                    <th style="font-size: 10pt; width: 32%;" class="text-dark" scope="col">Name</th>
+                    <th style="font-size: 10pt; width: 32%;" class="text-dark" scope="col">Type</th>
+                    <th class="text-center text-dark" style="font-size: 10pt; width: 20%;"  scope="col">Goal</th>
                 </tr>
             </thead>
             <tbody >
             @foreach(Savings Saving in Model)
             {
                 var parms = new Dictionary<string, string>{{ "id", Saving.SavingID.ToString() }};
-                    <td><button type="button" data-toggle="modal" data-target="#DeleteSavingModal" onclick="OpenDeleteSavingModal('@Saving.SavingID','@Saving.SavingsName','@Saving.SavingsType','@Saving.SavingsGoal')"></button></td>
-                    <td><button type="submit" asp-action="EditSaving" asp-controller="Budgets" asp-all-route-data="@parms"></button><i class="bi bi-pencil-square text-warning"></i></td>
-                    <tr style="font-size: 9pt; vertical-align: middle;" class="table-primary text-center">
+                <tr style="font-size: 9pt; vertical-align: middle;" class="table-primary">
+                    <td class="p-0 text-center"><button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="button" data-toggle="modal" data-target="#DeleteSavingModal" onclick="OpenDeleteSavingModal('@Saving.SavingID','@Saving.SavingsName','@Saving.SavingsType','@if(Saving.SavingsGoal == null){@Saving.RegularSavingValue}else{@Saving.SavingsGoal}')"><i class="bi bi-trash3 text-danger"></i></button></td>
+                    <td class="p-0 text-center"><button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="submit" asp-action="EditSaving" asp-controller="Budgets" asp-all-route-data="@parms"><i class="bi bi-pencil-square text-info"></i></button></td>
                     <td >@Saving.SavingsName</td>
                     @if(Saving.isRegularSaving)
                     {
@@ -39,7 +42,7 @@ else
                     }
                     @if (Saving.SavingsGoal == null)
                     {
-                        <td>@Saving.RegularSavingValue</td>
+                        <td class="text-center">@Saving.RegularSavingValue</td>
                     }
                     else
                     {
@@ -51,31 +54,5 @@ else
             </tbody>
         </table>
     </div>
-    <div class="modal fade" id="DeleteSavingModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Delete the Saving?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="textDeleteSavingModal"></p>
-            </div>
-            <div class="modal-footer">
-                <button id="btnDeleteSaving" type="submit" asp-action="DeleteSaving" asp-controller="Budgets" class="btn btn-primary">Yes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-            </div>
-            </div>
-        </div>
-    </div>
 }
 
-<script>
-    function OpenDeleteSavingModal(id, name, type, goal)
-    {
-        $('#textDeleteSavingModal').text = 'Are you sure you want to delete ' + name + ' from your savings? You had planned to saved ' + goal + ' seems like a righteous goal to me!'
-        $('#btnDeleteSaving').attr('formaction', '/Budgets/DeleteSaving/' + id);
-    }
-</script>

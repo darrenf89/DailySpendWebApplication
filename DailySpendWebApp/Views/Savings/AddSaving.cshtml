@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
 }
 <form method="post">
-    <input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
+    <input type="hidden" id="hdnServerDate" value='@ViewBag.CurrentDate' />
     <div class="d-flex flex-column align-items-center" style="background-color: transparent;">
         <div class="d-flex container align-items-center justify-content-center mt-4 pt-2">   
             <h3 class="text-white">@TempData["PageHeading"]</h3>
@@ -32,8 +32,8 @@
                         
                     </div>
                     <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                        <button asp-action="AddSavingConfirmation" asp-controller="Savings" type="submit" id="btnSaveSavings" class="btn btn-primary">Amazing, Let's Continue</button>
-                        <button asp-action="AddSavingCancel" asp-controller="Savings" type="submit" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="ConfirmationModal">Opps, Delete!</button>
+                    <button asp-action="AddSavingConfirmation" asp-controller="Savings" type="submit" id="btnSaveSavings" class="btn btn-primary" >Amazing, Let's Continue</button>
+                    <button asp-action="AddSavingCancel" asp-controller="Savings" type="submit" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="ConfirmationModal">Opps, Delete!</button>
                     </div>
                 </div>
             </div>
@@ -52,10 +52,12 @@
 </div>
 
 <script>
+
     const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const monthlist = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'];
     var PageStatus = '@ViewBag.PageStatus'
     document.addEventListener("load", CheckPageStatus(PageStatus));
+
 
     function CheckPageStatus(Status) {
         //var HtmlText = ''

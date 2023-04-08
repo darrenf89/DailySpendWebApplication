@@ -148,6 +148,8 @@ public class SavingsController : Controller
         ViewBag.RegularSavingValue = S.RegularSavingValue;
         ViewBag.SavingsType = S.SavingsType;
         ViewBag.PageStatus = "Confirmation";
+        ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
+        ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
 
         return View();
     }
@@ -183,6 +185,7 @@ public class SavingsController : Controller
 
         Savings? CreatedSaving = BudgetSavingsList.Savings.First();
 
+        ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
         TempData["SnackbarMess"] = "SavingCreated";
         return RedirectToAction("Index", "Home", new {ReMess = "SavingCreated", id = CreatedSaving.SavingID});
     }

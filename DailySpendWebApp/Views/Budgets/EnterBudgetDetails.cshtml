@@ -237,7 +237,7 @@
                 </div>
             </div>
         </div>
-        <div class="p-3">
+        <div class="p-3 pt-1">
             <div id="SavingsSummary">
             </div>
         </div>
@@ -269,6 +269,25 @@
             <button type="submit" class="btn btn-lg btn-success rounded-1 mb-4 col-10"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
         </div>
     </footer>
+    <div class="modal ps-4 pe-4" id="DeleteSavingModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-primary">
+                    <h5 class="modal-title">Delete the Saving?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="DeleteSavingModal" aria-label="Close" id="DeleteSavingModalClose">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0 text-secondary" id="textDeleteSavingModal"></p>
+                </div>
+                <div class="modal-footer border-top border-primary p-0">
+                    <button id="btnDeleteSaving" type="submit" asp-action="DeleteSaving" asp-controller="Budgets" class="btn btn-danger">Yes</button>
+                    <button type="button" class="btn btn-info" data-bs-dismiss="DeleteSavingModal" id="btnDeleteSavingModalClose">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal" id="SavingsModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -283,7 +302,7 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                    <button asp-controller="Budgets" asp-action="AddSavingBudget" type="submit" id="btnSaveSavings" class="btn btn-primary">Save changes</button>
+                    <button asp-controller="Budgets" asp-action="AddSavingBudget" type="submit" id="btnSaveSavings" class="btn btn-primary" onclick="ClearDisabled()">Save changes</button>
                     <button type="button" id="btnCancelSavings" class="btn btn-danger" data-bs-dismiss="SavingsModal">Cancel</button>
                 </div>
             </div>
@@ -341,6 +360,13 @@
     const btnNoSavings = document.getElementById("btnNoSavings");
     const btnSaveSavings = document.getElementById("btnSaveSavings");
     const btnCancelSavings = document.getElementById("btnCancelSavings");
+
+    function ClearDisabled() 
+    {
+        document.getElementById('txtRegularSavingValue').disabled = false;
+        document.getElementById('GoalDate').disabled = false;
+        document.getElementById('ddlSavingsPeriod').disabled = false;
+    }
 
     function UpdateHdnNextPayDayAmount() {
         var txtNextPayDayAmount = document.getElementById('txtNextPayDayAmount').value;
@@ -443,6 +469,12 @@
             $('#collapseOne').removeClass('show')
             $('#AccordionSettings').attr("aria-expanded", "false");
         }
+
+        if (Stage.includes('EditSaving')) 
+        {
+            $('#SavingsInfo').load("/Budgets/AddSavingPV/Edit/@Model.SavingID");
+            document.getElementById("SavingsModal").style.display = "block"            
+        }
     }
 
 
@@ -465,11 +497,10 @@
         }            
     }    
 
-    document.getElementById("OpenSavingsDetails").onclick = function(){
-        
+    document.getElementById("OpenSavingsDetails").onclick = function()
+    {
         document.getElementById("SavingsModal").style.display = "block"
-        $('#SavingsInfo').empty();
-        $('#SavingsInfo').load("/Budgets/AddSavingPV");
+        $('#SavingsInfo').load("/Budgets/AddSavingPV/New");
     }
 
     document.getElementById("OpenBillsDetails").onclick = function () {
@@ -482,16 +513,25 @@
         document.getElementById("SavingsModal").style.display = "none";
     }
 
+    document.getElementById("DeleteSavingModalClose").onclick = function () {
+        document.getElementById("DeleteSavingModal").style.display = "none";
+    }
+
+    document.getElementById("btnDeleteSavingModalClose").onclick = function () {
+        document.getElementById("DeleteSavingModal").style.display = "none";
+    }
+
     document.getElementById("CloseBillsModal").onclick = function () {
         document.getElementById("BillsModal").style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal || event.target == SavingsModal || event.target == BillsModal) {
+        if (event.target == modal || event.target == SavingsModal || event.target == BillsModal || event.target == DeleteSavingModal) {
             //modal.style.display = "none";
             SavingsModal.style.display = "none";
             BillsModal.style.display = "none";
+            DeleteSavingModal.style.display = "none";
         }
     }
 
@@ -577,19 +617,6 @@
         ChangeElement.className="form-control w-75 ms-4 border-0 text-primary p-0 ps-4";
         lblChangeElement.className = "d-flex form-label ms-4 mb-0 text-primary"
     }
-
-    //$(document).on('keydown', 'input[pattern]', function (e) {
-    //    var input = $(this);
-    //    var oldVal = input.val();
-    //    var regex = new RegExp(input.attr('pattern'), 'g');
-
-    //    setTimeout(function () {
-    //        var newVal = input.val();
-    //        if (!regex.test(newVal)) {
-    //            input.val(oldVal);
-    //        }
-    //    }, 1);
-    //});
 
     $(document).ready(handleIncomeRadioClick());
 
@@ -705,7 +732,14 @@
                 Stage.push('SettingsAccordianClosed');
             }
         }
-    }    
+    }
+
+    function OpenDeleteSavingModal(id, name, type, goal) {
+        $('#textDeleteSavingModal').html('Are you sure you want to delete ' + name + ' from your savings? You had planned to save ' + goal + ' seems like a righteous goal to me!')
+        $('#btnDeleteSaving').attr('formaction', '/Budgets/DeleteSaving/' + id);
+        $('#DeleteSavingModal').show();
+    }
+
 
 </script>
 

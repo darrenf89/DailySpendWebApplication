@@ -69,6 +69,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? RecuringType { get; set; }
         public int? RecuringPeriod { get; set; }
         public decimal? BillDailyValue { get; set; }
+        public int? AproxDaysBetweenPay { get; set; } = 30;
 
     }
 }
