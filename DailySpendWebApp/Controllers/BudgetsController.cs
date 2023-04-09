@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
 using Microsoft.Data.SqlClient.Server;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DailySpendBudgetWebApp.Controllers
 {
@@ -466,6 +467,7 @@ namespace DailySpendBudgetWebApp.Controllers
             _db.Savings.Remove(Saving);
             _db.SaveChanges();
 
+            obj.SavingsName = Saving.SavingsName;
             obj = UpdateEnterBudgetDetailsPageFromModel(obj);
 
             ViewBag.SnackBarMess = "DeleteSaving";
@@ -495,20 +497,35 @@ namespace DailySpendBudgetWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddSavingBudget(CreateABudgetPageModel obj)
         {
+
             Savings? S = new();
 
-            var BudgetSavingsList = _db.Budgets?
-                .Include(x => x.Savings)
-                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
-                .ToList();
-
-            foreach (var saving in BudgetSavingsList[0].Savings)
+            if (obj.SavingsName == null | obj.SavingsName== "")
             {
-                if (saving.SavingsName == obj.SavingsName && !saving.isSavingsClosed)
+                ModelState.AddModelError("SavingsName", "* You have to enter a name for your saving.");
+            }
+
+            if (!obj.Stage.Contains("EditSaving"))
+            {
+
+                var BudgetSavingsList = _db.Budgets?
+                    .Include(x => x.Savings)
+                    .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
+                    .ToList();
+
+                foreach (var saving in BudgetSavingsList[0].Savings)
                 {
-                    ModelState.AddModelError("SavingsName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
-                    break;
+                    if (saving.SavingsName == obj.SavingsName && !saving.isSavingsClosed)
+                    {
+                        ModelState.AddModelError("SavingsName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
+                        break;
+                    }
                 }
+            }
+            else
+            {
+                var SavingsList = _db.Savings.Where(x => x.SavingID == obj.SavingID);
+                S = SavingsList.FirstOrDefault();
             }
 
             if (DateTime.UtcNow.AddDays(1) >= obj.GoalDate)
@@ -519,7 +536,7 @@ namespace DailySpendBudgetWebApp.Controllers
 
 
             var BudgetList = _db.Budgets?
-                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
             Budgets? Budget = BudgetList?.FirstOrDefault();
 
             if (ModelState.IsValid)
@@ -550,8 +567,8 @@ namespace DailySpendBudgetWebApp.Controllers
                         S.SavingsType = obj.SavingsType;
                         S.GoalDate = obj.GoalDate;
                         S.RegularSavingValue = obj.RegularSavingValue;
-                        S.canExceedGoal = obj.canExceedGoal;
-                        S.isAutoComplete = false;
+                        S.canExceedGoal = false;
+                        S.isAutoComplete = obj.isAutoComplete;
 
                     }
                     else if (obj.SavingsType == "SavingsBuilder")
@@ -583,18 +600,32 @@ namespace DailySpendBudgetWebApp.Controllers
                     }
                 }
 
-                _db.Attach(Budget);
-                Budget.Savings.Add(S);
+                if (!obj.Stage.Contains("EditSaving"))
+                { 
+                    _db.Attach(Budget);
+                    Budget.Savings.Add(S);
+                    ViewBag.SnackBarMess = "NewSavingAdded";
+                    ViewBag.SnackBarType = "success";
+                }
+                else
+                {
+                    ViewBag.SnackBarMess = "SavingEdited";
+                    ViewBag.SnackBarType = "success";
+                }
+
                 _db.SaveChanges();
 
             }
             else
             {
                 obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+                obj.Stage.Remove("EditSaving");
                 return View("EnterBudgetDetails", obj);
             }
 
+
             obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+            obj.Stage.Remove("EditSaving");
             return View("EnterBudgetDetails", obj);
         }
 
@@ -731,7 +762,6 @@ namespace DailySpendBudgetWebApp.Controllers
 
         public CreateABudgetPageModel UpdateEnterBudgetDetailsPageFromModel(CreateABudgetPageModel obj)
         {
-            obj.Stage.Remove("EditSaving");
 
             var BudgetList = _db.Budgets
                     .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
@@ -891,9 +921,13 @@ namespace DailySpendBudgetWebApp.Controllers
             ViewBag.DateFormatDDL = GetDateFormatDDL(obj.DateFormatDDL);
             ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
 
-            obj.Stage.Remove("EditSaving");
-            obj.Stage.Remove("EditBill");
-            obj.Stage.Remove("EditIncome");
+            var temp = new List<string?>();
+            foreach (var s in obj.Stage)
+            {
+                if (!string.IsNullOrEmpty(s))
+                    temp.Add(s);
+            }
+            obj.Stage = temp;
 
             return obj;
         }

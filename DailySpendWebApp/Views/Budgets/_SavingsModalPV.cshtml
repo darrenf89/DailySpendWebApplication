@@ -5,8 +5,8 @@
     string? GoalDateString = "";
     string? CurrentBalanceString = "";
     string? RegularSavingString = "";
-    string? CanExceedString = "";
-    string? isAutoCompleteString = "";
+    string? CanExceedString = "true";
+    string? isAutoCompleteString = "true";
     if (Model.Stage.Contains("EditSaving"))
     {
         GoalString = String.Format("{0:c}", Model.SavingsGoal);
@@ -50,6 +50,7 @@
                     <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRegularSavingSelection('No'), false;">No</button>
                 </div>
                 <input type="hidden" asp-for="isRegularSaving" />
+                <input type="hidden" asp-for="SavingID" />
             </div>
         </div>
     </div>
@@ -157,6 +158,7 @@
 
         if (SavingModalStage.includes('EditSaving')) 
         {
+            document.getElementById('SavingsName').readOnly = true;
             if ('@Model.isRegularSaving' == 'True') 
             {           
                 LoadRegularSavingYes()
@@ -170,7 +172,7 @@
                     document.getElementById('GoalDate').value = '@Html.Raw(GoalDateString)'
                     document.getElementById('txtCurrentBalance').value = '@Html.Raw(CurrentBalanceString)'
                     document.getElementById('txtRegularSavingValue').value = '@Html.Raw(RegularSavingString)'
-                    document.getElementById('isAutoComplete').checked = '@isAutoCompleteString'
+                    document.getElementById('isAutoComplete').checked = @isAutoCompleteString
                 }
                 else if ('@Model.SavingsType' == 'SavingsBuilder') 
                 {
@@ -185,8 +187,8 @@
                     document.getElementById('GoalDate').value = '@Html.Raw(GoalDateString)'
                     document.getElementById('txtCurrentBalance').value = '@Html.Raw(CurrentBalanceString)'
                     document.getElementById('txtRegularSavingValue').value = '@Html.Raw(RegularSavingString)'
-                    document.getElementById('isAutoComplete').checked = '@isAutoCompleteString'
-                    document.getElementById('canExceedGoal').checked = '@CanExceedString'
+                    document.getElementById('isAutoComplete').checked = @isAutoCompleteString
+                    document.getElementById('canExceedGoal').checked = @CanExceedString
                 }
             }
             else 
@@ -343,11 +345,11 @@
 
     function UpdateValues() {
         //console.log('UpdatingValues');
-        if (document.getElementById('rdbTargetDate').checked) {
+        if (document.getElementById('SavingsType').value == 'TargetDate') {
             //console.log('TargetDate');
             UpdateSavingsValue();
         }
-        else if (document.getElementById('rdbTargetAmount').checked) {
+        else if (document.getElementById('SavingsType').value == 'TargetAmount') {
             //console.log('TargetAmount');
             UpdateGoalDate();
         }

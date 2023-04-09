@@ -382,8 +382,7 @@
 
     function CheckSnackBarMess()
     {
-        if ('@ViewBag.SnackBarMess' != null && '@ViewBag.SnackBarType' != null)
-        {
+        if ('@ViewBag.SnackBarMess' != null && '@ViewBag.SnackBarType' != null &&'@ViewBag.SnackBarMess' != "" && '@ViewBag.SnackBarType' != "") {
             ShowSnackBar('@ViewBag.SnackBarMess', '@ViewBag.SnackBarType')
         }
     }
@@ -511,7 +510,14 @@
 
     document.getElementById("CloseSavingModal").onclick = function () {
         document.getElementById("SavingsModal").style.display = "none";
+        DeleteEditSavingFromStage()
     }
+
+    document.getElementById("btnCancelSavings").onclick = function () {
+        document.getElementById("SavingsModal").style.display = "none";
+        DeleteEditSavingFromStage()
+    }
+
 
     document.getElementById("DeleteSavingModalClose").onclick = function () {
         document.getElementById("DeleteSavingModal").style.display = "none";
@@ -532,6 +538,7 @@
             SavingsModal.style.display = "none";
             BillsModal.style.display = "none";
             DeleteSavingModal.style.display = "none";
+            DeleteEditSavingFromStage()
         }
     }
 
@@ -630,6 +637,15 @@
         else if (Message == 'BudgetSettingsSaved') {
             x.innerHTML = "<div><strong>Congrats</strong> you have saved your <strong>Budgets</strong> Settings"
         }
+        else if (Message == 'NewSavingAdded') {
+            x.innerHTML = "<div><strong>Congrats</strong> you have added " + "@Model.SavingsName" + " as a new <strong>Saving</strong> to your budget"
+        }
+        else if (Message == 'SavingEdited') {
+            x.innerHTML = "<div>You have edited the saving <strong>" + "@Model.SavingsName" + "</strong>, hopefully saving more money now!"
+        }
+        else if (Message == 'DeleteSaving') {
+            x.innerHTML = "<div>You have <string>Deleted</strong> the saving <strong>" + "@Model.SavingsName" + "</strong>, I wouldn't have done that!"
+        } 
 
         var y = document.getElementById("snackbar");
         y.className = y.className.replace("alert-success", "");
@@ -645,6 +661,16 @@
         y.className = y.className + " show";
 
         setTimeout(function () { y.className = y.className.replace("show", ""); }, 6900);
+    }
+
+    function DeleteEditSavingFromStage()
+    {
+        if (Stage.includes('EditSaving'))
+        {
+            var number = Stage.indexOf('EditSaving');
+            Stage[number] = '';
+            $('#Stage_' + number + '_').val("");
+        }
     }
 
     function UpdateDetailsAccordianStage() 
