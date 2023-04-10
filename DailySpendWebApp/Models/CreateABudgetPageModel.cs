@@ -60,15 +60,15 @@ namespace DailySpendBudgetWebApp.Models
         public decimal? RegularSavingValue { get; set; }
         public bool isAutoComplete { get; set; }
         public int? BillID { get; set; }
-        public string? BillType { get; set; }
         public string? BillName { get; set; }
+        public string? BillType { get; set; }
+        public int? BillValue { get; set; }
+        public string? BillDuration { get; set; }
         public decimal? BillAmount { get; set; }
         public DateTime? BillDueDate { get; set; }
         public decimal? BillCurrentBalance { get; set; } = decimal.Zero;
-        public bool? isRecuring { get; set; } = false;
-        public string? RecuringType { get; set; }
-        public int? RecuringPeriod { get; set; }
-        public decimal? BillDailyValue { get; set; }
+        public bool? isBillRecuring { get; set; } = false;
+        public decimal? RegularBillValue { get; set; }
         public int? AproxDaysBetweenPay { get; set; } = 30;
 
     }

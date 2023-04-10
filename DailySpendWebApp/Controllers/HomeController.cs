@@ -62,7 +62,7 @@ public class HomeController : Controller
 
                     TempData["BillName"] = CreatedBill.BillName;
                     TempData["BillAmount"] = CreatedBill.BillAmount;
-                    TempData["BillDailyValue"] = CreatedBill.BillDailyValue;
+                    TempData["BillDailyValue"] = CreatedBill.RegularBillValue;
 
                 }
                 else if (ReMess == "SavingCreated")

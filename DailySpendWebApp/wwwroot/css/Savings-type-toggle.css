@@ -128,7 +128,7 @@ input[name="currency-field"]::placeholder {
     text-align: right;
     border: none;
     outline: none;
-    color: #df382c;
+    color: #38b44a;
 }
 
 #txtBillAmount {

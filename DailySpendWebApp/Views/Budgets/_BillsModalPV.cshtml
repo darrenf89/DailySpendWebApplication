@@ -1,0 +1,292 @@
+﻿@model DailySpendBudgetWebApp.Models.CreateABudgetPageModel
+
+@{
+    string? GoalString = "";
+    string? GoalDateString = "";
+    string? CurrentBalanceString = "";
+    int? BillValue = 0;
+    if (Model.Stage.Contains("EditBill"))
+    {
+        GoalString = String.Format("{0:c}", Model.BillAmount);
+        DateTime dt = Model.BillDueDate.GetValueOrDefault();
+        GoalDateString = dt.ToString("yyyy-MM-dd");
+        CurrentBalanceString = String.Format("{0:c}", Model.BillCurrentBalance);
+        BillValue = Model.BillValue ?? 1;
+    }
+}
+
+<div id="divMainBillContent" class="container">
+    <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divSavingsTypeSelector" style="display: block;">
+        <div class="container mt-1 mb-1">
+            <div class="d-flex flex-column align-items-center">
+                <div class="input-container col-7 mb-0">
+                    <input style="font-size: 20px; cursor: pointer;" placeholder="Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Savings Category'" asp-for="BillName" type="text" />
+                </div>
+                <div class="text-center p-1 pt-2" style="line-height: 11px">
+                    <span style="font: normal 10px Arial;" class="text-danger" asp-validation-for="BillName"></span>
+                </div>
+                <div id="divCategoryExp" class="text-muted text-center p-1" Style="font-size: 12px;"></div>
+                <div id="divRecurringTypeSelected" style="display: none;">
+                    <h5 class="text-dark p-2 text-center" id="txtRecurringTypeSelected"></h5>
+                </div>
+            </div>
+        </div>
+        <div id="divIsReccuring">
+            <div>
+                <h5 class="text-dark p-2 text-center">Do you want to set up a One-off or a Recurring Bill?</h5>
+                <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Set up a Recurring Bill and we will make sure you are saving for it every day! Or a one-off if you are never going to have to pay for it again, sounds more like a Saving to me though!</p>
+            </div>
+            <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRecurringBill">
+                <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
+                    <div id="divRecurringBillYes" class="col-5 m-2">
+                        <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRecurringBillSelection('Yes'), false;">Recurring</button>
+                    </div>
+                    <div id="divRecurringBillYes" class="col-5 m-2">
+                        <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRecurringBillSelection('No'), false;">One-off</button>
+                    </div>
+                    <input type="hidden" asp-for="isBillRecuring" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="BillsDetails" style="display: none;">
+        <div id="divSpacerTop2" class="mt-4"></div>
+        <div id="divBillTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
+            <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillAmount">Total Amount Due</label>
+            <input id="txtBillAmount" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''; this.value = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnBillAmount();" />
+            <input asp-for="BillAmount" type="hidden" />
+            <span class="text-danger" asp-validation-for="BillAmount"></span>
+        </div>
+        <div id="divCurrentBalance" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+            <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillCurrentBalance">Current Saved</label>
+            <input id="txtBillCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''; this.value = '';" onblur="this.placeholder = '£0.00';" onchange="UpdateHdnBillCurrentBalance();" />
+            <input asp-for="BillCurrentBalance" type="hidden" />
+            <span class="text-danger" asp-validation-for="BillCurrentBalance"></span>
+        </div>
+        <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+            <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="BillDueDate">Bill Due Date</label>
+            <input asp-for="BillDueDate" type="date" onblur="CheckDateFuture(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+            <span class="text-danger" asp-validation-for="BillDueDate" id="valGoalDate"></span>
+        </div>
+        <div id="divRecurringBill">
+            <div id="divSpacerTop" class="mt-3"></div>
+            <fieldset class="form-group">
+                <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="BillRadioButtons">
+                    <div class="form-check col-10 p-0">
+                        <input class="form-check-input" type="radio" name="BilloptionsRadios" id="BilloptionsRadios1" value="Everynth" />
+                        <label class="form-check-label align-self-center text-dark" for="BilloptionsRadios1" id="lblBilloptionsRadios1">
+                            Every nth ...
+                        </label>
+                    </div>
+                    <div class="form-check col-10 p-0">
+                        <input class="form-check-input align-self-center" type="radio" name="BilloptionsRadios" id="BilloptionsRadios2" value="OfEveryMonth" />
+                        <label class="form-check-label align-self-center text-dark" for="BilloptionsRadios2" id="lblBilloptionsRadios2">
+                            on the ... of every month
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="ps-4">
+                <input type="hidden" asp-for="BillType" />
+                <span asp-validation-for="BillType" style="font-size:8pt" class="text-danger text-center"></span>
+            </div>
+            <div class="mt-3 mb-1 pe-3 d-flex">
+                <div id="divBillPeriodicPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                    <div class="text-center me-1" style="display: flex">
+                        <span class="text-dark form-label mb-0">Every</span>
+                    </div>
+                    <div class="text-center me-1" style="display: flex">
+                        <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" id="BillPeriodicPay" />
+                    </div>
+                    <div class="" style="display: flex">
+                        <div class="DropDown">
+                            <select class="form-select text-primary text-center" asp-for="BillDuration">
+                                <option>days</option>
+                                <option>weeks</option>
+                                <option>months</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="divBillGivenDayOfMonthPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                    <div class="text-center me-1">
+                        <span class="text-dark form-label mb-0">On the </span>
+                    </div>
+                    <div class="text-center me-1">
+                        <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" id="BillGivenDayOfMonthPay" />
+                    </div>
+                    <div class="text-center">
+                        <span class="text-dark form-label mb-0"> of every month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" asp-for="BillValue" />
+        <div id="divSpacerTop2" class="mt-4"></div>
+    </div>
+</div>
+
+<script>
+
+    var BillModalStage = [];
+
+    document.addEventListener("load", CheckBillStage());
+
+    function CheckBillStage() 
+    {
+        BillModalStage = [];
+    @foreach (string item in Model.Stage)
+    {
+        @:BillModalStage.push('@item');
+    }
+
+        if (BillModalStage.includes('EditBill')) 
+        {
+            document.getElementById('txtBillAmount').value = '@Html.Raw(GoalString)'
+            document.getElementById('BillDueDate').value = '@Html.Raw(GoalDateString)'
+            document.getElementById('txtBillCurrentBalance').value = '@Html.Raw(CurrentBalanceString)'
+            document.getElementById('BillName').readOnly = true;
+            if ('@Model.isBillRecuring' == 'True') 
+            {
+                isRecurringBillSelection('Yes');
+
+                if ('@Model.BillType' == 'Everynth') 
+                {
+                    document.getElementById('BilloptionsRadios1').checked = true
+                    document.getElementById('BilloptionsRadios2').checked = false
+                    document.getElementById('divBillPeriodicPay').style.display = 'flex';
+                    document.getElementById('divBillGivenDayOfMonthPay').style.display = 'none';
+                    document.getElementById('lblBilloptionsRadios1').className = "form-check-label align-self-center text-primary"
+                    document.getElementById('lblBilloptionsRadios2').className = "form-check-label align-self-center text-secondary"
+                    document.getElementById('BillType').value = "Everynth"
+                    document.getElementById('BillPeriodicPay').value = @BillValue
+                }
+                else if ('@Model.BillType' == 'OfEveryMonth') 
+                {
+                    document.getElementById('BilloptionsRadios1').checked = false
+                    document.getElementById('BilloptionsRadios2').checked = true
+                    document.getElementById('divBillPeriodicPay').style.display = 'none';
+                    document.getElementById('divBillGivenDayOfMonthPay').style.display = 'flex';
+                    document.getElementById('lblBilloptionsRadios1').className = "form-check-label align-self-center text-secondary"
+                    document.getElementById('lblBilloptionsRadios2').className = "form-check-label align-self-center text-primary"
+                    document.getElementById('BillType').value = "OfEveryMonth"
+                    document.getElementById('BillGivenDayOfMonthPay').value = @BillValue
+                }
+            }
+            else 
+            {
+                isRecurringBillSelection('No');
+            }
+        }
+    }
+
+    function ClearBillsInputs() {
+        document.getElementById('txtBillAmount').value = '';
+        document.getElementById('txtBillCurrentBalance').value = '';
+        document.getElementById('BillDueDate').value = '';
+    }
+
+
+    $("input[data-type='currency']").on({
+        keyup: function () {
+            formatCurrency($(this));
+        },
+        blur: function () {
+            formatCurrency($(this), "blur");
+        }
+    });
+
+    $("#BillGivenDayOfMonthPay").on({
+        change: function () {
+            $('#BillValue').val(this.value)
+        }
+    });
+
+    $("#BillPeriodicPay").on({
+        change: function () {
+            $('#BillValue').val(this.value)
+        }
+    });
+
+    document.querySelectorAll('input[name="BilloptionsRadios"]').forEach(radio => {
+        radio.addEventListener('click', handleBillRadioClick);
+    });
+
+    function handleBillRadioClick() {
+        if (document.getElementById('BilloptionsRadios1').checked) {
+            document.getElementById('divBillPeriodicPay').style.display = 'flex';
+            document.getElementById('divBillGivenDayOfMonthPay').style.display = 'none';
+            document.getElementById('lblBilloptionsRadios1').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblBilloptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('BillType').value = "Everynth"
+
+        }
+        else if (document.getElementById('BilloptionsRadios2').checked) {
+            document.getElementById('divBillPeriodicPay').style.display = 'none';
+            document.getElementById('divBillGivenDayOfMonthPay').style.display = 'flex';
+            document.getElementById('lblBilloptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblBilloptionsRadios2').className = "form-check-label align-self-center text-primary"
+            document.getElementById('BillType').value = "OfEveryMonth"
+        }
+    }
+
+    function UpdateHdnBillAmount() {
+        var txtBillAmount = document.getElementById('txtBillAmount').value;
+        var numBillAmount = txtBillAmount.replace('£', '').replace(',', '');
+        document.getElementById('BillAmount').value = numBillAmount;
+    }
+
+    function UpdateHdnBillCurrentBalance() {
+        var txtBillCurrentBalance = document.getElementById('txtBillCurrentBalance').value;
+        var numBillCurrentBalance = txtBillCurrentBalance.replace('£', '').replace(',', '');
+        document.getElementById('BillCurrentBalance').value = numBillCurrentBalance;
+    }
+
+    function CheckDateFuture() {
+        var CurrentDateString = (document.getElementById('hdnServerDate').value);
+        var CurrentDateStringSplit = CurrentDateString.split(' ');
+        var DateCurrentDate = new Date(CurrentDateStringSplit[0].split('/')[2], CurrentDateStringSplit[0].split('/')[1] - 1, CurrentDateStringSplit[0].split('/')[0]);
+        var CurrentDate = DateCurrentDate.getTime();
+        var TargetDate = Date.parse(document.getElementById('GoalDate').value);
+
+        console.log(CurrentDateString)
+        console.log(CurrentDateStringSplit)
+        console.log(DateCurrentDate)
+        console.log(TargetDate)
+        console.log(CurrentDate)
+
+        var DateTargetDate = new Date(TargetDate)
+        var year = DateTargetDate.getFullYear()
+
+        if (!(year <= 9)) {
+            if (CurrentDate > TargetDate) {
+                document.getElementById('valGoalDate').innerHTML = '<span id="GoalDate-error" style="font-size:8pt" class> * The Date must be in the future</span>'
+            }
+            else {
+                document.getElementById('valGoalDate').innerHTML = ''
+            }
+        }
+    }
+
+
+    function isRecurringBillSelection(isRegular) {
+        document.getElementById("divIsReccuring").style.display = "none";
+        document.getElementById("divRecurringTypeSelected").style.display = "block";
+        document.getElementById("BillsDetails").style.display = "block";
+        if (isRegular == 'Yes') {
+            document.getElementById('isBillRecuring').value = 'true';
+            document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a recurring bill";
+            document.getElementById("divRecurringBill").style.display = "block";
+            document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For most of your bills! Phone, car, Netflix, the list goes on ...</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Tell us how much, when the next bill is due and how often it occurs</p>'
+
+        }
+        else if (isRegular == 'No') {
+            document.getElementById('isBillRecuring').value = 'false';
+            document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a one off bill";
+            document.getElementById("divRecurringBill").style.display = "none";
+            document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For those one off bills, owe someone money? </p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Tell us how much and when the bill is due</p>'
+
+        }
+    }
+
+</script>

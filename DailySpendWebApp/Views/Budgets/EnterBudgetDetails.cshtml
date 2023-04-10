@@ -17,6 +17,8 @@
         }
     }
     </div>
+    <input asp-for="BillID" type="hidden" value="@Model.BillID"/>
+    <input asp-for="SavingID" type="hidden" value="@Model.SavingID"/>
     <div class="bg-transparent" style="min-height: 82vh;">
         <div class="mt-4 row justify-content-center p-2">
             @if (ViewBag.hasBudgetName)
@@ -35,7 +37,7 @@
                     <div class="d-flex justify-content-around align-items-center mt-auto mb-auto">                                        
                     <div class="input-container col-9 mb-3" >
                         <input style="font-size:20px;" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Budget Name'" placeholder="Budget Name" asp-for="BudgetName" type="text" required onchange="ChangeDivBudgetNameBorder();"/>
-                            <span style="font-size:10px" class="text-danger text-center" asp-validation-for="BudgetName"></span>
+                        <span style="font-size:10px" class="text-danger text-center" asp-validation-for="BudgetName"></span>
                     </div>
                 </div>
             </div>
@@ -253,7 +255,7 @@
         </div>
         <div class="p-2">
             <div id="OpenIncomeDetails" class="p-2">
-                <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Extra Income! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
+                <a class="btn btn-lg btn-success rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Extra Income! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
             </div>
         </div>        
     </div>
@@ -312,6 +314,25 @@
             </div>
         </div>
     </div>
+    <div class="modal ps-4 pe-4" id="DeleteBillModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-primary">
+                    <h5 class="modal-title">Delete the Bill?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="DeleteBillModal" aria-label="Close" id="DeleteBillModalClose">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0 text-secondary" id="textDeleteBillModal"></p>
+                </div>
+                <div class="modal-footer border-top border-primary p-0">
+                    <button id="btnDeleteBill" type="submit" asp-action="DeleteBill" asp-controller="Budgets" class="btn btn-danger">Yes</button>
+                    <button type="button" class="btn btn-info" data-bs-dismiss="DeleteBillModal" id="btnDeleteBillModalClose">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal" id="BillsModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -326,7 +347,7 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
-                    <button type="button" id="btnSaveBills" class="btn btn-primary">Save changes</button>
+                    <button asp-controller="Budgets" asp-action="AddBillBudget" type="submit" class="btn btn-primary" onclick="DisableBilltxt()">Save changes</button>
                     <button type="button" id="btnCancelBills" class="btn btn-danger" data-bs-dismiss="BillsModal">Cancel</button>
                 </div>
             </div>
@@ -370,6 +391,14 @@
         document.getElementById('txtRegularSavingValue').disabled = false;
         document.getElementById('GoalDate').disabled = false;
         document.getElementById('ddlSavingsPeriod').disabled = false;
+    }
+    
+    function DisableBilltxt() 
+    {
+        document.getElementById('txtBillAmount').disabled = true;
+        document.getElementById('txtBillCurrentBalance').disabled = true;
+        document.getElementById('BillPeriodicPay').disabled = true;
+        document.getElementById('BillGivenDayOfMonthPay').disabled = true;
     }
 
     function UpdateHdnNextPayDayAmount() {
@@ -478,6 +507,12 @@
             $('#SavingsInfo').load("/Budgets/AddSavingPV/Edit/@Model.SavingID");
             document.getElementById("SavingsModal").style.display = "block"            
         }
+
+        if (Stage.includes('EditBill')) 
+        {
+            $('#BillsInfo').load("/Budgets/AddBillPV/Edit/@Model.BillID");
+            document.getElementById("BillsModal").style.display = "block"            
+        }
     }
 
 
@@ -506,12 +541,6 @@
         $('#SavingsInfo').load("/Budgets/AddSavingPV/New");
     }
 
-    document.getElementById("OpenBillsDetails").onclick = function () {
-        document.getElementById("BillsModal").style.display = "block"
-        $('#BillsInfo').empty();
-        $('#BillsInfo').load("/Budgets/AddBillPV");
-    }
-
     document.getElementById("CloseSavingModal").onclick = function () {
         document.getElementById("SavingsModal").style.display = "none";
         DeleteEditSavingFromStage()
@@ -522,7 +551,6 @@
         DeleteEditSavingFromStage()
     }
 
-
     document.getElementById("DeleteSavingModalClose").onclick = function () {
         document.getElementById("DeleteSavingModal").style.display = "none";
     }
@@ -531,18 +559,42 @@
         document.getElementById("DeleteSavingModal").style.display = "none";
     }
 
+    document.getElementById("OpenBillsDetails").onclick = function () {
+        document.getElementById("BillsModal").style.display = "block"
+        $('#BillsInfo').load("/Budgets/AddBillPV/New");
+    }
+
     document.getElementById("CloseBillsModal").onclick = function () {
         document.getElementById("BillsModal").style.display = "none";
+        DeleteEditBillFromStage()
+        $('#BillsInfo').html('');
+    }
+
+    document.getElementById("btnCancelBills").onclick = function () {
+        document.getElementById("BillsModal").style.display = "none";
+        DeleteEditBillFromStage()
+        $('#BillsInfo').html('');
+    }
+
+    document.getElementById("DeleteBillModalClose").onclick = function () {
+        document.getElementById("DeleteBillModal").style.display = "none";
+    }
+
+    document.getElementById("btnDeleteBillModalClose").onclick = function () {
+        document.getElementById("DeleteBillModal").style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal || event.target == SavingsModal || event.target == BillsModal || event.target == DeleteSavingModal) {
+        if (event.target == document.getElementById("SavingsModal") || event.target == document.getElementById("BillsModal") || event.target == document.getElementById("DeleteSavingModal") || event.target == document.getElementById("DeleteBillModal")) {
             //modal.style.display = "none";
-            SavingsModal.style.display = "none";
-            BillsModal.style.display = "none";
-            DeleteSavingModal.style.display = "none";
+            document.getElementById("SavingsModal").style.display = "none";
+            document.getElementById("BillsModal").style.display = "none";
+            document.getElementById("DeleteSavingModal").style.display = "none";
+            document.getElementById("DeleteBillModal").style.display = "none";
             DeleteEditSavingFromStage()
+            DeleteEditBillFromStage()
+            $('#BillsInfo').html('');
         }
     }
 
@@ -677,6 +729,15 @@
         }
     }
 
+    function DeleteEditBillFromStage() 
+    {
+        if (Stage.includes('EditBill')) {
+            var number = Stage.indexOf('EditBill');
+            Stage[number] = '';
+            $('#Stage_' + number + '_').val("");
+        }
+    }
+
     function UpdateDetailsAccordianStage() 
     {
 
@@ -764,10 +825,18 @@
         }
     }
 
-    function OpenDeleteSavingModal(id, name, type, goal) {
+    function OpenDeleteSavingModal(id, name, type, goal) 
+    {
         $('#textDeleteSavingModal').html('Are you sure you want to delete ' + name + ' from your savings? You had planned to save ' + goal + ' seems like a righteous goal to me!')
         $('#btnDeleteSaving').attr('formaction', '/Budgets/DeleteSaving/' + id);
         $('#DeleteSavingModal').show();
+    }
+
+    function OpenDeleteBillModal(id, name, type, goal) 
+    {
+        $('#textDeleteBillModal').html('Are you sure you want to delete ' + name + ' from your Bills? Your Bill was for ' + goal + ' remember doesnt go away just cause you delete it!')
+        $('#btnDeleteBill').attr('formaction', '/Budgets/DeleteBill/' + id);
+        $('#DeleteBillModal').show();
     }
 
 
@@ -775,6 +844,8 @@
 
 @section Scripts{
     <script>
+        $('#BillsSummary').load("/Budgets/AddBillsTable")
         $('#SavingsSummary').load("/Budgets/AddSavingsTable")
+
     </script>
 }

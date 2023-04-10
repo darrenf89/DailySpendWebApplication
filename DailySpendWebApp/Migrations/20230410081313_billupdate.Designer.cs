@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendBudgetWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230410081313_billupdate")]
+    partial class billupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,29 +275,30 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<DateTime>("DateOfIncomeEvent")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("IncomeActiveDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("IncomeAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("IncomeCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("IncomeDailyValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("IncomeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RecurringIncomeDuration")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RecurringIncomePeriod")
+                    b.Property<int>("RecurringIncomePeriod")
                         .HasColumnType("int");
 
                     b.Property<string>("RecurringIncomeType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isClosed")
+                    b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("isInstantActive")
+                    b.Property<bool>("isMainIncome")
                         .HasColumnType("bit");
 
                     b.Property<bool>("isRecurringIncome")

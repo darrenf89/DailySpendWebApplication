@@ -39,7 +39,7 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddBill(Bills obj)
         {
-            Bills? B = new();
+           Bills? B = new();
 
             var BudgetSavingsList = _db.Budgets?
                 .Include(x => x.Bills)
@@ -55,6 +55,11 @@ namespace DailySpendWebApp.Controllers
                 }
             }
 
+            if((obj.BillValue < 1 | obj.BillValue > 31) && obj.BillType == "OfEveryMonth")
+            {
+                ModelState.AddModelError("BillName", "* You have entered an invalid value for your bill. you must enter a day between between 1 and 31");
+            }
+
             var BudgetList = _db.Budgets?
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
             Budgets? Budget = BudgetList?.FirstOrDefault();
@@ -62,26 +67,34 @@ namespace DailySpendWebApp.Controllers
             if (ModelState.IsValid)
             {
 
-                decimal? DailySavingValue = new();
+                decimal DailySavingValue = new();
                 TimeSpan Difference = (TimeSpan)(obj.BillDueDate - DateTime.Now);
                 int NumberOfDays = Difference.Days;
-                decimal? RemainingBillAmount = obj.BillAmount - obj.BillCurrentBalance;
+                decimal BillAmount = obj.BillAmount ?? 0;
+                decimal RemainingBillAmount = BillAmount - obj.BillCurrentBalance;
                 DailySavingValue = RemainingBillAmount / NumberOfDays;
+                DailySavingValue = Math.Round(DailySavingValue, 2);
 
-                B.BillDailyValue = DailySavingValue;
+                B.RegularBillValue = DailySavingValue;
                 B.BillName = obj.BillName;
                 B.isRecuring = obj.isRecuring;
                 B.BillDueDate = obj.BillDueDate;
                 B.BillCurrentBalance = obj.BillCurrentBalance;
                 B.LastUpdatedDate = DateTime.UtcNow;
-                B.LastUpdatedValue = obj.BillCurrentBalance;
                 B.BillAmount = obj.BillAmount;
 
                 if (obj.isRecuring)
                 {
-                    B.RecuringPeriod = obj.RecuringPeriod;
-                    B.RecuringType = obj.RecuringType;
-
+                    B.BillType = obj.BillType;
+                    B.BillValue = obj.BillValue;
+                    if (obj.BillType == "Everynth")
+                    {
+                        B.BillDuration = obj.BillDuration;
+                    }
+                    else
+                    {
+                        B.BillDuration = null;
+                    }                    
                 }
 
                 _db.Attach(Budget);
@@ -93,7 +106,7 @@ namespace DailySpendWebApp.Controllers
             }   
             else
             {
-
+                return View(obj);
             }
 
             return View(obj);

@@ -1,0 +1,9 @@
+﻿@model DailySpendBudgetWebApp.Models.IncomeEvents
+@{
+    ViewData["Title"] = "Add An Income";
+    Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
+}
+
+<form method="post">
+    <input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
+</form>

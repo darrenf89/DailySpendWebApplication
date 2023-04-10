@@ -22,6 +22,7 @@
                         <div class="text-center p-1 pt-2" style="line-height: 11px">
                             <span style="font: normal 10px Arial;" class="text-danger" asp-validation-for="BillName"></span>
                         </div>
+                        <div id="divCategoryExp" class="text-muted text-center p-1" Style="font-size: 12px;"></div>
                         <div id="divRecurringTypeSelected" style="display: none;">
                             <h5 class="text-dark p-2 text-center" id="txtRecurringTypeSelected"></h5>
                         </div>
@@ -30,7 +31,7 @@
                 <div id="divIsReccuring">
                     <div>
                         <h5 class="text-dark p-2 text-center">Do you want to set up a One-off or a Recurring Bill?</h5>
-                        <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Set up a Recurring Bill and we will make sure you are saving for it every time! Or a one-off if you are never going to save for it again, sounds more like a Saving to me though!</p>
+                        <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Set up a Recurring Bill and we will make sure you are saving for it every day! Or a one-off if you are never going to have to pay for it again, sounds more like a Saving to me though!</p>
                     </div>
                     <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRecurringBill">
                         <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
@@ -50,13 +51,13 @@
                 <div id="divBillTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
                     <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillAmount">Total Amount Due</label>
                     <input id="txtBillAmount" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''; this.value = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnBillAmount();" />
-                    <input asp-for="BillAmount" type="number" style="display:none;" />
+                    <input asp-for="BillAmount" type="hidden" />
                     <span class="text-danger" asp-validation-for="BillAmount"></span>
                 </div>
                 <div id="divCurrentBalance" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
                     <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="BillCurrentBalance">Current Saved</label>
                     <input id="txtBillCurrentBalance" type="text" pattern="^\d*(\.\d{0,2})?£" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''; this.value = '';" onblur="this.placeholder = '£0.00';" onchange="UpdateHdnBillCurrentBalance();" />
-                    <input asp-for="BillCurrentBalance" type="number" style="display:none;" />
+                    <input asp-for="BillCurrentBalance" type="hidden" />
                     <span class="text-danger" asp-validation-for="BillCurrentBalance"></span>
                 </div>
                 <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
@@ -65,26 +66,59 @@
                     <span class="text-danger" asp-validation-for="BillDueDate" id="valGoalDate"></span>
                 </div>
                 <div id="divRecurringBill">
-                    <div id="divRecurringType" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
-                        <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringType">What is the recurring period?</label>
-                        <div class="DropDown col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
-                            <select class="form-select text-secondary" asp-for="RecuringType">
-                                <option>Daily</option>
-                                <option>Weekly</option>
-                                <option>Monthly</option>
-                                <option>Yearly</option>
-                            </select>
+                    <div id="divSpacerTop" class="mt-3"></div>
+                    <fieldset class="form-group">
+                        <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="BillRadioButtons">
+                            <div class="form-check col-10 p-0">
+                                <input class="form-check-input" type="radio" name="BilloptionsRadios" id="BilloptionsRadios1" value="Everynth" />
+                                <label class="form-check-label align-self-center text-dark" for="BilloptionsRadios1" id="lblBilloptionsRadios1">
+                                    Every nth ...
+                                </label>
+                            </div>
+                            <div class="form-check col-10 p-0">                            
+                                <input class="form-check-input align-self-center" type="radio" name="BilloptionsRadios" id="BilloptionsRadios2" value="OfEveryMonth" />
+                                <label class="form-check-label align-self-center text-dark" for="BilloptionsRadios2" id="lblBilloptionsRadios2">
+                                    on the ... of every month
+                                </label>
+                            </div>
                         </div>
-                        <span class="text-danger" asp-validation-for="RecuringType" id="RecuringType" min="0"></span>
+                    </fieldset>
+                    <div class="ps-4">
+                        <input type="hidden" asp-for="BillType" />
+                        <span asp-validation-for="BillType" style="font-size:8pt" class="text-danger text-center"></span>
                     </div>
-                    <div id="divRecurringPeriod" style="display: none" class="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
-                        <label class="form-label col-6 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="RecuringPeriod">How many periods between each bill?</label>
-                        <div class="col-6 p-2" style="text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;">
-                            <input class="form-control text-secondary" type="Number" asp-for="RecuringPeriod" style="text-align: right; border: none; outline: none; color: #772953;" />
+                    <div class="mt-3 mb-1 pe-3 d-flex">
+                        <div id="divPeriodicPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1" style="display: flex">
+                                <span class="text-dark form-label mb-0">Every</span>
+                            </div>
+                            <div class="text-center me-1" style="display: flex">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number"  id="PeriodicPay" />
+                            </div>
+                            <div class="" style="display: flex">
+                                <div class="DropDown">
+                                    <select class="form-select text-primary text-center" asp-for="BillDuration">
+                                        <option>days</option>
+                                        <option>weeks</option>
+                                        <option>months</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-danger" asp-validation-for="RecuringPeriod" id="RecuringPeriod"></span>
+                        <div id="divGivenDayOfMonthPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1">
+                                <span class="text-dark form-label mb-0">On the </span>
+                            </div>
+                            <div class="text-center me-1">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" id="GivenDayOfMonthPay" />
+                            </div>
+                            <div class="text-center">
+                                <span class="text-dark form-label mb-0"> of every month</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <input type="hidden" asp-for="BillValue" />
                 <div id="divSpacerTop2" class="mt-4"></div>
             </div>
         </div>
@@ -126,6 +160,43 @@
 </div>
 
 <script>
+
+    $("#GivenDayOfMonthPay").on({
+        change: function () {
+            $('#BillValue').val(this.value)
+        }
+    });
+
+    $("#PeriodicPay").on({
+        change: function () {
+                $('#BillValue').val(this.value)
+        }
+    });
+
+    document.querySelectorAll('input[name="BilloptionsRadios"]').forEach(radio => {
+        radio.addEventListener('click', handleBillRadioClick);
+    });
+
+    function handleBillRadioClick() {
+        if (document.getElementById('BilloptionsRadios1').checked) 
+        {
+            document.getElementById('divPeriodicPay').style.display = 'flex';
+            document.getElementById('divGivenDayOfMonthPay').style.display = 'none';
+            document.getElementById('lblBilloptionsRadios1').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblBilloptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('BillType').value = "Everynth"
+
+        }
+        else if (document.getElementById('BilloptionsRadios2').checked) 
+        {
+            document.getElementById('divPeriodicPay').style.display = 'none';
+            document.getElementById('divGivenDayOfMonthPay').style.display = 'flex';
+            document.getElementById('lblBilloptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblBilloptionsRadios2').className = "form-check-label align-self-center text-primary"
+            document.getElementById('BillType').value = "OfEveryMonth"
+        }
+    }
+
     const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthlist = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     var PageStatus = '@ViewBag.PageStatus'
@@ -165,8 +236,8 @@
 
             if ('@Model.isRecuring' == 'True')
             {
-                var Type = '@Model.RecuringType';
-                var Period = '@Model.RecuringPeriod'
+                var Type = '@Model.BillType';
+                var Period = '@Model.BillDuration'
                 var HtmlText = 'Congrats you have set up '+ Name + ' as a recurring bill for £' + Amount +  ' which is due on ' + GoalDate + ' and then every ' + Period + ' ' + Type +  ' , well maybe not congrats but still.'
             }
             else if ('@Model.isRecuring' == "False")
@@ -254,13 +325,19 @@
         document.getElementById("BillsDetails").style.display = "block"; 
         if (isRegular == 'Yes')
         {
+            document.getElementById('isRecuring').value = 'true';
             document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a recurring bill";
             document.getElementById("divRecurringBill").style.display = "block";
+            document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For most of your bills! Phone, car, Netflix, the list goes on ...</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Tell us how much, when the next bill is due and how often it occurs</p>'
+
         }
         else if (isRegular == 'No')
         {
+            document.getElementById('isRecuring').value = 'false';
             document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a one off bill";
             document.getElementById("divRecurringBill").style.display = "none";
+            document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For those one off bills, owe someone money? </p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Tell us how much and when the bill is due</p>'
+
         }
     }
 

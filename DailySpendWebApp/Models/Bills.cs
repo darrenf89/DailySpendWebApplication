@@ -6,27 +6,21 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int BillID { get; set; }
-        public string? BillType { get; set; }
         [Required]
         public string? BillName { get; set; }
+        public string? BillType { get; set; }
+        public int? BillValue { get; set; }
+        public string? BillDuration { get; set; }
         [Required]
         public decimal? BillAmount { get; set; }
         [Required]
         public DateTime? BillDueDate { get; set; }
         public decimal BillCurrentBalance { get; set; } = decimal.Zero;
         public bool isRecuring { get; set; } = false;
-        public string? RecuringType { get; set; }
-        public int? RecuringPeriod { get; set; }
         public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
-        public decimal? BillDailyValue { get; set; }
-        public decimal? LastUpdatedValue { get; set; }
+        public bool isClosed { get; set; }
+        public decimal? RegularBillValue { get; set; }
 
-        private static DateTime CalcualteNextRecuringBillDate()
-        {
-            DateTime BillDate = new();
-
-            return BillDate;
-        }
 
     }
 

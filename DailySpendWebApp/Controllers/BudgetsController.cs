@@ -458,6 +458,43 @@ namespace DailySpendBudgetWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Budgets/DeleteBill/{id?}")]
+        public IActionResult DeleteBill(CreateABudgetPageModel obj, int id)
+        {
+
+            var BillSet = _db.Bills.Where(x => x.BillID == id);
+            var Bill = BillSet.FirstOrDefault();
+            _db.Bills.Remove(Bill);
+            _db.SaveChanges();
+
+            obj.BillName = Bill.BillName;
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+
+            ViewBag.SnackBarMess = "DeleteSaving";
+            ViewBag.SnackBarType = "danger";
+
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Budgets/EditBill/{id?}")]
+        public IActionResult EditBill(CreateABudgetPageModel obj, int id)
+        {
+
+            var BillSet = _db.Bills.Where(x => x.BillID == id);
+            var Bill = BillSet.FirstOrDefault();
+
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+
+            obj.BillID = Bill.BillID;
+
+            obj.Stage.Add("EditBill");
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("Budgets/DeleteSaving/{id?}")]
         public IActionResult DeleteSaving(CreateABudgetPageModel obj, int id)
         {
@@ -490,6 +527,109 @@ namespace DailySpendBudgetWebApp.Controllers
             obj.SavingID = Saving.SavingID;
 
             obj.Stage.Add("EditSaving");
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddBillBudget(CreateABudgetPageModel obj)
+        {
+            Bills? B = new();
+
+            if (obj.BillName == null | obj.BillName == "")
+            {
+                ModelState.AddModelError("SavingsName", "* You have to enter a name for your saving.");
+            }
+
+            if ((obj.BillValue < 1 | obj.BillValue > 31) && obj.BillType == "OfEveryMonth")
+            {
+                ModelState.AddModelError("BillName", "* You have entered an invalid value for your bill. you must enter a day between between 1 and 31");
+            }
+
+            if (!obj.Stage.Contains("EditBill"))
+            {
+                var BudgetBillssList = _db.Budgets?
+                    .Include(x => x.Bills)
+                    .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
+                    .ToList();
+
+                foreach (var bill in BudgetBillssList[0].Bills)
+                {
+                    if (bill.BillName == obj.BillName && !bill.isClosed)
+                    {
+                        ModelState.AddModelError("SavingsName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                var BillsList = _db.Bills.Where(x => x.BillID == obj.BillID);
+                B = BillsList.FirstOrDefault();
+            }
+
+            var BudgetList = _db.Budgets?
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"));
+            Budgets? Budget = BudgetList?.FirstOrDefault();
+
+            if (ModelState.IsValid)
+            {
+                decimal DailySavingValue = new();
+                TimeSpan Difference = (TimeSpan)(obj.BillDueDate - DateTime.Now);
+                int NumberOfDays = Difference.Days;
+                decimal BillAmount = obj.BillAmount ?? 0;
+                decimal BillCurrentBalance = obj.BillCurrentBalance ?? 0;
+                decimal RemainingBillAmount = BillAmount - BillCurrentBalance;
+                DailySavingValue = RemainingBillAmount / NumberOfDays;
+                DailySavingValue = Math.Round(DailySavingValue, 2);
+
+                B.RegularBillValue = DailySavingValue;
+                B.BillName = obj.BillName;
+                B.isRecuring = obj.isBillRecuring ?? false;
+                B.BillDueDate = obj.BillDueDate;
+                B.BillCurrentBalance = BillCurrentBalance;
+                B.LastUpdatedDate = DateTime.UtcNow;
+                B.BillAmount = obj.BillAmount;
+
+                if (obj.isBillRecuring ?? false)
+                {
+                    B.BillType = obj.BillType;
+                    B.BillValue = obj.BillValue;
+                    if (obj.BillType == "Everynth")
+                    {
+                        B.BillDuration = obj.BillDuration;
+                    }
+                    else
+                    {
+                        B.BillDuration = null;
+                    }
+                }
+
+                if (!obj.Stage.Contains("EditBill"))
+                {
+                    _db.Attach(Budget);
+                    Budget.Bills.Add(B);
+                    ViewBag.SnackBarMess = "NewBillAdded";
+                    ViewBag.SnackBarType = "success";
+                }
+                else
+                {
+                    ViewBag.SnackBarMess = "BillEdited";
+                    ViewBag.SnackBarType = "success";
+                }
+
+                _db.SaveChanges();
+
+            }
+            else
+            {
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+                obj.Stage.Remove("EditBill");
+                return View("EnterBudgetDetails", obj);
+            }
+
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+            obj.Stage.Remove("EditBill");
             return View("EnterBudgetDetails", obj);
         }
 
@@ -671,6 +811,48 @@ namespace DailySpendBudgetWebApp.Controllers
             Thread.CurrentThread.CurrentCulture = nfi;
 
             return PartialView("_SavingsModalPV", obj);
+        }
+
+        [Route("Budgets/AddBillPV/{type?}/{id?}")]
+        public IActionResult AddBillPV(CreateABudgetPageModel obj, string? type, int? id)
+        {
+
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+
+            if (type == "Edit")
+            {
+                var BillSet = _db.Bills.Where(x => x.BillID == id);
+                var Bill = BillSet.FirstOrDefault();
+
+                obj.BillID = Bill.BillID;
+                obj.RegularBillValue = Bill.RegularBillValue;
+                obj.BillName = Bill.BillName;
+                obj.BillType = Bill.BillType;
+                obj.BillValue = Bill.BillValue;
+                obj.BillDuration = Bill.BillDuration;
+                obj.BillAmount = Bill.BillAmount;
+                obj.BillDueDate = Bill.BillDueDate;
+                obj.isBillRecuring = Bill.isRecuring;
+
+                obj.Stage.Add("EditBill");
+            }
+            else if (type == "New")
+            {
+                obj.Stage.Remove("EditBill");
+            }
+
+
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = "£";
+            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
+            nfi.NumberFormat.CurrencyGroupSeparator = ",";
+            nfi.NumberFormat.CurrencyDecimalDigits = 2;
+            nfi.NumberFormat.CurrencyPositivePattern = 0;
+
+            Thread.CurrentThread.CurrentCulture = nfi;
+
+            return PartialView("_BillsModalPV", obj);
         }
 
         public IActionResult CreateNewBudget()
@@ -945,6 +1127,21 @@ namespace DailySpendBudgetWebApp.Controllers
                 SavingsList.Add(saving);
             }
             return PartialView("SavingsTableBudget", SavingsList);
+        }
+
+        public IActionResult AddBillsTable()
+        {
+            Budgets? BudgetBillsList = _db.Budgets?
+                .Include(x => x.Bills)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
+                .FirstOrDefault();
+
+            List<Bills> BillsList = new List<Bills>();
+            foreach (Bills bill in BudgetBillsList.Bills)
+            {
+                BillsList.Add(bill);
+            }
+            return PartialView("BillsTableBudget", BillsList);
         }
 
         public List<SelectListItem> GetCurrencyDDL(string? SelectedValue)
