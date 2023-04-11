@@ -29,6 +29,7 @@ else
                 {
                     DateTime dt = Bill.BillDueDate.GetValueOrDefault();
                     string GoalDateString = dt.ToString("dd MMM yyyy");
+                    string AmountString = string.Format("{0:c}", Bill.BillAmount);
                     var parms = new Dictionary<string, string> { { "id", Bill.BillID.ToString() } };
                     <tr style="font-size: 9pt; vertical-align: middle;" class="table-primary">
                         <td class="p-0 text-center">
@@ -38,7 +39,7 @@ else
                             <button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="submit" asp-action="EditBill" asp-controller="Budgets" asp-all-route-data="@parms"><i class="bi bi-pencil-square text-info"></i></button>
                         </td>
                         <td>@Bill.BillName</td>
-                        <td>@Bill.BillAmount</td>
+                        <td>@AmountString</td>
                         <td class="text-center">@GoalDateString</td>
                     </tr>
                 }

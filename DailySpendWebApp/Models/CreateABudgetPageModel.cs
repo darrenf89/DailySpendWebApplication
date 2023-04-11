@@ -70,6 +70,18 @@ namespace DailySpendBudgetWebApp.Models
         public bool? isBillRecuring { get; set; } = false;
         public decimal? RegularBillValue { get; set; }
         public int? AproxDaysBetweenPay { get; set; } = 30;
+        public int? IncomeEventID { get; set; }
+        public decimal? IncomeAmount { get; set; }
+        public string? IncomeName { get; set; } = "";
+        public DateTime? IncomeActiveDate { get; set; } = DateTime.Now;
+        public DateTime? DateOfIncomeEvent { get; set; } = DateTime.Now;
+        public bool? isRecurringIncome { get; set; }
+        public string? RecurringIncomeType { get; set; }
+        public int? RecurringIncomeValue { get; set; }
+        public string? RecurringIncomeDuration { get; set; }
+        public bool? isClosed { get; set; } = true;
+        public bool? isInstantActive { get; set; }
+
 
     }
 }

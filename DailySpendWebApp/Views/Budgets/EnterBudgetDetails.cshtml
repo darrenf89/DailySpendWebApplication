@@ -19,6 +19,7 @@
     </div>
     <input asp-for="BillID" type="hidden" value="@Model.BillID"/>
     <input asp-for="SavingID" type="hidden" value="@Model.SavingID"/>
+    <input asp-for="IncomeEventID" type="hidden" value="@Model.IncomeEventID" />
     <div class="bg-transparent" style="min-height: 82vh;">
         <div class="mt-4 row justify-content-center p-2">
             @if (ViewBag.hasBudgetName)
@@ -240,6 +241,13 @@
             </div>
         </div>
         <div class="p-3 pt-1 pb-2">
+            <div id="IncomesSummary">
+            </div>
+            <div id="OpenIncomesDetails" class="mt-3">
+                <a class="btn btn-lg btn-success rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Extra Income! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
+            </div>
+        </div>
+        <div class="p-3 pt-1 pb-2">
             <div id="SavingsSummary">
             </div>
             <div id="OpenSavingsDetails" class="mt-3">
@@ -252,12 +260,7 @@
             <div id="OpenBillsDetails" class="mt-3">
                 <a class="btn btn-lg btn-dark rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Some Bills &nbsp;<i class="bi bi-receipt text-white"></i></a>
             </div>
-        </div>
-        <div class="p-2">
-            <div id="OpenIncomeDetails" class="p-2">
-                <a class="btn btn-lg btn-success rounded-1 col-12 mb-1 shadow" style="font-size: 14pt;">Add Extra Income! &nbsp;<i class="bi bi-cash-stack text-white"></i></a>
-            </div>
-        </div>        
+        </div>       
     </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="max-width: 80vw;">
         <div class="offcanvas-header">
@@ -270,11 +273,50 @@
             </div>           
         </div>
     </div>
-    <footer class="sticky-bottom m-0 p-0"style="width: 100%">
-        <div class="d-flex flex-column align-items-center justify-content-center">
-            <button type="submit" class="btn btn-lg btn-success rounded-1 mb-4 col-10"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
+    <footer class="sticky-bottom m-0 p-0" style="width: 100%; bottom: 15px;">
+        <div class="d-flex flex-column align-items-center justify-content-center me-2 ms-2">
+            <button type="submit" class="btn btn-lg btn-success rounded-1 mb-3 col-12"><i class="bi bi-file-earmark-plus"></i> &nbsp Create Budget</button>
         </div>
     </footer>
+    <div class="modal" id="IncomesModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-primary">Add an extra Income to your Budget</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="SavingsModal" aria-label="Close" id="CloseIncomeModal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="IncomesInfo">
+                    </div>
+                </div>
+                <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                    <button asp-controller="Budgets" asp-action="AddIncomeBudget" type="submit" id="btnSaveIncomes" class="btn btn-primary" onclick="DisableIncometxt()">Save changes</button>
+                    <button type="button" id="btnCancelIncomes" class="btn btn-danger" data-bs-dismiss="IncomesModal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal ps-4 pe-4" id="DeleteIncomeModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-primary">
+                    <h5 class="modal-title">Delete the Income?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="DeleteIncomeModal" aria-label="Close" id="DeleteIncomeModalClose">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0 text-secondary" id="textDeleteIncomeModal"></p>
+                </div>
+                <div class="modal-footer border-top border-primary p-0">
+                    <button id="btnDeleteIncome" type="submit" asp-action="DeleteIncome" asp-controller="Budgets" class="btn btn-danger">Yes</button>
+                    <button type="button" class="btn btn-info" data-bs-dismiss="DeleteIncomeModal" id="btnDeleteIncomeModalClose">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal ps-4 pe-4" id="DeleteSavingModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -513,6 +555,11 @@
             $('#BillsInfo').load("/Budgets/AddBillPV/Edit/@Model.BillID");
             document.getElementById("BillsModal").style.display = "block"            
         }
+
+        if (Stage.includes('EditIncome')) {
+            $('#IncomesInfo').load("/Budgets/AddIncomePV/Edit/@Model.IncomeEventID");
+            document.getElementById("IncomesModal").style.display = "block"
+        }
     }
 
 
@@ -533,7 +580,32 @@
                 x.className = x.className.replace("border-dark", "border-primary");
             }
         }            
-    }    
+    }
+
+    document.getElementById("OpenIncomesDetails").onclick = function () {
+        document.getElementById("IncomesModal").style.display = "block"
+        $('#IncomesInfo').load("/Budgets/AddIncomePV/New");
+    }
+
+    document.getElementById("CloseIncomeModal").onclick = function () {
+        document.getElementById("IncomesModal").style.display = "none";
+        DeleteEditIncomeFromStage()
+        $('#IncomesInfo').html('');
+    }
+
+    document.getElementById("btnCancelIncomes").onclick = function () {
+        document.getElementById("IncomesModal").style.display = "none";
+        DeleteEditIncomeFromStage()
+        $('#IncomesInfo').html('');
+    }
+
+    document.getElementById("DeleteIncomeModalClose").onclick = function () {
+        document.getElementById("DeleteIncomeModal").style.display = "none";
+    }
+
+    document.getElementById("btnDeleteIncomeModalClose").onclick = function () {
+        document.getElementById("DeleteIncomeModal").style.display = "none";
+    }
 
     document.getElementById("OpenSavingsDetails").onclick = function()
     {
@@ -586,7 +658,7 @@
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == document.getElementById("SavingsModal") || event.target == document.getElementById("BillsModal") || event.target == document.getElementById("DeleteSavingModal") || event.target == document.getElementById("DeleteBillModal")) {
+        if (event.target == document.getElementById("SavingsModal") || event.target == document.getElementById("BillsModal") || event.target == document.getElementById("DeleteSavingModal") || event.target == document.getElementById("DeleteBillModal") || event.target == document.getElementById("DeleteIncomeModal") || event.target == document.getElementById("IncomesModal")) {
             //modal.style.display = "none";
             document.getElementById("SavingsModal").style.display = "none";
             document.getElementById("BillsModal").style.display = "none";
@@ -595,6 +667,7 @@
             DeleteEditSavingFromStage()
             DeleteEditBillFromStage()
             $('#BillsInfo').html('');
+            $('#IncomesInfo').html('');
         }
     }
 
@@ -701,6 +774,24 @@
         }
         else if (Message == 'DeleteSaving') {
             x.innerHTML = "<div>You have <string>Deleted</strong> the saving <strong>" + "@Model.SavingsName" + "</strong>, I wouldn't have done that!"
+        }
+        else if (Message == 'NewIncomeAdded') {
+            x.innerHTML = "<div><strong>Congrats</strong> you have added " + "@Model.IncomeName" + " as a new <strong>Income</strong> way to go!"
+        }
+        else if (Message == 'IncomeEdited') {
+            x.innerHTML = "<div>You have edited the Income <strong>" + "@Model.IncomeName" + "</strong>, hopefully you got more dollars now not less!"
+        }
+        else if (Message == 'DeleteIncome') {
+            x.innerHTML = "<div>You have <string>Deleted</strong> the Income <strong>" + "@Model.IncomeName" + "</strong>, I wouldn't have done that!"
+        } 
+        else if (Message == 'NewBillAdded') {
+            x.innerHTML = "<div><strong>Congrats</strong> you have added " + "@Model.BillName" + " as a new <strong>Bill</strong>, well yeah I guess congrats!"
+        }
+        else if (Message == 'BillEdited') {
+            x.innerHTML = "<div>You have edited the bill <strong>" + "@Model.BillName" + "</strong>, for your sake I hope its costing you less now!"
+        }
+        else if (Message == 'DeleteBill') {
+            x.innerHTML = "<div>You have <string>Deleted</strong> the bill <strong>" + "@Model.BillName" + "</strong>, I wouldn't have done that!"
         } 
 
         var y = document.getElementById("snackbar");
@@ -733,6 +824,15 @@
     {
         if (Stage.includes('EditBill')) {
             var number = Stage.indexOf('EditBill');
+            Stage[number] = '';
+            $('#Stage_' + number + '_').val("");
+        }
+    }
+
+    function DeleteEditIncomeFromStage() 
+    {
+        if (Stage.includes('EditIncome')) {
+            var number = Stage.indexOf('EditIncome');
             Stage[number] = '';
             $('#Stage_' + number + '_').val("");
         }
@@ -839,6 +939,16 @@
         $('#DeleteBillModal').show();
     }
 
+    function OpenDeleteIncomeModal(id, name, type, goal) {
+        $('#textDeleteIncomeModal').html('Are you sure you want to delete ' + name + ' as an Income? You were going to recieve ' + goal + ' if you get money let us know, it always works better!')
+        $('#btnDeleteIncome').attr('formaction', '/Budgets/DeleteIncome/' + id);
+        $('#DeleteIncomeModal').show();
+    }
+
+    function DisableIncometxt() {
+        document.getElementById('txtIncomeAmount').disabled = true;
+    }
+    
 
 </script>
 
@@ -846,6 +956,7 @@
     <script>
         $('#BillsSummary').load("/Budgets/AddBillsTable")
         $('#SavingsSummary').load("/Budgets/AddSavingsTable")
+        $('#IncomesSummary').load("/Budgets/AddIncomesTable")
 
     </script>
 }

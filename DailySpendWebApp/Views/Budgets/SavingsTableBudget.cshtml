@@ -28,6 +28,8 @@ else
             @foreach(Savings Saving in Model)
             {
                 var parms = new Dictionary<string, string>{{ "id", Saving.SavingID.ToString() }};
+                    string RegularSavingValue = string.Format("{0:c}", Saving.RegularSavingValue);
+                    string SavingsGoal = string.Format("{0:c}", Saving.SavingsGoal);
                 <tr style="font-size: 9pt; vertical-align: middle;" class="table-primary">
                     <td class="p-0 text-center"><button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="button" data-toggle="modal" data-target="#DeleteSavingModal" onclick="OpenDeleteSavingModal('@Saving.SavingID','@Saving.SavingsName','@Saving.SavingsType','@if(Saving.SavingsGoal == null){@Saving.RegularSavingValue}else{@Saving.SavingsGoal}')"><i class="bi bi-trash3 text-danger"></i></button></td>
                     <td class="p-0 text-center"><button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="submit" asp-action="EditSaving" asp-controller="Budgets" asp-all-route-data="@parms"><i class="bi bi-pencil-square text-info"></i></button></td>
@@ -42,11 +44,11 @@ else
                     }
                     @if (Saving.SavingsGoal == null)
                     {
-                        <td class="text-center">@Saving.RegularSavingValue</td>
+                        <td class="">@RegularSavingValue</td>
                     }
                     else
                     {
-                        <td class="text-center">@Saving.SavingsGoal</td>
+                        <td class="">@SavingsGoal</td>
                     } 
 
                 </tr>

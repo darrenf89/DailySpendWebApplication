@@ -155,4 +155,11 @@ input[name="currency-field"]::placeholder {
     color: #38b44a;
 }
 
+#txtIncomeAmount {
+    width: 30%;
+    text-align: right;
+    border: none;
+    outline: none;
+    color: #38b44a;
+}
 

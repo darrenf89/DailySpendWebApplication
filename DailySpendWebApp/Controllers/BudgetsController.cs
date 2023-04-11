@@ -458,6 +458,44 @@ namespace DailySpendBudgetWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Budgets/DeleteIncome/{id?}")]
+        public IActionResult DeleteIncome(CreateABudgetPageModel obj, int id)
+        {
+
+            var IncomeSet = _db.IncomeEvents.Where(x => x.IncomeEventID == id);
+            var Income = IncomeSet.FirstOrDefault();
+            _db.IncomeEvents.Remove(Income);
+            _db.SaveChanges();
+
+            obj.IncomeName = Income.IncomeName;
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+
+            ViewBag.SnackBarMess = "DeleteIncome";
+            ViewBag.SnackBarType = "danger";
+
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Budgets/EditIncome/{id?}")]
+        public IActionResult EditIncome(CreateABudgetPageModel obj, int id)
+        {
+
+            var IncomeSet = _db.IncomeEvents.Where(x => x.IncomeEventID == id);
+            var Income = IncomeSet.FirstOrDefault();
+
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+
+            obj.IncomeName = Income.IncomeName;
+            obj.IncomeEventID = Income.IncomeEventID;
+
+            obj.Stage.Add("EditIncome");
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("Budgets/DeleteBill/{id?}")]
         public IActionResult DeleteBill(CreateABudgetPageModel obj, int id)
         {
@@ -470,7 +508,7 @@ namespace DailySpendBudgetWebApp.Controllers
             obj.BillName = Bill.BillName;
             obj = UpdateEnterBudgetDetailsPageFromModel(obj);
 
-            ViewBag.SnackBarMess = "DeleteSaving";
+            ViewBag.SnackBarMess = "DeleteBill";
             ViewBag.SnackBarType = "danger";
 
             return View("EnterBudgetDetails", obj);
@@ -532,6 +570,122 @@ namespace DailySpendBudgetWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public IActionResult AddIncomeBudget(CreateABudgetPageModel obj)
+        {
+            IncomeEvents? I = new();
+
+            var BudgetSavingsList = _db.Budgets?
+               .Include(x => x.IncomeEvents)
+               .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+               .ToList();
+
+            if (obj.isInstantActive == null)
+            {
+                ModelState.AddModelError("IncomeName", "* You have to tell us when you want the income to be active.");
+            }
+
+            foreach (var Income in BudgetSavingsList[0].IncomeEvents)
+            {
+                if (Income.IncomeName == obj.IncomeName)
+                {
+                    ModelState.AddModelError("IncomeName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
+                    break;
+                }
+            }
+
+            if ((obj.RecurringIncomeValue < 1 | obj.RecurringIncomeValue > 31) && obj.RecurringIncomeType == "OfEveryMonth")
+            {
+                ModelState.AddModelError("IncomeName", "* You have entered an invalid value for your Income. you must enter a day between between 1 and 31");
+            }
+
+            if (!obj.Stage.Contains("EditIncome"))
+            {
+                var BudgetBillssList = _db.Budgets?
+                    .Include(x => x.IncomeEvents)
+                    .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
+                    .ToList();
+
+                foreach (var income in BudgetBillssList[0].IncomeEvents)
+                {
+                    if (income.IncomeName == obj.IncomeName && !income.isClosed)
+                    {
+                        ModelState.AddModelError("IncomeName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                var IncomesList = _db.IncomeEvents.Where(x => x.IncomeEventID == obj.IncomeEventID);
+                I = IncomesList.FirstOrDefault();
+            }
+
+            var BudgetList = _db.Budgets?
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+            Budgets? Budget = BudgetList?.FirstOrDefault();
+
+            if (ModelState.IsValid)
+            {
+                I.IncomeAmount = obj.IncomeAmount ?? 0;
+                I.DateOfIncomeEvent = obj.DateOfIncomeEvent ?? DateTime.UtcNow;
+                I.IncomeName = obj.IncomeName;
+                I.isClosed = false;
+                I.isRecurringIncome = obj.isRecurringIncome ?? false;
+                I.isInstantActive = obj.isInstantActive;
+
+                if (obj.isInstantActive ?? false)
+                {
+                    I.IncomeActiveDate = obj.IncomeActiveDate ?? DateTime.UtcNow;
+                }
+                else
+                {
+                    I.IncomeActiveDate = obj.DateOfIncomeEvent ?? DateTime.UtcNow;
+                }
+
+                if (obj.isRecurringIncome ?? false)
+                {
+                    I.RecurringIncomeType = obj.RecurringIncomeType;
+                    I.RecurringIncomeValue = obj.RecurringIncomeValue;
+                    if (obj.RecurringIncomeType == "Everynth")
+                    {
+                        I.RecurringIncomeDuration = obj.RecurringIncomeDuration;
+                    }
+                    else
+                    {
+                        I.RecurringIncomeDuration = null;
+                    }
+                }
+
+                if (!obj.Stage.Contains("EditIncome"))
+                {
+                    _db.Attach(Budget);
+                    Budget.IncomeEvents.Add(I);
+                    ViewBag.SnackBarMess = "NewIncomeAdded";
+                    ViewBag.SnackBarType = "success";
+                }
+                else
+                {
+                    ViewBag.SnackBarMess = "IncomeEdited";
+                    ViewBag.SnackBarType = "success";
+                }
+
+                _db.SaveChanges();
+
+            }
+            else
+            {
+                obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+                obj.Stage.Remove("EditIncome");
+                return View("EnterBudgetDetails", obj);
+            }
+
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+            obj.Stage.Remove("EditIncome");
+            return View("EnterBudgetDetails", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddBillBudget(CreateABudgetPageModel obj)
         {
             Bills? B = new();
@@ -557,7 +711,7 @@ namespace DailySpendBudgetWebApp.Controllers
                 {
                     if (bill.BillName == obj.BillName && !bill.isClosed)
                     {
-                        ModelState.AddModelError("SavingsName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
+                        ModelState.AddModelError("BillName", "* You have already used that Name. Dont save for the same thing twice, just do it once.");
                         break;
                     }
                 }
@@ -811,6 +965,50 @@ namespace DailySpendBudgetWebApp.Controllers
             Thread.CurrentThread.CurrentCulture = nfi;
 
             return PartialView("_SavingsModalPV", obj);
+        }
+
+        [Route("Budgets/AddIncomePV/{type?}/{id?}")]
+        public IActionResult AddIncomePV(CreateABudgetPageModel obj, string? type, int? id)
+        {
+
+            obj = UpdateEnterBudgetDetailsPageFromModel(obj);
+
+            if (type == "Edit")
+            {
+                var IncomeSet = _db.IncomeEvents.Where(x => x.IncomeEventID == id);
+                var Income = IncomeSet.FirstOrDefault();
+
+                obj.IncomeEventID = Income.IncomeEventID;
+                obj.IncomeAmount = Income.IncomeAmount;
+                obj.IncomeName = Income.IncomeName;
+                obj.IncomeActiveDate = Income.IncomeActiveDate;
+                obj.DateOfIncomeEvent = Income.DateOfIncomeEvent;
+                obj.isRecurringIncome = Income.isRecurringIncome;
+                obj.RecurringIncomeType = Income.RecurringIncomeType;
+                obj.RecurringIncomeValue = Income.RecurringIncomeValue;
+                obj.RecurringIncomeDuration = Income.RecurringIncomeDuration;
+                obj.isClosed = Income.isClosed;
+                obj.isInstantActive = Income.isInstantActive;
+
+                obj.Stage.Add("EditIncome");
+            }
+            else if (type == "New")
+            {
+                obj.Stage.Remove("EditIncome");
+            }
+
+
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = "£";
+            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
+            nfi.NumberFormat.CurrencyGroupSeparator = ",";
+            nfi.NumberFormat.CurrencyDecimalDigits = 2;
+            nfi.NumberFormat.CurrencyPositivePattern = 0;
+
+            Thread.CurrentThread.CurrentCulture = nfi;
+
+            return PartialView("_IncomeModalPV", obj);
         }
 
         [Route("Budgets/AddBillPV/{type?}/{id?}")]
@@ -1116,6 +1314,16 @@ namespace DailySpendBudgetWebApp.Controllers
 
         public IActionResult AddSavingsTable()
         {
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = "£";
+            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
+            nfi.NumberFormat.CurrencyGroupSeparator = ",";
+            nfi.NumberFormat.CurrencyDecimalDigits = 2;
+            nfi.NumberFormat.CurrencyPositivePattern = 0;
+
+            Thread.CurrentThread.CurrentCulture = nfi;
+
             Budgets? BudgetSavingsList = _db.Budgets?
                 .Include(x => x.Savings)
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
@@ -1129,8 +1337,44 @@ namespace DailySpendBudgetWebApp.Controllers
             return PartialView("SavingsTableBudget", SavingsList);
         }
 
+        public IActionResult AddIncomesTable()
+        {
+
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = "£";
+            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
+            nfi.NumberFormat.CurrencyGroupSeparator = ",";
+            nfi.NumberFormat.CurrencyDecimalDigits = 2;
+            nfi.NumberFormat.CurrencyPositivePattern = 0;
+
+            Thread.CurrentThread.CurrentCulture = nfi;
+
+            Budgets? BudgetIncomeEventList = _db.Budgets?
+                .Include(x => x.IncomeEvents)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))
+                .FirstOrDefault();
+
+            List<IncomeEvents> IncomeEventsList = new List<IncomeEvents>();
+            foreach (IncomeEvents IncomeEvents in BudgetIncomeEventList.IncomeEvents)
+            {
+                IncomeEventsList.Add(IncomeEvents);
+            }
+            return PartialView("IncomeTableBudget", IncomeEventsList);
+        }
+
         public IActionResult AddBillsTable()
         {
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = "£";
+            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
+            nfi.NumberFormat.CurrencyGroupSeparator = ",";
+            nfi.NumberFormat.CurrencyDecimalDigits = 2;
+            nfi.NumberFormat.CurrencyPositivePattern = 0;
+
+            Thread.CurrentThread.CurrentCulture = nfi;
+
             Budgets? BudgetBillsList = _db.Budgets?
                 .Include(x => x.Bills)
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_NewBudgetID"))

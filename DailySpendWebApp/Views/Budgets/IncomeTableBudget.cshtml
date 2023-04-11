@@ -1,0 +1,49 @@
+﻿@model List<IncomeEvents>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (Model.Count == 0)
+{
+    <div></div>
+}
+else
+{
+    <div class="d-flex justify-content-end">
+        <span style="font-size: 10pt" class="badge bg-success p-2 mb-2 me-2">Income</span>
+    </div>
+    <div class="card text-white shadow">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th style="font-size: 10pt; width: 8%;" scope="col"></th>
+                    <th style="font-size: 10pt; width: 8%;" scope="col"></th>
+                    <th style="font-size: 10pt; width: 34%;" class="text-dark" scope="col">Name</th>
+                    <th style="font-size: 10pt; width: 25%;" class="text-dark" scope="col">Amount </th>
+                    <th class="text-center text-dark" style="font-size: 10pt; width: 25%;" scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (IncomeEvents IncomeEvent in Model)
+                {
+                    DateTime dt = IncomeEvent.DateOfIncomeEvent;
+                    string GoalDateString = dt.ToString("dd MMM yyyy");
+                    string IncomeAmountString = string.Format("{0:c}", IncomeEvent.IncomeAmount);
+                    var parms = new Dictionary<string, string> { { "id", IncomeEvent.IncomeEventID.ToString() } };
+                    <tr style="font-size: 9pt; vertical-align: middle;" class="table-primary">
+                        <td class="p-0 text-center">
+                            <button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="button" data-toggle="modal" data-target="#DeleteBillModal" onclick="OpenDeleteIncomeModal('@IncomeEvent.IncomeEventID','@IncomeEvent.IncomeName','@IncomeEvent.RecurringIncomeType','@IncomeEvent.IncomeAmount')"><i class="bi bi-trash3 text-danger"></i></button>
+                        </td>
+                        <td class="p-0 text-center">
+                            <button class="p-0" style="background-color: transparent; border: none; z-index: 99; font-size: 12pt" type="submit" asp-action="EditIncome" asp-controller="Budgets" asp-all-route-data="@parms"><i class="bi bi-pencil-square text-info"></i></button>
+                        </td>
+                        <td>@IncomeEvent.IncomeName</td>
+                        <td>@IncomeAmountString</td>
+                        <td class="text-center">@GoalDateString</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

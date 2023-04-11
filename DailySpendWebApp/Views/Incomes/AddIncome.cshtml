@@ -6,4 +6,353 @@
 
 <form method="post">
     <input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
+    <div class="d-flex flex-column align-items-center" style="background-color: transparent;">
+        <div class="d-flex container align-items-center justify-content-center mt-4 pt-2">
+            <h3 class="text-white">@TempData["PageHeading"]</h3>
+        </div>
+        <div class="align-items-center mb-5 mt-5">
+            <img src="~/img/logoFiles/ForWeb/png/JustlogoOrange.png" class="shadow rounded-circle" style="max-width: 75px; background-color: transparent;" />
+        </div>
+        <div id="divMainIncomeContent" class="container" style="min-height: 82vh;">
+            <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="divIncomeTypeSelector" style="display: block;">
+                <div class="container mt-1 mb-1">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="input-container col-7 mb-0">
+                            <input style="font-size: 20px; cursor: pointer;" placeholder="Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Name'" asp-for="IncomeName" type="text" required />
+                        </div>
+                        <div>
+                            <span class="text-danger text-center" style="font: normal 10px Arial;" class="text-danger" asp-validation-for="IncomeName"></span>
+                        </div>
+                        <div id="divRecurringTypeSelected" style="display: none;" class="text-dark p-2 text-center">
+                            <h5 class="mb-0" id="txtRecurringTypeSelected"></h5>
+                        </div>
+                        <div id="divCategoryExp" class="text-muted text-center p-1" Style="font-size: 12px; display: none;"></div>
+                    </div>
+                </div>
+                <div id="divIsReccuringIncome">
+                    <div>
+                        <h5 class="text-dark p-2 text-center">One-off or a Recurring Income?</h5>
+                        <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Set up a Recurring Income, maybe pay from a second job or money from investments? Or add a one-off Income you know is coming, a gift or selling something big?</p>
+                    </div>
+                    <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRecurringBill">
+                        <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
+                            <div id="divRecurringBillYes" class="col-5 m-2">
+                                <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRecurringIncomeSelection('Yes'); return false;">Recurring</button>
+                            </div>
+                            <div id="divRecurringBillYes" class="col-5 m-2">
+                                <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRecurringIncomeSelection('No'); return false;">One-off</button>
+                            </div>
+                            <input type="hidden" asp-for="isRecurringIncome" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="IncomeDetails" style="display: none;">
+                <div id="divSpacerTop2" class="mt-4"></div>
+                <div id="divBillTarget" class="row justify-content-between align-items-center ms-2 me-2 mt-0">
+                    <label class="form-label col-5 ps-2 pe-1 m-0 text-dark" asp-for="IncomeAmount">Income Amount</label>
+                    <input id="txtIncomeAmount" type="text" pattern="^\d*(\.\d{0,2})?£" value="" style="cursor: pointer; border-left: 1px solid #772953; width: 42%;" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''; this.value = '';" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnIncomeAmount();" />
+                    <input asp-for="IncomeAmount" type="hidden" />
+                    <span class="text-danger" asp-validation-for="IncomeAmount"></span>
+                </div>
+                <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
+                    <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="DateOfIncomeEvent">Date of Income</label>
+                    <input asp-for="DateOfIncomeEvent" id="GoalDate" type="date" onblur="CheckDateFuture(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+                    <span class="text-danger" asp-validation-for="DateOfIncomeEvent" id="valGoalDate"></span>
+                </div>
+                <div id="divRecurringIncome">
+                    <div id="divSpacerTop" class="mt-2"></div>
+                    <fieldset class="form-group">
+                        <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="IncomeRadioButtons">
+                            <div class="form-check col-10 p-0">
+                                <input class="form-check-input" type="radio" name="IncomeoptionsRadios" id="IncomeoptionsRadios1" value="Everynth" />
+                                <label class="form-check-label align-self-center text-dark" for="IncomeoptionsRadios1" id="lblIncomeoptionsRadios1">
+                                    Every nth ...
+                                </label>
+                            </div>
+                            <div class="form-check col-10 p-0">
+                                <input class="form-check-input align-self-center" type="radio" name="IncomeoptionsRadios" id="IncomeoptionsRadios2" value="OfEveryMonth" />
+                                <label class="form-check-label align-self-center text-dark" for="IncomeoptionsRadios2" id="lblIncomeoptionsRadios2">
+                                    on the ... of every month
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="ps-4">
+                        <input type="hidden" asp-for="RecurringIncomeType" />
+                        <span asp-validation-for="RecurringIncomeType" style="font-size:8pt" class="text-danger text-center"></span>
+                    </div>
+                    <div class="pe-3 d-flex" id="divRecurringTypesSelector">
+                        <div id="divIncomePeriodicPay" style="display: none;" class="mt-3 mb-1 ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1" style="display: flex">
+                                <span class="text-dark form-label mb-0">Every</span>
+                            </div>
+                            <div class="text-center me-1" style="display: flex">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" id="IncomePeriodicPay" />
+                            </div>
+                            <div class="" style="display: flex">
+                                <div class="DropDown">
+                                    <select class="form-select text-primary text-center" asp-for="RecurringIncomeDuration">
+                                        <option>days</option>
+                                        <option>weeks</option>
+                                        <option>months</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divIncomeGivenDayOfMonthPay" style="display: none;" class="mt-3 mb-1 ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1">
+                                <span class="text-dark form-label mb-0">On the </span>
+                            </div>
+                            <div class="text-center me-1">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" id="IncomeGivenDayOfMonthPay" />
+                            </div>
+                            <div class="text-center">
+                                <span class="text-dark form-label mb-0"> of every month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="RecurringIncomeValue" />
+                <div id="divSpacerTop2" class="mt-4"></div>
+            </div>
+            <div class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark" id="isIncomeInstantActive" style="display: none;">
+                <div id="isInstantActiveQuestions">
+                    <div>
+                        <h5 class="text-dark ps-2 pe-2 m-0 mt-2 text-center">Income Instant Active?</h5>
+                        <p class="text-muted text-center pb-1 ps-2 pe-2 m-0" style="font-size: 8pt;">Do you want the income to be added to your allowed spending instantly rather than when it is due?</p>
+                        <p class="text-danger text-center pb-1 ps-2 pe-2 m-0" style="font-size: 10pt;">* <strong>Caution</strong> though you might end up spending more money than you have</p>
+                    </div>
+                    <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsInstantActive">
+                        <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
+                            <div id="divisInstantActiveBillYes" class="col-5 m-2">
+                                <button id="btnYesActive" type="button" class="btn btn-primary rounded-3 col-12" onclick="isInstantActiveIncomeSelection('Yes'); return false;">Yes</button>
+                            </div>
+                            <div id="divisInstantActiveBillYes" class="col-5 m-2">
+                                <button id="btnNoActive" type="button" class="btn btn-dark rounded-3 col-12" onclick="isInstantActiveIncomeSelection('No'); return false;">No</button>
+                            </div>
+                            <input type="hidden" asp-for="isInstantActive" value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div id="isInstantActiveAnswer" style="display: none;">
+                    <p class="text-muted pb-1 ps-4 pe-4 m-2 pt-1" style="font-size: 8pt;" id="isInstantActiveAnswertxt"></p>
+                </div>
+            </div>
+        </div>
+        <footer class="sticky-bottom m-0 p-0" style="width: 100%">
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <button asp-action="AddIncome" asp-controller="Incomes" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11" onclick="DisableInputs()"><i class="bi bi-save2"></i> &nbsp Add Income</button>
+            </div>
+        </footer>
+    </div>
+    <div class="modal" id="ConfirmationModal" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="margin-bottom: 45%">
+                <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-primary">Congrats, Your Income was Created!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="ConfirmationModal" aria-label="Close" id="CloseIncomeModal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ConfirmationModalBody">
+                </div>
+                <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                    <button asp-action="AddIncomeConfirmation" asp-controller="Incomes" type="submit" id="btnSaveIncome" class="btn btn-primary">Amazing, Let's Continue</button>
+                    <button asp-action="AddIncomeCancel" asp-controller="Incomes" type="submit" id="btnCancelIncome" class="btn btn-danger" data-bs-dismiss="ConfirmationModal">Opps, Delete!</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+<div class="fixed-top">
+    <div class="d-flex container justify-content-end">
+        <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
+    </div>
+</div>
+<div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
+    <div class="d-flex">
+        <div id="SnackBarMessage" class="col-11 pe-1"></div>
+        <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+<script>
+
+    $("#IncomeGivenDayOfMonthPay").on({
+        change: function () {
+            $('#RecurringIncomeValue').val(this.value)
+        }
+    });
+
+    $("#IncomePeriodicPay").on({
+        change: function () {
+            $('#RecurringIncomeValue').val(this.value)
+        }
+    });
+
+    document.querySelectorAll('input[name="IncomeoptionsRadios"]').forEach(radio => {
+        radio.addEventListener('click', handleIncomeRadioClick);
+    });
+
+    function DisableInputs(){
+        document.getElementById('txtIncomeAmount').disabled = true;
+    }
+
+    function handleIncomeRadioClick() {
+        if (document.getElementById('IncomeoptionsRadios1').checked) {
+            document.getElementById('divIncomePeriodicPay').style.display = 'flex';
+            document.getElementById('divIncomeGivenDayOfMonthPay').style.display = 'none';
+            document.getElementById('lblIncomeoptionsRadios1').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblIncomeoptionsRadios2').className = "form-check-label align-self-center text-dark"
+            document.getElementById('RecurringIncomeType').value = "Everynth"
+
+        }
+        else if (document.getElementById('IncomeoptionsRadios2').checked) {
+            document.getElementById('divIncomePeriodicPay').style.display = 'none';
+            document.getElementById('divIncomeGivenDayOfMonthPay').style.display = 'flex';
+            document.getElementById('lblIncomeoptionsRadios1').className = "form-check-label align-self-center text-dark"
+            document.getElementById('lblIncomeoptionsRadios2').className = "form-check-label align-self-center text-primary"
+            document.getElementById('RecurringIncomeType').value = "OfEveryMonth"
+        }
+    }
+
+    const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const monthlist = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    var PageStatus = '@ViewBag.PageStatus'
+    document.addEventListener("load", CheckPageStatus(PageStatus));
+
+    function UpdateHdnIncomeAmount() {
+        var txtBillAmount = document.getElementById('txtIncomeAmount').value;
+        var numBillAmount = txtBillAmount.replace('£', '').replace(',', '');
+        document.getElementById('IncomeAmount').value = numBillAmount;
+    }
+
+    function CheckPageStatus(Status) {
+        //var HtmlText = ''
+
+        if (Status == 'Confirmation') {
+
+            var GoalDate = '@Model.DateOfIncomeEvent';
+            var Amount = '@Model.IncomeAmount';
+            var Name = '@Model.IncomeName';
+
+
+            var DateStringSplit = GoalDate.split(' ');
+            var DateGoalDate = new Date(DateStringSplit[0].split('/')[2], DateStringSplit[0].split('/')[1] - 1, DateStringSplit[0].split('/')[0]);
+
+            day = weekday[DateGoalDate.getDay()];
+            datenumber = DateGoalDate.getDate();
+            month = monthlist[DateGoalDate.getMonth()];
+            year = DateGoalDate.getFullYear();
+
+            GoalDate = day + ' ' + datenumber + ' ' + month + ' ' + year
+
+            if ('@Model.isRecurringIncome' == 'True') {
+                var Type = '@Model.RecurringIncomeType';                
+                var IncomeValue = '@Model.RecurringIncomeValue'
+                if('@Model.RecurringIncomeType' == 'Everynth')
+                {
+                    var Period = '@Model.RecurringIncomeDuration'
+                    var HtmlText = 'Congrats you have set up ' + Name + ' as a recurring Income for £' + Amount + ' which is due on ' + GoalDate + ' and then every ' + IncomeValue + ' ' + Period
+                }
+                else if ('@Model.RecurringIncomeType' == 'OfEveryMonth') 
+                {
+                    var HtmlText = 'Congrats you have set up ' + Name + ' as a recurring Income for £' + Amount + ' which is due on ' + GoalDate + ' and then every ' + IncomeValue + ' of the month!'
+                }
+                
+            }
+            else if ('@Model.isRecurringIncome' == "False") 
+            {
+                var HtmlText = 'Congrats you have added the one-off £' + Amount + ' Income, ' + Name + ' which you will recieve on ' + GoalDate + '!'
+            }
+            else 
+            {
+                var HtmlText = "There seems to have been an issue, Opps!";
+            }
+
+
+            document.getElementById('ConfirmationModalBody').innerHTML = HtmlText;
+            document.getElementById('ConfirmationModal').style.display = "block";
+        }
+        else if (Status == 'Cancel') {
+            ShowSnackBar('IncomeCancelled', 'danger');
+        }
+    }
+
+    function ShowSnackBar(Message, Type) {
+
+        var x = document.getElementById("SnackBarMessage");
+
+        if (Message == 'BillCreated') {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["BillName"]' + "</strong> as a Bill for <strong>£" + '@TempData["BillAmount"]' + "</strong> which will require you to save <strong>£" + '@TempData["BillDailyValue"]' + "</strong> a day!</div>"
+        }
+        else if (Message == 'SavingCreated') {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as a Bill for <strong>£" + '@TempData["SavingsGoal"]' + "</strong> which will required you to save <strong>£" + '@TempData["RegularSavingValue"]' + "</strong> a day!</div>";
+        }
+        else if (Message == 'SavingCancelled') {
+            x.innerHTML = '<div>Youve back out of creating the <strong>Saving</strong>, Whats wrong you scared? Dont worry we believe in you!</div>'
+        }
+        else if (Message == 'BillCancelled') {
+            x.innerHTML = '<div>You <strong>Deleted</strong> your Bill, This doesnt delete it from life though just in the app it still needs to be paid, so maybe just add it anyway?</div>';
+        }
+        else if (Message == 'IncomeCancelled') {
+            x.innerHTML = '<div>You <strong>Deleted</strong> the Income, its always best to add what you have to the app. If you dont want to spend it just put it in a Saving!</div>';
+        }
+
+        var y = document.getElementById("snackbar");
+        y.className = y.className.replace("alert-success", "");
+        y.className = y.className.replace("alert-danger", "");
+
+        if (Type == 'success') {
+            y.className = y.className + ' alert-success';
+        }
+        else if (Type == 'danger') {
+            y.className = y.className + ' alert-danger';
+        }
+
+        y.className = y.className + " show";
+
+        setTimeout(function () { y.className = y.className.replace("show", ""); }, 6900);
+    }
+
+    function isRecurringIncomeSelection(isRegular) {
+        document.getElementById("divIsReccuringIncome").style.display = "none";
+        document.getElementById("divRecurringTypeSelected").style.display = "block";
+        document.getElementById("IncomeDetails").style.display = "block";
+        document.getElementById("isIncomeInstantActive").style.display = "block";
+        if (isRegular == 'Yes') {
+            document.getElementById('isRecurringIncome').value = 'true';
+            document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a recurring Income";
+            document.getElementById("divRecurringIncome").style.display = "block";
+            document.getElementById("divCategoryExp").style.display = "block";
+            document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Any Income outside of your main pay you get on a regular and consitent way!</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Maybe a second part time job, some cash from investments or maybe you have really generous friends?!</p>'
+
+        }
+        else if (isRegular == 'No') {
+            document.getElementById('isRecurringIncome').value = 'false';
+            document.getElementById("txtRecurringTypeSelected").innerHTML = "You are adding a one off Income";
+            document.getElementById("divRecurringIncome").style.display = "none";
+            document.getElementById("divCategoryExp").style.display = "block";
+            document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Any Income you know you are going to get but will only recieve it this once.</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Maybe a gift from family, sold something big ... or small any extra money you get put it in here.</p>'
+        }
+    }
+
+    function isInstantActiveIncomeSelection(isIsntantActive)
+    {
+        if (isIsntantActive == 'Yes') 
+        {
+            document.getElementById("isInstantActiveQuestions").style.display = "none";
+            document.getElementById("isInstantActiveAnswer").style.display = "block";
+            document.getElementById("isInstantActiveAnswertxt").innerHTML = "The Income will be availble from today and used to calculate your daily spend, careful you dont spend more money than you have!";
+            document.getElementById("isInstantActive").value = "true";            
+        }
+        else if (isIsntantActive == 'No') 
+        {
+            document.getElementById("isInstantActiveQuestions").style.display = "none";
+            document.getElementById("isInstantActiveAnswer").style.display = "block";
+            document.getElementById("isInstantActiveAnswertxt").innerHTML = "The Income will become availble for spend and used in calculation on the day you have told us it will be recieved!";
+            document.getElementById("isInstantActive").value = "false";
+        }
+    }
+
+</script>

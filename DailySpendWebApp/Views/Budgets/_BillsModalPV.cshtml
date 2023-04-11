@@ -65,7 +65,7 @@
         </div>
         <div id="divGoalDate" class="row justify-content-between align-items-center ms-2 me-2 mt-2">
             <label class="form-label col-5 ps-2 pt-2 pe-1 pb-2 m-0 text-dark" asp-for="BillDueDate">Bill Due Date</label>
-            <input asp-for="BillDueDate" type="date" onblur="CheckDateFuture(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
+            <input asp-for="BillDueDate" type="date" onblur="CheckDateFutureBills(), false;" class="pe-2 pt-2 pb-2" style="width: 42%; text-align: right; border: none; outline: none; color: #772953; cursor: pointer; border-left: 1px solid #772953;" oninput="this.style.color = '#e95420'" />
             <span class="text-danger" asp-validation-for="BillDueDate" id="valGoalDate"></span>
         </div>
         <div id="divRecurringBill">
@@ -100,7 +100,7 @@
                     </div>
                     <div class="" style="display: flex">
                         <div class="DropDown">
-                            <select class="form-select text-primary text-center" asp-for="BillDuration">
+                            <select class="form-select text-primary text-center" asp-for="BillDuration" value="@Model.BillDuration">
                                 <option>days</option>
                                 <option>weeks</option>
                                 <option>months</option>
@@ -242,12 +242,12 @@
         document.getElementById('BillCurrentBalance').value = numBillCurrentBalance;
     }
 
-    function CheckDateFuture() {
+    function CheckDateFutureBills() {
         var CurrentDateString = (document.getElementById('hdnServerDate').value);
         var CurrentDateStringSplit = CurrentDateString.split(' ');
         var DateCurrentDate = new Date(CurrentDateStringSplit[0].split('/')[2], CurrentDateStringSplit[0].split('/')[1] - 1, CurrentDateStringSplit[0].split('/')[0]);
         var CurrentDate = DateCurrentDate.getTime();
-        var TargetDate = Date.parse(document.getElementById('GoalDate').value);
+        var TargetDate = Date.parse(document.getElementById('BillDueDate').value);
 
         console.log(CurrentDateString)
         console.log(CurrentDateStringSplit)
