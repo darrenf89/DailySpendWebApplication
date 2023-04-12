@@ -81,7 +81,8 @@ namespace DailySpendBudgetWebApp.Models
         public string? RecurringIncomeDuration { get; set; }
         public bool? isClosed { get; set; } = true;
         public bool? isInstantActive { get; set; }
-
+        public string? ddlSavingsPeriod { get; set; }
+        public decimal? PeriodSavingValue { get; set; }
 
     }
 }

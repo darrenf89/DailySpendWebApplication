@@ -29,7 +29,9 @@ namespace DailySpendBudgetWebApp.Models
         public bool isRegularSaving { get; set; }
         [DisplayName("Savings Amount")]
         public decimal? RegularSavingValue { get; set; }
+        public decimal? PeriodSavingValue { get; set; }
         public bool isAutoComplete { get; set; }
+        public string? ddlSavingsPeriod { get; set; }
 
     }
 }

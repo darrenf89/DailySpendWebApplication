@@ -3,6 +3,7 @@ using DailySpendBudgetWebApp.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Castle.Core.Smtp;
+using DailySpendWebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlSer
     builder.Configuration.GetConnectionString("DefaultConnectionString")
     ));
 builder.Services.AddScoped<ISecurityHelper, SecurityHelper>();
+builder.Services.AddScoped<IProductTools, ProductTools>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -33,6 +35,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
 
 });
+
 
 var app = builder.Build();
 

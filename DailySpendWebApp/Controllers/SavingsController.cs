@@ -89,6 +89,8 @@ public class SavingsController : Controller
                     S.SavingsType = obj.SavingsType;                
                     S.GoalDate = obj.GoalDate;
                     S.RegularSavingValue= obj.RegularSavingValue;
+                    S.ddlSavingsPeriod = "PerDay";
+                    S.PeriodSavingValue = null;
                     S.canExceedGoal = obj.canExceedGoal;
                     S.isAutoComplete = false;
 
@@ -96,10 +98,20 @@ public class SavingsController : Controller
                 else if (obj.SavingsType == "SavingsBuilder")
                 {
                     S.SavingsType = obj.SavingsType;                
-                    S.RegularSavingValue= obj.RegularSavingValue;
                     S.SavingsGoal = null;
                     S.canExceedGoal = false;
                     S.isAutoComplete = false;
+                    S.ddlSavingsPeriod = obj.ddlSavingsPeriod;
+                    if (obj.ddlSavingsPeriod == "PerDay")
+                    {
+                        S.RegularSavingValue = obj.RegularSavingValue;
+                        S.PeriodSavingValue = null;
+                    }
+                    else if (obj.ddlSavingsPeriod == "PerPayPeriod")
+                    {
+                        S.PeriodSavingValue = obj.RegularSavingValue;
+                        S.RegularSavingValue = obj.RegularSavingValue / Budget.AproxDaysBetweenPay;
+                    }
 
                 }
                 else if (obj.SavingsType == "TargetAmount")
@@ -109,12 +121,22 @@ public class SavingsController : Controller
                     S.SavingsGoal = obj.SavingsGoal;
                     S.CurrentBalance = obj.CurrentBalance;
                     S.GoalDate = obj.GoalDate;
-                    S.RegularSavingValue = obj.RegularSavingValue;
                     S.canExceedGoal = obj.canExceedGoal;
                     S.isAutoComplete = obj.isAutoComplete;
                     S.isSavingsClosed = false;
                     S.isRegularSaving = true;
                     S.isDailySaving = false;
+                    S.ddlSavingsPeriod = obj.ddlSavingsPeriod;
+                    if (obj.ddlSavingsPeriod == "PerDay")
+                    {
+                        S.RegularSavingValue = obj.RegularSavingValue;
+                        S.PeriodSavingValue = null;
+                    }
+                    else if (obj.ddlSavingsPeriod == "PerPayPeriod")
+                    {
+                        S.PeriodSavingValue = obj.RegularSavingValue;
+                        S.RegularSavingValue = obj.RegularSavingValue / Budget.AproxDaysBetweenPay;
+                    }
                 }
                 else
                 {

@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendBudgetWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230412182054_SavingsUpdate")]
+    partial class SavingsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -526,9 +528,6 @@ namespace DailySpendBudgetWebApp.Migrations
 
                     b.Property<bool>("canExceedGoal")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ddlSavingsPeriod")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isAutoComplete")
                         .HasColumnType("bit");

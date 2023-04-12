@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.Globalization;
 using Microsoft.Data.SqlClient.Server;
 using static System.Net.Mime.MediaTypeNames;
+using DailySpendWebApp.Services;
 
 namespace DailySpendBudgetWebApp.Controllers
 {
@@ -24,10 +25,13 @@ namespace DailySpendBudgetWebApp.Controllers
 
         private readonly ApplicationDBContext _db;
 
-        public BudgetsController(ILogger<HomeController> logger, ApplicationDBContext db)
+        private readonly IProductTools _pt;
+
+        public BudgetsController(ILogger<HomeController> logger, ApplicationDBContext db, IProductTools pt)
         {
             _logger = logger;
             _db = db;
+            _pt = pt;
         }
 
         public CreateABudgetPageModel ValidateBudgetDetails(CreateABudgetPageModel obj)
@@ -112,7 +116,141 @@ namespace DailySpendBudgetWebApp.Controllers
             return obj;
         }
 
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateBudget(CreateABudgetPageModel obj)
+        {
+            obj = ValidateBudgetDetails(obj);
+
+            //Save Budget Details Again
+            if (ModelState.IsValid)
+            {
+                var BudgetsSetting = _db.BudgetSettings?
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+
+                BudgetSettings? BS = BudgetsSetting.FirstOrDefault();
+
+                if (BS == null)
+                {
+                    BS = new BudgetSettings();
+                    _db.BudgetSettings.Add(BS);
+                    BS.BudgetID = HttpContext.Session.GetInt32("_DefaultBudgetID");
+                }
+
+                BS.CurrencySymbol = int.Parse(obj.CurrencyDDL);
+                BS.CurrencyPattern = int.Parse(obj.CurrencyPlacementDDL);
+
+                int DateFormatObj = int.Parse(obj.DateFormatDDL);
+                var DateFormats = _db.lut_DateFormats.Where(x => x.id == DateFormatObj);
+                lut_DateFormat DateFormat = DateFormats.FirstOrDefault();
+
+                BS.DateSeperator = DateFormat.DateSeperatorID;
+                BS.ShortDatePattern = DateFormat.ShortDatePatternID;
+
+                int NumberFormatObj = int.Parse(obj.NumberFormatDDL);
+                var NumberFormats = _db.lut_NumberFormats.Where(x => x.id == NumberFormatObj);
+                lut_NumberFormat NumberFormat = NumberFormats.FirstOrDefault();
+
+                BS.CurrencyDecimalDigits = NumberFormat.CurrencyDecimalDigitsID;
+                BS.CurrencyDecimalSeparator = NumberFormat.CurrencyDecimalSeparatorID;
+                BS.CurrencyGroupSeparator = NumberFormat.CurrencyGroupSeparatorID;
+
+                bool Everynth = obj.Everynth ?? false;
+                bool WorkingDays = obj.WorkingDays ?? false;
+                bool OfEveryMonth = obj.OfEveryMonth ?? false;
+                bool LastOfTheMonth = obj.LastOfTheMonth ?? false;
+
+                var Budgets = _db.Budgets?
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"));
+
+                Budgets? Budget = Budgets.FirstOrDefault();
+
+                Decimal Balance;
+                Decimal.TryParse(obj.StartingBalance, out Balance);
+
+                Budget.BankBalance = Balance;
+                Budget.MoneyAvailableBalance = Balance;
+                Budget.LeftToSpendBalance = Balance;
+
+                Decimal Pay;
+                Decimal.TryParse(obj.NextPayDayAmount, out Pay);
+
+                Budget.PaydayAmount = Pay;
+
+                string format = "yyyy-MM-dd";
+                DateTime PayDate = new DateTime();
+                DateTime.TryParseExact(obj.NextIncomeDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out PayDate);
+                Budget.NextIncomePayday = PayDate;
+
+                if (Everynth)
+                {
+                    Budget.PaydayType = "Everynth";
+                    Budget.PaydayValue = obj.PeriodicPayPeriod;
+                    Budget.PaydayDuration = obj.PeriodicPayPeriodDDL;
+                    int Duration = new int();
+                    if (Budget.PaydayDuration == "days")
+                    {
+                        Duration = 1;
+                    }
+                    else if (Budget.PaydayDuration == "weeks")
+                    {
+                        Duration = 7;
+                    }
+                    else if (Budget.PaydayDuration == "months")
+                    {
+                        int year = DateTime.Now.Year;
+                        int month = DateTime.Now.Month;
+                        Duration = DateTime.DaysInMonth(year, month);
+                    }
+                    Budget.AproxDaysBetweenPay = Duration * Budget.PaydayValue;
+                }
+                else if (WorkingDays)
+                {
+                    Budget.PaydayType = "WorkingDays";
+                    Budget.PaydayValue = obj.LastDayOfMonthPayPeriod;
+                    Budget.PaydayDuration = null;
+
+                    int? NumberOfDaysBefore = Budget.PaydayValue;
+
+                    Budget.AproxDaysBetweenPay = GetNumberOfDaysLastWorkingDay(NumberOfDaysBefore);
+
+                }
+                else if (OfEveryMonth)
+                {
+                    Budget.PaydayType = "OfEveryMonth";
+                    Budget.PaydayValue = obj.GivenDayOfMonthPayPeriod;
+                    Budget.PaydayDuration = null;
+
+                    int year = DateTime.Now.Year;
+                    int month = DateTime.Now.Month;
+                    int days = DateTime.DaysInMonth(year, month);
+                    Budget.AproxDaysBetweenPay = days;
+                }
+                else if (LastOfTheMonth)
+                {
+                    Budget.PaydayType = "LastOfTheMonth";
+                    Budget.PaydayValue = null;
+                    Budget.PaydayDuration = obj.LastGivenDayOfWeekPay;
+
+                    int dayNumber = ((int)Enum.Parse(typeof(DayOfWeek), Budget.PaydayDuration));
+
+                    Budget.AproxDaysBetweenPay = GetNumberOfDaysLastDayOfWeek(dayNumber);
+
+                }
+
+                Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
+
+                TimeSpan t = Budget.NextIncomePayday - DateTime.UtcNow ?? new TimeSpan();
+                Budget.LeftToSpendDailyAmount = Balance / t.Days;
+
+                _db.SaveChanges();
+            }
+
+            string? status = _pt.UpdateAllBudgetSavings(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditBudgetDetailsStage(CreateABudgetPageModel obj)
@@ -861,17 +999,29 @@ namespace DailySpendBudgetWebApp.Controllers
                         S.SavingsType = obj.SavingsType;
                         S.GoalDate = obj.GoalDate;
                         S.RegularSavingValue = obj.RegularSavingValue;
-                        S.canExceedGoal = false;
-                        S.isAutoComplete = obj.isAutoComplete;
+                        S.ddlSavingsPeriod = "PerDay";
+                        S.PeriodSavingValue = null;
+                        S.canExceedGoal = obj.canExceedGoal;
+                        S.isAutoComplete = false;
 
                     }
                     else if (obj.SavingsType == "SavingsBuilder")
                     {
                         S.SavingsType = obj.SavingsType;
-                        S.RegularSavingValue = obj.RegularSavingValue;
                         S.SavingsGoal = null;
                         S.canExceedGoal = false;
                         S.isAutoComplete = false;
+                        S.ddlSavingsPeriod = obj.ddlSavingsPeriod;
+                        if (obj.ddlSavingsPeriod == "PerDay")
+                        {
+                            S.RegularSavingValue = obj.RegularSavingValue;
+                            S.PeriodSavingValue = null;
+                        }
+                        else if (obj.ddlSavingsPeriod == "PerPayPeriod")
+                        {
+                            S.PeriodSavingValue = obj.RegularSavingValue;
+                            S.RegularSavingValue = obj.RegularSavingValue / Budget.AproxDaysBetweenPay;
+                        }
 
                     }
                     else if (obj.SavingsType == "TargetAmount")
@@ -881,12 +1031,22 @@ namespace DailySpendBudgetWebApp.Controllers
                         S.SavingsGoal = obj.SavingsGoal;
                         S.CurrentBalance = obj.CurrentBalance;
                         S.GoalDate = obj.GoalDate;
-                        S.RegularSavingValue = obj.RegularSavingValue;
                         S.canExceedGoal = obj.canExceedGoal;
                         S.isAutoComplete = obj.isAutoComplete;
                         S.isSavingsClosed = false;
                         S.isRegularSaving = true;
                         S.isDailySaving = false;
+                        S.ddlSavingsPeriod = obj.ddlSavingsPeriod;
+                        if (obj.ddlSavingsPeriod == "PerDay")
+                        {
+                            S.RegularSavingValue = obj.RegularSavingValue;
+                            S.PeriodSavingValue = null;
+                        }
+                        else if (obj.ddlSavingsPeriod == "PerPayPeriod")
+                        {
+                            S.PeriodSavingValue = obj.RegularSavingValue;
+                            S.RegularSavingValue = obj.RegularSavingValue / Budget.AproxDaysBetweenPay;
+                        }
                     }
                     else
                     {

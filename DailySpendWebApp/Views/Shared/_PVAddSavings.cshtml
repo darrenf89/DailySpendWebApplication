@@ -89,7 +89,7 @@
                 <input id="txtRegularSavingValue" type="text" pattern="^£\d{1,3}(,\d{3})*(\.\d+)" style=" color: #38b44a; width: 40%; text-align: right; border: none; outline: none; cursor: pointer;" value="" data-type="currency" placeholder="£0.00" class="pe-2 pt-2 pb-2" onfocus="this.placeholder = ''" onblur="this.placeholder = '£0.00'" onchange="UpdateHdnSavingAmount();" />
                 <input asp-for="RegularSavingValue" type="number" style="display:none;" />
                 <div class="d-flex text-dark align-items-center" style="width: 55%">
-                    <select name="ddlSavingsPeriod" id="ddlSavingsPeriod" class="form-select form-select-sm" onchange="UpdateHdnSavingAmount()">
+                    <select asp-for="ddlSavingsPeriod" class="form-select form-select-sm" onchange="UpdateHdnSavingAmount()">
                         <option value="PerDay">Every Day</option>
                         <option value="PerPayPeriod">Pay Day</option>
                     </select>
@@ -176,9 +176,9 @@
         document.getElementById('divSavingValue').style.display = 'flex';
         document.getElementById('divCanExceedGoal').style.display = 'none';
         document.getElementById('divIsAutoComplete').style.display = 'flex';
-        document.getElementById('txtRegularSavingValue').readOnly = true;
-        document.getElementById('txtRegularSavingValue').style.color = "#c0c0c0";
-        document.getElementById('GoalDate').disabled = false;
+        document.getElementById('txtRegularSavingValue').disabled = true;
+        document.getElementById('GoalDate').readOnly = false;
+        document.getElementById('GoalDate').style.color = "#333";
         document.getElementById('ddlSavingsPeriod').value = 'PerDay'
         document.getElementById('ddlSavingsPeriod').disabled = true;
         document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For holidays, your wedding ...</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Figure out how much you need to contribute each day to meet a goal with a deadline</p>'
@@ -196,7 +196,8 @@
         document.getElementById('divCanExceedGoal').style.display = 'none';
         document.getElementById('divIsAutoComplete').style.display = 'none';
         document.getElementById('txtRegularSavingValue').disabled = false;
-        document.getElementById('GoalDate').disabled = false;
+        document.getElementById('GoalDate').readOnly = false;
+        document.getElementById('GoalDate').style.color = "#333";
         document.getElementById('ddlSavingsPeriod').disabled = false;
         document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For saving goals without any time or target constraints</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Save the same amount each period, as much as you can afford!</p>'
 
@@ -430,7 +431,6 @@
 
             var txtSavingsGoal = document.getElementById('txtRegularSavingValue').value;
             var numSavingsGoal = txtSavingsGoal.replace('£', '').replace(',', '');
-            var numSavingsGoal = numSavingsGoal / @ViewBag.PaymentPeriod
             document.getElementById('RegularSavingValue').value = numSavingsGoal;
 
         }
