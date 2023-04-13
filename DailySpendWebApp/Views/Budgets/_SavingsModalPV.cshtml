@@ -44,10 +44,10 @@
         <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRegularSaving">
             <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
                 <div id="divRegularSavingYes" class="col-4 m-2">
-                    <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRegularSavingSelection('Yes'), false;">Yes</button>
+                    <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRegularSavingSelection('Yes'), false;">Ongoing</button>
                 </div>
                 <div id="divRegularSavingYes" class="col-4 m-2">
-                    <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRegularSavingSelection('No'), false;">No</button>
+                    <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRegularSavingSelection('No'), false;">Envelope</button>
                 </div>
                 <input type="hidden" asp-for="isRegularSaving" />
                 <input type="hidden" asp-for="SavingID" />
@@ -239,12 +239,18 @@
         document.getElementById('SavingsDetails').style.display = 'block';
         //document.getElementById('btnSubmit').style.display = 'block';
         document.getElementById('isRegularSaving').value = 'False';
-        document.getElementById('divSavingTarget').style.display = 'flex';
+        document.getElementById('divSavingTarget').style.display = 'none';
         document.getElementById('divCurrentBalance').style.display = 'flex';
         document.getElementById('divGoalDate').style.display = 'none';
-        document.getElementById('divSavingValue').style.display = 'none';
+        document.getElementById('divSavingValue').style.display = 'flex';
+        document.getElementById('ddlSavingsPeriod').value = 'PerPayPeriod'
+        document.getElementById('ddlSavingsPeriod').selectedIndex = 1
+        document.getElementById('ddlSavingsPeriod').disabled = true;
         document.getElementById('divCanExceedGoal').style.display = 'none';
         document.getElementById('divIsAutoComplete').style.display = 'none';
+        document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Envelope Saving allows you to set aside money after youve been paid to spend during the month</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Maybe its for groceries, or money for going out! Using Envelopes will help you better control your spending!</p>'
+        document.getElementById('divCategoryExp').style.display = 'block';
+
     }
 
     function LoadRegularSavingYes() {

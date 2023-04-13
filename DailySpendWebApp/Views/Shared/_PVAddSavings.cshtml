@@ -9,16 +9,16 @@
 <div class="container" style="min-height: 82vh;">
     <div id="divIsRegularSavingSelector" class="card text-white bg-white mb-3 shadow rounded-5 ms-3 me-3 border-dark">
         <div>
-            <h5 class="text-dark p-2 text-center">Do you want to set up a Regular Saving?</h5>
+            <h5 class="text-dark p-2 mt-2 text-center">What type of saving?</h5>
             <p class="text-muted text-center pb-3 ps-2 pe-2 m-0" style="font-size: 8pt;">Let us do the work for you. Set up a Saving goal and we will figure everything else out, well apart from what you should wear!</p>
         </div>
         <div class="container d-flex flex-column mb-1 ps-3 pe-3" id="divIsRegularSaving">
             <div class="d-flex justify-content-between align-items-center text-center ms-3 me-3">
                 <div id="divRegularSavingYes" class="col-4 m-2">
-                    <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRegularSavingSelection('Yes'), false;">Yes</button>
+                    <button id="btnYes" type="button" class="btn btn-primary rounded-3 col-12" onclick="isRegularSavingSelection('Yes'), false;">Ongoing</button>
                 </div>
                 <div id="divRegularSavingYes" class="col-4 m-2">
-                    <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRegularSavingSelection('No'), false;">No</button>
+                    <button id="btnNo" type="button" class="btn btn-dark rounded-3 col-12" onclick="isRegularSavingSelection('No'), false;">Envelope</button>
                 </div>
                 <input type="hidden" asp-for="isRegularSaving" />
             </div>
@@ -148,12 +148,17 @@
         document.getElementById('SavingsDetails').style.display = 'block';
         //document.getElementById('btnSubmit').style.display = 'block';
         document.getElementById('isRegularSaving').value = 'False';
-        document.getElementById('divSavingTarget').style.display = 'flex';
+        document.getElementById('divSavingTarget').style.display = 'none';
         document.getElementById('divCurrentBalance').style.display = 'flex';
         document.getElementById('divGoalDate').style.display = 'none';
-        document.getElementById('divSavingValue').style.display = 'none';
+        document.getElementById('divSavingValue').style.display = 'flex';
+        document.getElementById('ddlSavingsPeriod').value = 'PerPayPeriod'
+        document.getElementById('ddlSavingsPeriod').selectedIndex = 1
+        document.getElementById('ddlSavingsPeriod').disabled = true;
         document.getElementById('divCanExceedGoal').style.display = 'none';
         document.getElementById('divIsAutoComplete').style.display = 'none';
+        document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Envelope Saving allows you to set aside money after youve been paid to spend during the month</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Maybe its for groceries, or money for going out! Using Envelopes will help you better control your spending!</p>'
+        document.getElementById('divCategoryExp').style.display = 'block';
     }
 
     function LoadRegularSavingYes(){
