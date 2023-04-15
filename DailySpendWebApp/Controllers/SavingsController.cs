@@ -171,10 +171,12 @@ public class SavingsController : Controller
         }
 
         ViewBag.isRegularSaving = S.isRegularSaving;
+        ViewBag.isDailySaving = S.isDailySaving;
         ViewBag.GoalDate = S.GoalDate;
         ViewBag.SavingsName = S.SavingsName;
         ViewBag.SavingsGoal = S.SavingsGoal;
         ViewBag.RegularSavingValue = S.RegularSavingValue;
+        ViewBag.PeriodSavingValue = S.PeriodSavingValue;
         ViewBag.SavingsType = S.SavingsType;
         ViewBag.PageStatus = "Confirmation";
         ViewBag.PaymentPeriod = Budget.AproxDaysBetweenPay;
@@ -216,7 +218,21 @@ public class SavingsController : Controller
 
         ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
         TempData["SnackbarMess"] = "SavingCreated";
-        return RedirectToAction("Index", "Home", new {ReMess = "SavingCreated", id = CreatedSaving.SavingID});
+
+        string RedirectMessage = "";
+
+        if (CreatedSaving.isRegularSaving)
+        {
+             RedirectMessage = "SavingCreated";
+        }
+        else
+        {
+             RedirectMessage = "EnvolopeSavingCreated";
+        }
+
+        
+        
+        return RedirectToAction("Index", "Home", new {ReMess = RedirectMessage, id = CreatedSaving.SavingID});
     }
 
 

@@ -60,13 +60,16 @@
             x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["BillName"]' + "</strong> as a Bill for <strong>£" + '@TempData["BillAmount"]' + "</strong> which will require you to save <strong>£" + '@TempData["BillDailyValue"]' + "</strong> a day!</div>"
         }
         else if (Message == 'SavingCreated') {
-            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as a Bill for <strong>£" + '@TempData["SavingsGoal"]' + "</strong> which will required you to save <strong>£" + '@TempData["RegularSavingValue"]' + "</strong> a day!</div>";
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as a Saving for <strong>£" + '@TempData["SavingsGoal"]' + "</strong> which will required you to save <strong>£" + '@TempData["RegularSavingValue"]' + "</strong> a day!</div>";
         }
         else if (Message == 'SavingCancelled') {
             x.innerHTML = '<div>Youve back out of creating the <strong>Saving</strong>, Whats wrong you scared? Dont worry we believe in you!</div>'
         }
         else if (Message == 'BillCancelled') {
             x.innerHTML = '<div>You <strong>Deleted</strong> your Bill, This doesnt delete it from life though just in the app it still needs to be paid, so maybe just add it anyway?</div>';
+        }
+        else if (Message == 'EnvolopeSavingCreated') {
+            x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as an Envolope Saving for <strong>£" + '@TempData["PeriodSavingValue"]' + ".</strong> We will allocate this amount at the start of every pay day to spend during the month.</div>";
         }
 
         var y = document.getElementById("snackbar");

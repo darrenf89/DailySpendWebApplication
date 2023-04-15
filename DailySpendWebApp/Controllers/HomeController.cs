@@ -76,8 +76,18 @@ public class HomeController : Controller
                     TempData["SavingsGoal"] = CreatedSaving.SavingsGoal;
                     TempData["RegularSavingValue"] = CreatedSaving.RegularSavingValue;
                 }
+                else if (ReMess == "EnvolopeSavingCreated")
+                {
+                    var Savings = _db.Savings.Where(x => x.SavingID == id);
 
-                return View(obj);
+                    Savings? CreatedSaving = new();
+                    CreatedSaving = Savings.FirstOrDefault();
+
+                    TempData["SavingsName"] = CreatedSaving.SavingsName;
+                    TempData["PeriodSavingValue"] = CreatedSaving.PeriodSavingValue;
+                }
+
+                    return View(obj);
             }
             else
             {

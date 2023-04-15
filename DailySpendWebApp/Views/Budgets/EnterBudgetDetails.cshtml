@@ -395,6 +395,28 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="SaveDetailsSettingsModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-primary">Save your Budget Details and Settings!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="SaveDetailsSettingsModal" aria-label="Close" id="CloseSaveDetailsSettingsModal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="SaveDetailsSettingsInfo">
+                        <p class="text-muted">Your Budget Settings and/or Details haven't been saved and you may have made changes since the last time you Saved them.</p>
+                        <p class="text-muted">Would you like to save the settings and details before you continue?</p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-dark p-1 border-top border-primary border-3">
+                    <button asp-controller="Budgets" asp-action="CreateBudget" asp-route-SaveYesNo="Yes" type="submit" id="btnSaveDetailsSettingsModalYes" class="btn btn-primary">Yes</button>
+                    <button asp-controller="Budgets" asp-action="CreateBudget" asp-route-SaveYesNo="No" type="submit" id="btnSaveDetailsSettingsModalNo" class="btn btn-danger" data-bs-dismiss="SaveDetailsSettingsModal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 <div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
     <div class="d-flex">
@@ -560,9 +582,12 @@
             $('#IncomesInfo').load("/Budgets/AddIncomePV/Edit/@Model.IncomeEventID");
             document.getElementById("IncomesModal").style.display = "block"
         }
+
+        if (Stage.includes('ReSaveDetailsSettings')) {
+            document.getElementById("SaveDetailsSettingsModal").style.display = "block"
+        }
+
     }
-
-
 
     function ChangeDivBudgetNameBorder()
     {
@@ -642,6 +667,12 @@
         $('#BillsInfo').html('');
     }
 
+    document.getElementById("CloseSaveDetailsSettingsModal").onclick = function () {
+        document.getElementById("SaveDetailsSettingsModal").style.display = "none";
+        DeleteSaveDetailsSettingsFromStage()
+        $('#BillsInfo').html('');
+    }
+
     document.getElementById("btnCancelBills").onclick = function () {
         document.getElementById("BillsModal").style.display = "none";
         DeleteEditBillFromStage()
@@ -658,16 +689,21 @@
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == document.getElementById("SavingsModal") || event.target == document.getElementById("BillsModal") || event.target == document.getElementById("DeleteSavingModal") || event.target == document.getElementById("DeleteBillModal") || event.target == document.getElementById("DeleteIncomeModal") || event.target == document.getElementById("IncomesModal")) {
+        if (event.target == document.getElementById("SaveDetailsSettingsModal") || event.target == document.getElementById("SavingsModal") || event.target == document.getElementById("BillsModal") || event.target == document.getElementById("DeleteSavingModal") || event.target == document.getElementById("DeleteBillModal") || event.target == document.getElementById("DeleteIncomeModal") || event.target == document.getElementById("IncomesModal")) {
             //modal.style.display = "none";
             document.getElementById("SavingsModal").style.display = "none";
             document.getElementById("BillsModal").style.display = "none";
             document.getElementById("DeleteSavingModal").style.display = "none";
             document.getElementById("DeleteBillModal").style.display = "none";
+            document.getElementById("DeleteIncomeModal").style.display = "none";
+            document.getElementById("IncomesModal").style.display = "none";
+            document.getElementById("SaveDetailsSettingsModal").style.display = "none";
             DeleteEditSavingFromStage()
             DeleteEditBillFromStage()
+            DeleteSaveDetailsSettingsFromStage()
             $('#BillsInfo').html('');
             $('#IncomesInfo').html('');
+            $('#SavingsInfo').html('');
         }
     }
 
@@ -773,7 +809,7 @@
             x.innerHTML = "<div>You have edited the saving <strong>" + "@Model.SavingsName" + "</strong>, hopefully saving more money now!"
         }
         else if (Message == 'DeleteSaving') {
-            x.innerHTML = "<div>You have <string>Deleted</strong> the saving <strong>" + "@Model.SavingsName" + "</strong>, I wouldn't have done that!"
+            x.innerHTML = "<div>You have <strong>Deleted</strong> the saving <strong>" + "@Model.SavingsName" + "</strong>, I wouldn't have done that!"
         }
         else if (Message == 'NewIncomeAdded') {
             x.innerHTML = "<div><strong>Congrats</strong> you have added " + "@Model.IncomeName" + " as a new <strong>Income</strong> way to go!"
@@ -782,7 +818,7 @@
             x.innerHTML = "<div>You have edited the Income <strong>" + "@Model.IncomeName" + "</strong>, hopefully you got more dollars now not less!"
         }
         else if (Message == 'DeleteIncome') {
-            x.innerHTML = "<div>You have <string>Deleted</strong> the Income <strong>" + "@Model.IncomeName" + "</strong>, I wouldn't have done that!"
+            x.innerHTML = "<div>You have <strong>Deleted</strong> the Income <strong>" + "@Model.IncomeName" + "</strong>, I wouldn't have done that!"
         } 
         else if (Message == 'NewBillAdded') {
             x.innerHTML = "<div><strong>Congrats</strong> you have added " + "@Model.BillName" + " as a new <strong>Bill</strong>, well yeah I guess congrats!"
@@ -791,8 +827,12 @@
             x.innerHTML = "<div>You have edited the bill <strong>" + "@Model.BillName" + "</strong>, for your sake I hope its costing you less now!"
         }
         else if (Message == 'DeleteBill') {
-            x.innerHTML = "<div>You have <string>Deleted</strong> the bill <strong>" + "@Model.BillName" + "</strong>, I wouldn't have done that!"
+            x.innerHTML = "<div>You have <strong>Deleted</strong> the bill <strong>" + "@Model.BillName" + "</strong>, I wouldn't have done that!"
         } 
+        else if (Message == 'SettingDetailsNotSaved') {
+            x.innerHTML = "<div><strong>Caution</strong> you haven't saved your Budget Details or setting! You <strong>need</strong>, to provide these details to proceed!"
+        } 
+        
 
         var y = document.getElementById("snackbar");
         y.className = y.className.replace("alert-success", "");
@@ -821,6 +861,15 @@
     }
 
     function DeleteEditBillFromStage() 
+    {
+        if (Stage.includes('ReSaveDetailsSettings')) {
+            var number = Stage.indexOf('ReSaveDetailsSettings');
+            Stage[number] = '';
+            $('#Stage_' + number + '_').val("");
+        }
+    }
+    
+    function DeleteSaveDetailsSettingsFromStage() 
     {
         if (Stage.includes('EditBill')) {
             var number = Stage.indexOf('EditBill');
