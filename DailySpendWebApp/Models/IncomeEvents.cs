@@ -16,6 +16,6 @@ namespace DailySpendBudgetWebApp.Models
         public string? RecurringIncomeDuration { get; set; }
         public bool isClosed { get; set; } = true;
         public bool? isInstantActive { get; set; }
-
+        public bool? isIncomeAddedToBalance { get; set; } = false;
     }
 }

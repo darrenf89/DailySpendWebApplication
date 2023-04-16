@@ -175,11 +175,9 @@ namespace DailySpendBudgetWebApp.Controllers
                 {
                     Duration = 7;
                 }
-                else if (Budget.PaydayDuration == "months")
+                else if (Budget.PaydayDuration == "years")
                 {
-                    int year = DateTime.Now.Year;
-                    int month = DateTime.Now.Month;
-                    Duration = DateTime.DaysInMonth(year, month);
+                    Duration = 365;
                 }
                 Budget.AproxDaysBetweenPay = Duration * Budget.PaydayValue;
             }
@@ -215,9 +213,7 @@ namespace DailySpendBudgetWebApp.Controllers
 
                 Budget.AproxDaysBetweenPay = GetNumberOfDaysLastDayOfWeek(dayNumber);
 
-            }
-
-            Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
+            }            
 
             TimeSpan t = Budget.NextIncomePayday - DateTime.UtcNow ?? new TimeSpan();
             Budget.LeftToSpendDailyAmount = Balance / t.Days;
@@ -280,7 +276,29 @@ namespace DailySpendBudgetWebApp.Controllers
                 }
             }
 
-            string? status = _pt.UpdateAllBudgetSavings(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
+            string status = "";
+
+            try
+            {
+                status = _pt.UpdateBudgetCreateSavings(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
+                status = _pt.UpdateBudgetCreateIncome(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
+                status = _pt.UpdateBudgetCreateSavingsSpend(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
+                status = _pt.UpdateBudgetCreateBillsSpend(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
+
+                Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
+                int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
+                Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
+
+                _db.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { Message = ex.Message , Status = status });
+
+            }
+
+            Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
 
             return RedirectToAction("Index", "Home");
         }
@@ -427,11 +445,9 @@ namespace DailySpendBudgetWebApp.Controllers
                     {
                         Duration = 7;
                     }
-                    else if (Budget.PaydayDuration == "months")
+                    else if (Budget.PaydayDuration == "years")
                     {
-                        int year = DateTime.Now.Year;
-                        int month = DateTime.Now.Month;
-                        Duration = DateTime.DaysInMonth(year, month);
+                        Duration = 365;
                     }
                     Budget.AproxDaysBetweenPay = Duration * Budget.PaydayValue;
                 }
@@ -468,8 +484,6 @@ namespace DailySpendBudgetWebApp.Controllers
                     Budget.AproxDaysBetweenPay = GetNumberOfDaysLastDayOfWeek(dayNumber);
 
                 }
-
-                Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
 
                 TimeSpan t = Budget.NextIncomePayday - DateTime.UtcNow ?? new TimeSpan();
                 Budget.LeftToSpendDailyAmount = Balance / t.Days;
