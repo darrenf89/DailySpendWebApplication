@@ -49,6 +49,7 @@
 		<None Include="Views\Budgets\CreateNewBudget.cshtml" />
 		<None Include="Views\Budgets\EditBudgetDetails.cshtml" />
 		<None Include="Views\Budgets\EnterBudgetDetails.cshtml" />
+		<None Include="Views\Transaction\AddTransaction.cshtml" />
 		<None Include="wwwroot\css\DropDownMenus.css" />
 		<None Include="wwwroot\img\LogoFiles\ForPrint\eps\Black logo - no background.eps" />
 		<None Include="wwwroot\img\LogoFiles\ForPrint\eps\Color logo - no background.eps" />

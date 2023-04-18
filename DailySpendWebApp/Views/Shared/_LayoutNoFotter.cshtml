@@ -15,7 +15,7 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
 </head>
 
-<body class="m-0 p-0 vh-100 bg-white" >
+<body class="m-0 p-0 vh-100 bg-white">
     <div class="infoouter">
         <div class="d-flex">
             <div id="infoinner" style="display: flex;" class="infoinner text-center align-items-center">
@@ -28,24 +28,24 @@
     </div>
     <div id="backgroundimg" class="m-auto p-0">
         <header class="sticky-top">
-            <nav class="navbar navbar-expand bg-primary p-0 border-bottom border-5 border-dark">
-                <div>
-                    <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-warning"></i></a>
+            <nav class="navbar navbar-expand bg-primary p-0 border-bottom border-3 border-dark">
+                <div class="mt-2 mb-1">
+                    <a asp-action="Index" asp-controller="Home"><i style="font-size: 25px;" class="ps-2 pt-2 pb-2 bi bi-x text-white"></i></a>
                 </div>
-                <div class="container-fluid mt-2 mb-2 pe-3 justify-content-end">   
+                <div class="container-fluid ps-4 justify-content-start mt-2 mb-1">
                     <h5 class="text-white pt-2 pb-2 m-0">@TempData["PageHeading"]</h5>
                 </div>
             </nav>
         </header>
-    <div style="max-width: 900px; margin: auto;" class="container ps-0 pe-0">
-        <main role="main" class= "">
-            @RenderBody()
-        </main>
-    </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <div style="max-width: 900px; margin: auto;" class="container ps-0 pe-0">
+            <main role="main" class="">
+                @RenderBody()
+            </main>
+        </div>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
     </div>
 </body>
 </html>

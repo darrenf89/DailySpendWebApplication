@@ -7,7 +7,44 @@
     border: 1px solid #772953;
 }
 
+    .Saving-Type-Toggle label {
+        text-align: center;
+        display: inline-block;
+        color: #772953;
+        position: relative;
+        z-index: 2;
+        margin: 0;
+        text-align: center;
+        padding: 6px 6px;
+        font-size: 12px;
+        cursor: pointer;
+        width: 100%;
+        /* cursor: pointer; */
+    }
 
+    .Saving-Type-Toggle input {
+        /* display: none; */
+        position: absolute;
+        z-index: 3;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+        .Saving-Type-Toggle input[value="TargetDate"]:checked + label {
+            color: white;
+        }
+
+        .Saving-Type-Toggle input[value="SavingsBuilder"]:checked + label {
+            color: white;
+        }
+
+        .Saving-Type-Toggle input[value="No"]:checked + label {
+            color: white;
+        }
+
+        .Saving-Type-Toggle input[value="TargetAmount"]:checked + label {
+            color: white;
+        }
 
 .Regular-Saving-Toggle {
     /* background: #95A5A6; */
@@ -17,74 +54,45 @@
     border: 1px solid #772953;
 }
 
-.Saving-Type-Toggle label {
-    text-align: center;
-    display: inline-block;
-    color: #772953;
-    position: relative;
-    z-index: 2;
-    margin: 0;
-    text-align: center;
-    padding: 6px 6px;
-    font-size: 12px;
-    cursor: pointer;
-    width: 100%;
-    /* cursor: pointer; */
+    .Regular-Saving-Toggle label {
+        text-align: center;
+        display: inline-block;
+        color: #772953;
+        position: relative;
+        z-index: 2;
+        margin: 0;
+        text-align: center;
+        padding: 6px 6px;
+        font-size: 12px;
+        cursor: pointer;
+        width: 100%;
+        /* cursor: pointer; */
+    }
+
+    .Regular-Saving-Toggle input {
+        /* display: none; */
+        position: absolute;
+        z-index: 3;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+
+        .Regular-Saving-Toggle input[value="Yes"]:checked + label {
+            color: white;
+        }
+
+#divIncoming {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 
-.Regular-Saving-Toggle label {
-    text-align: center;
-    display: inline-block;
-    color: #772953;
-    position: relative;
-    z-index: 2;
-    margin: 0;
-    text-align: center;
-    padding: 6px 6px;
-    font-size: 12px;
-    cursor: pointer;
-    width: 100%;
-    /* cursor: pointer; */
-}
-
-.Saving-Type-Toggle input {
-    /* display: none; */
-    position: absolute;
-    z-index: 3;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.Regular-Saving-Toggle input {
-    /* display: none; */
-    position: absolute;
-    z-index: 3;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.Saving-Type-Toggle input[value="TargetDate"]:checked + label {
-    color: white;
-}
-
-.Regular-Saving-Toggle input[value="Yes"]:checked + label {
-    color: white;
-}
-
-.Saving-Type-Toggle input[value="SavingsBuilder"]:checked + label {
-    color: white;
-}
-
-.Saving-Type-Toggle input[value="No"]:checked + label {
-    color: white;
-}
-
-.Saving-Type-Toggle input[value="TargetAmount"]:checked + label {
-    color: white;
+#divOutgoing {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 #divTargetDate {
-    
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
 }
@@ -122,6 +130,27 @@ input[name="currency-field"]::placeholder {
     outline: none;
     color: #df382c;
 }
+
+#txtTransactionAmount {
+    border: none;
+    outline: none;
+}
+
+.AmountRed::placeholder {
+    color: #df382c;
+}
+
+.AmountRed {
+    color: #df382c;
+}
+
+.AmountGreen {
+    color: #38b44a;
+}
+
+    .AmountGreen::placeholder {
+        color: #38b44a;
+    }
 
 #txtBillCurrentBalance {
     width: 30%;
@@ -163,3 +192,41 @@ input[name="currency-field"]::placeholder {
     color: #38b44a;
 }
 
+.Transaction-Toggle {
+    /* background: #95A5A6; */
+    display: inline-block;
+    border-radius: 20px;
+    position: relative;
+    border: 2px solid #e95420;
+}
+
+    .Transaction-Toggle label {
+        text-align: center;
+        display: inline-block;
+        color: #e95420;
+        position: relative;
+        z-index: 2;
+        margin: 0;
+        text-align: center;
+        padding: 6px 6px;
+        font-size: 12px;
+        cursor: pointer;
+        width: 100%;
+        /* cursor: pointer; */
+    }
+
+    .Transaction-Toggle input {
+        /* display: none; */
+        position: absolute;
+        z-index: 3;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+        .Transaction-Toggle input[value="Outgoing"]:checked + label {
+            color: white;
+        }
+
+        .Transaction-Toggle input[value="Incoming"]:checked + label {
+            color: white;
+        }

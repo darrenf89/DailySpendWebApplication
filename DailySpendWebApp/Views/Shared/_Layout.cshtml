@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="~/js/site.js"></script>
 </head>
-<body class="m-0 p-0" >
+<body class="m-0 p-0">
     <header class="sticky-top">
         <nav class="navbar navbar-expand bg-primary p-0">
-            <div class="container-fluid mt-2 mb-1 ps-4 pe-1">   
+            <div class="container-fluid ps-4 pe-1">
                 <h5 class="text-white m-0">@TempData["PageHeading"]</h5>
                 <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarColor01">
                     <ul class="navbar-nav">
@@ -33,32 +33,27 @@
     </header>
     <div style="max-width: 900px; margin: auto; min-height: 100vh;" class="container ps-2 pe-2 bg-white">
         <p style="font-size: 11px" class="text-end text-muted mb-1"><span>Not @TempData["NickName"] please </span><a class="text-primary" asp-controller="Accounts" asp-action="Logout">logout</a></p>
-        <main role="main" class= "pb-3">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="sticky-bottom border-top border-dark border-5" style="width: 100%; max-width: 900px; line-height: normal;">
-        <div class="d-flex align-items-center justify-content-between bg-primary p-2 pb-3">
+    <footer class="sticky-bottom border-top border-dark border-3" style="width: 100%; max-width: 900px; line-height: normal;">
+        <div class="d-flex align-items-center justify-content-between bg-primary p-1 pb-2">
             <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="Index" asp-controller="Home"><i class="bi bi-columns-gap text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Dashboard</p>
             </div>
             <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="AddBill" asp-controller="Bills"><i class="bi bi-receipt-cutoff text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Bills</p>
             </div>
             <div class="d-flex flex-column align-items-center col-2">
-                <a class="m-1" asp-action="addTransaction" asp-controller="Transactions"><i class="bi bi-wallet text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Transactions</p>
+                <a class="m-1" asp-action="AddTransaction" asp-controller="Transaction"><i class="bi bi-plus-circle text-white" style="font-size: 20px"></i></a>
             </div>
             <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="addIncome" asp-controller="Incomes"><i class="bi bi-graph-up-arrow text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Income</p>
             </div>
             <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="AddSaving" asp-controller="Savings"><i class="bi bi-piggy-bank text-white" style="font-size: 20px"></i></a>
-                <p class="text-white m-0" style="font-size:10px">Savings</p>
             </div>
         </div>
     </footer>

@@ -7,13 +7,15 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int TransactionID { get; set; }
+        public string? TransactionType { get; set; }
         public bool isSpendFromSavings { get; set; } = false;
-        public DateTime TransactionDate { get; set; }=DateTime.Now;
+        [ForeignKey("Savings")]
+        public int? SavingID { get; set; }
+        public DateTime TransactionDate { get; set; } = DateTime.Now.Date;
+        public bool isIncome { get; set; } = false;
         public decimal TransactionAmount { get; set; }
+        public string? Category { get; set; }
+        public string? Payee { get; set; }
         public string? Notes { get; set; }
-        [ForeignKey("Category")]
-        public int CategoryID { get; set; }
-        public Categories? Category { get; set; }
-
     }
 }
