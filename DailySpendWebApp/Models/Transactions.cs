@@ -11,6 +11,7 @@ namespace DailySpendBudgetWebApp.Models
         public bool isSpendFromSavings { get; set; } = false;
         [ForeignKey("Savings")]
         public int? SavingID { get; set; }
+        public string? SavingName { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.Now.Date;
         public bool isIncome { get; set; } = false;
         public decimal TransactionAmount { get; set; }

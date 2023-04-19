@@ -1,6 +1,44 @@
 ﻿@model DailySpendBudgetWebApp.Models.Transactions
 
+@{
+    string txtPayeeInfomration = "";
+    if (Model.Payee == null || Model.Payee == "")
+    {
+        txtPayeeInfomration = "Select Payee";
+    }
+    else
+    {
+        txtPayeeInfomration = Model.Payee;
+    }
 
+    string txtCategoryInformation = "";
+    if (Model.Category == null || Model.Category == "")
+    {
+        txtCategoryInformation = "Select Category";
+    }
+    else
+    {
+        txtCategoryInformation = Model.Category;
+    }
+
+
+    string txtSavingInformation = "";
+    if (Model.isSpendFromSavings & (Model.SavingName != null | Model.SavingName != ""))
+    {
+        txtSavingInformation = @Model.SavingName;
+    }
+    else
+    {
+        txtSavingInformation = "";
+    }
+
+    string txtDateInformation = DateTime.Now.ToString("dd MMMM yyyy");
+    if(Model.TransactionDate.Date != DateTime.Now.Date)
+    {
+        txtSavingInformation = @Model.TransactionDate.ToString("dd MMMM yyyy");
+    }
+
+}
 <div class="container p-0" style="min-height: 82vh;">
     <div>
         <div class="d-flex mb-1 ps-3 pe-3 justify-content-center">
@@ -28,6 +66,64 @@
             <input id="txtTransactionAmount" type="text" pattern="^£\d{1,3}(,\d{3})*(\.\d+)" value="" style="cursor: pointer; width: 75%; font-size: 25pt;" data-type="currencyneg" placeholder="-£0.00" class="AmountRed pe-2 pt-2 pb-2 text-center" />
             <input asp-for="TransactionAmount" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="TransactionAmount"></span>
+        </div>
+    </div>
+    <div id="divTransactionDetails" class="mt-2 p-1">
+        <div id="divPayee" class="border-2 border-bottom border-secondary">
+            <a asp-controller="Transaction" asp-route="SelectPayee">
+                <div class="d-flex justify-content-between bg-light">
+                    <div class="text-left text-muted">
+                        <strong><p>Payee</p></strong>
+                    </div>
+                    <div class="text-right text-muted">
+                        <p id="txtPayeeInformation">@txtPayeeInfomration</p>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="Payee" />
+            </a>
+        </div>
+        <div id="divCategory" class="border-2 border-top border-bottom border-secondary">
+            <a asp-controller="Transaction" asp-route="SelectCategory">
+                <div class="d-flex justify-content-between bg-light">
+                    <div class="text-left text-muted">
+                        <strong><p>Category</p></strong>
+                    </div>
+                    <div class="text-right text-muted">
+                        <p id="txtCategoryInformation">@txtCategoryInformation</p>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="Category" />
+            </a>
+        </div>
+        <div id="divDate" class="border-2 border-top border-bottom border-secondary">
+            <a onclick="">
+                <div class="d-flex justify-content-between bg-light">
+                    <div class="text-left text-muted">
+                        <strong><p>Date</p></strong>
+                    </div>
+                    <div class="text-right text-muted">
+                        <p id="txtDateInformation">@txtDateInformation</p>
+                    </div>
+                    <input type="hidden" asp-for="TransactionDate" />
+                </div>
+            </a>
+        </div>
+
+
+        
+        <div id="divFromSaving" class="border-2 border-top border-bottom border-secondary">
+            <a asp-controller="Transaction" asp-route="SelectSaving">
+                <div class="d-flex justify-content-between bg-light">
+                    <div class="text-left text-muted">
+                        <strong><p>Saving Category</p></strong>
+                    </div>
+                    <div class="text-right text-muted">
+                        <p id="txtSavingInformation">@txtSavingInformation</p>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="SavingName" />
+                <input type="hidden" asp-for="SavingID" />
+            </a>
         </div>
     </div>
 </div>
