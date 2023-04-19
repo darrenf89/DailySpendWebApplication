@@ -164,10 +164,10 @@ namespace DailySpendWebApp.Services
                             Income.isIncomeAddedToBalance = true;
                         }
                     }
-                    _db.SaveChanges();
+                    
                 }
             }
-
+            _db.SaveChanges();
             return "OK";
         }
 
@@ -259,10 +259,9 @@ namespace DailySpendWebApp.Services
                 Budget.DailyBillOutgoing = DailyBillOutgoing;
                 Budget.LeftToSpendBalance = Budget.LeftToSpendBalance - PeriodTotalBillOutgoing;
                 Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance - PeriodTotalBillOutgoing;
-
-                _db.SaveChanges();
-            }            
-
+                
+            }
+            _db.SaveChanges();
             return "OK";
         }
 
