@@ -1,0 +1,36 @@
+@model DailySpendBudgetWebApp.Models.Transactions
+
+@{
+    ViewData["Title"] = "Add a Transaction";
+    Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
+}
+
+<form method="post">
+    <div id="divPayeeSearch">
+        <input type="text" asp-for="Payee" placeholder="Pick the person you are going to pay!" onchange="" value="@Model.Payee" />
+        <button type="button" id="divClearButton"><i class="bi bi-x-octagon-fill"></i></button>
+    </div>
+    <div id="divCreateNewPayee">
+        <h3 class="text-success"><i class="bi bi-plus-circle-fill text-success"></i> Create "@Model.Payee" As A Payee?</h3>
+    </div>
+    @{
+        
+        string StartsWith = ViewBag.Payees[0].Substring(0,1).ToUpper();
+        <div>@StartsWith</div>
+        foreach(string item in ViewBag.Payees)
+        {
+            if(StartsWith !=  item.Substring(0,1).ToUpper())
+            {
+                StartsWith = item.Substring(0,1).ToUpper();
+                <div>@StartsWith</div>
+            }
+            <div>
+                <a asp-controller="Transaction" asp-action="SelectSpecificPayee" asp-route-PayeeName="@item" >
+                    <div class="text-left text-muted">
+                        <p class="text-dark mt-3 mb-3 border-0 ps-2"><strong>@item</strong></p>
+                    </div>               
+                </a>
+            </div>
+        }
+    }
+</form>

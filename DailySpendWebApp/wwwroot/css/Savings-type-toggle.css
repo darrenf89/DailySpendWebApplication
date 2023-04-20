@@ -136,6 +136,11 @@ input[name="currency-field"]::placeholder {
     outline: none;
 }
 
+#Notes {
+    border: none;
+    outline: none;
+}
+
 .AmountRed::placeholder {
     color: #df382c;
 }

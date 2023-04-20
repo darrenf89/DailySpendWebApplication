@@ -2,40 +2,66 @@
 
 @{
     string txtPayeeInfomration = "";
+    string Payeecolor = "";
     if (Model.Payee == null || Model.Payee == "")
     {
         txtPayeeInfomration = "Select Payee";
+        Payeecolor = "dark";
     }
     else
     {
         txtPayeeInfomration = Model.Payee;
+        Payeecolor = "primary";
     }
 
     string txtCategoryInformation = "";
+    string CategoryColor = "";
     if (Model.Category == null || Model.Category == "")
     {
         txtCategoryInformation = "Select Category";
+        CategoryColor = "dark";
     }
     else
     {
         txtCategoryInformation = Model.Category;
+        CategoryColor = "primary";
     }
 
 
     string txtSavingInformation = "";
+    string SavingColor = "";
+    string isSavingsChecked = "false";
+    string SavingCategoryDisplay = "none";
     if (Model.isSpendFromSavings & (Model.SavingName != null | Model.SavingName != ""))
     {
         txtSavingInformation = @Model.SavingName;
+        SavingColor = "primary";
+        isSavingsChecked = "true";
+        SavingCategoryDisplay = "flex";
+
     }
     else
     {
         txtSavingInformation = "";
+        SavingColor = "dark";
     }
 
     string txtDateInformation = DateTime.Now.ToString("dd MMMM yyyy");
-    if(Model.TransactionDate.Date != DateTime.Now.Date)
+    string DateColor = "dark";
+    if(Model.TransactionDate.GetValueOrDefault().Date != null)
     {
-        txtSavingInformation = @Model.TransactionDate.ToString("dd MMMM yyyy");
+        txtSavingInformation = @Model.TransactionDate.GetValueOrDefault().ToString("dd MMMM yyyy");
+        DateColor = "primary";
+    }
+
+    string AmountColor = "AmountRed";
+    string AmountPlaceholder = "-£0.00";
+    string AmountDatatype = "NegativeCurrency";
+    if (Model.isIncome)
+    {
+        AmountColor = "AmountGreen";
+        AmountPlaceholder = "£0.00";
+        AmountDatatype = "PositiveCurrency";
     }
 
 }
@@ -64,7 +90,7 @@
     </div>
     <div id="divIsRegularSavingSelector" class="card text-white bg-white mt-5 mb-3 shadow rounded-5 border-dark" >
         <div id="divTransactionAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-            <input id="txtTransactionAmount" type="text" pattern="^£\d{1,3}(,\d{3})*(\.\d+)" value="" style="cursor: pointer; width: 75%; font-size: 25pt;" data-type="currencyneg" placeholder="-£0.00" class="AmountRed pe-2 pt-2 pb-2 text-center" />
+            <input id="txtTransactionAmount" type="text" pattern="^£\d{1,3}(,\d{3})*(\.\d+)" value="" style="cursor: pointer; width: 75%; font-size: 25pt;" data-type="@AmountDatatype" placeholder="@AmountPlaceholder" class="@AmountColor pe-2 pt-2 pb-2 text-center" />
             <input asp-for="TransactionAmount" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="TransactionAmount"></span>
         </div>
@@ -76,7 +102,7 @@
                             <p class="text-dark mt-3 mb-3 border-0 ps-2"><strong>Payee</strong></p>
                         </div>
                         <div class="text-right text-muted">
-                            <p class="text-dark mt-3 mb-3 pe-2" id="txtPayeeInformation"><strong>@txtPayeeInfomration</strong></p>
+                            <p class="text-@Payeecolor mt-3 mb-3 pe-2" id="txtPayeeInformation"><strong>@txtPayeeInfomration</strong></p>
                         </div>
                     </div>                    
                 </a>
@@ -89,7 +115,7 @@
                             <p class="text-dark mt-3 mb-3 ps-2"><strong>Category</strong></p>
                         </div>
                         <div class="text-right text-muted">
-                            <p id="txtCategoryInformation" class="text-dark mt-3 mb-3 pe-2"><strong>@txtCategoryInformation</strong></p>
+                            <p id="txtCategoryInformation" class="text-@CategoryColor mt-3 mb-3 pe-2"><strong>@txtCategoryInformation</strong></p>
                         </div>
                     </div>                    
                 </a>
@@ -97,19 +123,19 @@
             </div>
             <div id="divFromSaving" class="d-flex flex-column border-1 border-top border-bottom border-dark bg-white">
                 <div class="d-flex">
-                    <input asp-for="isSpendFromSavings" type="checkbox" class="ms-2" />
+                    <input asp-for="isSpendFromSavings" type="checkbox" class="ms-2" checked="@isSavingsChecked" />
                     <p class="text-dark mt-3 mb-3 ps-3">
                         <strong>Spend Savings Money?!</strong>
                     </p>
                 </div>
-                <div id="divSavingCategory" class="border-1 border-top border-bottom border-dark" style="display: none">
+                <div id="divSavingCategory" class="border-1 border-top border-bottom border-dark" style="display: @SavingCategoryDisplay">
                     <a asp-controller="Transaction" asp-action="SelectSaving" class="bg-light">
                         <div class="d-flex justify-content-between">
                             <div class="text-left text-muted">
                                 <p class="text-dark mt-2 mb-2 ps-2"><strong>Saving Category</strong></p>
                             </div>
                             <div class="text-right text-muted">
-                                <p class="text-dark mt-2 mb-2 pe-2" id="txtSavingInformation"><strong>@txtSavingInformation</strong></p>
+                                <p class="text-@SavingColor mt-2 mb-2 pe-2" id="txtSavingInformation"><strong>@txtSavingInformation</strong></p>
                             </div>
                         </div>
                     </a>
@@ -124,7 +150,7 @@
                             <p class="text-dark ps-2 mt-3 mb-3"><strong>Date</strong></p>
                         </div>
                         <div class="text-right text-muted">
-                            <p class="text-dark mt-3 mb-3 pe-2" id="txtDateInformation"><strong>@txtDateInformation</strong></p>
+                            <p class="text-@DateColor mt-3 mb-3 pe-2" id="txtDateInformation"><strong>@txtDateInformation</strong></p>
                         </div>
                         <input type="hidden" asp-for="TransactionDate" />
                     </div>
@@ -132,10 +158,10 @@
             </div>
             <div id="divNote" class="mt-4 mb-5 align-items-start">
                 <div>
-                    <p class="text-dark ms-2 me-2 mb-0 p-0">Enter a note:</p>
+                    <p class="text-dark ms-2 me-2 mb-0 p-0 h3">Enter a note:</p>
                 </div>
                 <div class="d-flex ms-2 me-2"> 
-                    <input asp-for="Notes" type="text" class="col-12 p-0 m-0 border-bottom border-2 border-success text-muted bg-white text-left" />
+                    <input asp-for="Notes" type="text" class="col-12 p-0 pt-2 m-0 border-bottom border-2 border-success text-muted bg-white text-left h4" />
                 </div>                
             </div>
         </div>
