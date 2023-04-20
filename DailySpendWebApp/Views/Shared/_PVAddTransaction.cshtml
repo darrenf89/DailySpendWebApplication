@@ -30,25 +30,25 @@
 
     string txtSavingInformation = "";
     string SavingColor = "";
-    string isSavingsChecked = "false";
+    bool isSavingsChecked = false;
     string SavingCategoryDisplay = "none";
     if (Model.isSpendFromSavings & (Model.SavingName != null | Model.SavingName != ""))
     {
         txtSavingInformation = @Model.SavingName;
         SavingColor = "primary";
-        isSavingsChecked = "true";
+        isSavingsChecked = true;
         SavingCategoryDisplay = "flex";
 
     }
     else
     {
-        txtSavingInformation = "";
+        txtSavingInformation = "Select Category";
         SavingColor = "dark";
     }
 
     string txtDateInformation = DateTime.Now.ToString("dd MMMM yyyy");
     string DateColor = "dark";
-    if(Model.TransactionDate.GetValueOrDefault().Date != null)
+    if(Model.TransactionDate != null)
     {
         txtSavingInformation = @Model.TransactionDate.GetValueOrDefault().ToString("dd MMMM yyyy");
         DateColor = "primary";
@@ -57,12 +57,28 @@
     string AmountColor = "AmountRed";
     string AmountPlaceholder = "-£0.00";
     string AmountDatatype = "NegativeCurrency";
+    bool rdbIncomingString = false;
+    bool rdbOutgoingString = true;
     if (Model.isIncome)
     {
         AmountColor = "AmountGreen";
         AmountPlaceholder = "£0.00";
         AmountDatatype = "PositiveCurrency";
+        rdbIncomingString = true;
+        rdbOutgoingString = false;
+
     }
+
+    string jsloadIncoming = "";
+    if (rdbIncomingString)
+    {
+        jsloadIncoming = "LoadTransactionIncoming(), formatCurrency($('#txtTransactionAmount'))";
+    }
+    else
+    {
+        jsloadIncoming = "LoadTransactionOutgoing(), NegativeformatCurrency($('#txtTransactionAmount'))";
+    }
+       
 
 }
 
@@ -72,70 +88,84 @@
             <div class="Transaction-Toggle col-11 bg-white" id="divTransactionType">
                 <div class="d-flex justify-content-center align-items-center text-center">
                     <div class="col-6" id="divIncoming">
-                        <input type="radio" id="rdbIncoming" name="TransactionToggleOption" value="Incoming" />
+                        <input type="radio" id="rdbIncoming" name="TransactionToggleOption" value="Incoming" checked="@rdbIncomingString" />
                         <label style="font-size:10pt" for="rdbIncoming" class="lblTransactionToggleOption pe-0">
-                            <strong>Incoming &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+</strong>
+                            Incoming &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+
                         </label>
                     </div>
                     <div class="col-6 text-white" id="divOutgoing">
-                        <input type="radio" id="rdbOutgoing" name="TransactionToggleOption" value="Outgoing" />
+                        <input type="radio" id="rdbOutgoing" name="TransactionToggleOption" value="Outgoing" checked="@rdbOutgoingString" />
                         <label style="font-size:10pt" for="rdbOutgoing" class="lblTransactionToggleOption ps-0">
-                            <strong> - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Outgoing </strong>
+                             - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Outgoing 
                         </label>
                     </div>
-                    <input asp-for="isIncome" type="hidden" value="false" />
+                    <input asp-for="isIncome" type="hidden" value="@Model.isIncome" />
                 </div>
             </div>
         </div>
     </div>
     <div id="divIsRegularSavingSelector" class="card text-white bg-white mt-5 mb-3 shadow rounded-5 border-dark" >
         <div id="divTransactionAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-            <input id="txtTransactionAmount" type="text" pattern="^£\d{1,3}(,\d{3})*(\.\d+)" value="" style="cursor: pointer; width: 75%; font-size: 25pt;" data-type="@AmountDatatype" placeholder="@AmountPlaceholder" class="@AmountColor pe-2 pt-2 pb-2 text-center" />
+            <input id="txtTransactionAmount" type="text" value="" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="@AmountDatatype" placeholder="@AmountPlaceholder" class="@AmountColor pe-2 pt-2 pb-2 text-center" onchange="UpdateHdnTransactionAmount()" />
             <input asp-for="TransactionAmount" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="TransactionAmount"></span>
         </div>
         <div id="divTransactionDetails" class="mt-2 p-1">
-            <div id="divPayee" class="border-1 border-bottom border-dark bg-white">
-                <a asp-controller="Transaction" asp-action="SelectPayee" >
+            <div id="divPayee" class="bg-white">
+                <button type="submit" asp-controller="Transaction" asp-action="SelectPayee" class="col-12 p-0" style="background-color: transparent; border: none;" >
                     <div class="d-flex justify-content-between">
-                        <div class="text-left text-muted">
-                            <p class="text-dark mt-3 mb-3 border-0 ps-2"><strong>Payee</strong></p>
+                        <div class="text-left">
+                            <p class="text-dark mt-3 mb-3 border-0 ps-2 h5">Payee</p>
                         </div>
-                        <div class="text-right text-muted">
-                            <p class="text-@Payeecolor mt-3 mb-3 pe-2" id="txtPayeeInformation"><strong>@txtPayeeInfomration</strong></p>
+                        <div class="text-right">
+                            <p class="text-@Payeecolor mb-3 mt-3 pe-2 h5" id="txtPayeeInformation">@txtPayeeInfomration</p>
                         </div>
                     </div>                    
-                </a>
-                <input type="hidden" asp-for="Payee" />
+                </button>
+                <input type="hidden" asp-for="Payee" value="@Model.Payee" />
             </div>
-            <div id="divCategory" class="border-1 border-top border-bottom border-dark bg-white">
+            <div id="divCategory" class="border-1 border-top border-dark bg-white">
                 <a asp-controller="Transaction" asp-action="SelectCategory">
                     <div class="d-flex justify-content-between">
-                        <div class="text-left text-muted">
-                            <p class="text-dark mt-3 mb-3 ps-2"><strong>Category</strong></p>
+                        <div class="text-left">
+                            <p class="text-dark mt-3 mb-3 ps-2 h5">Category</p>
                         </div>
-                        <div class="text-right text-muted">
-                            <p id="txtCategoryInformation" class="text-@CategoryColor mt-3 mb-3 pe-2"><strong>@txtCategoryInformation</strong></p>
+                        <div class="text-right">
+                            <p id="txtCategoryInformation" class="text-@CategoryColor mt-3 mb-3 pe-2 h5">@txtCategoryInformation</p>
                         </div>
                     </div>                    
                 </a>
                 <input type="hidden" asp-for="Category" />
             </div>
-            <div id="divFromSaving" class="d-flex flex-column border-1 border-top border-bottom border-dark bg-white">
-                <div class="d-flex">
-                    <input asp-for="isSpendFromSavings" type="checkbox" class="ms-2" checked="@isSavingsChecked" />
-                    <p class="text-dark mt-3 mb-3 ps-3">
-                        <strong>Spend Savings Money?!</strong>
-                    </p>
+            <div id="divDate" class="border-1 border-top border-dark bg-white">
+                <a onclick="">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-left">
+                            <p class="text-dark ps-2 mb-3 mt-3 h5">Date</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-@DateColor mt-3 mb-3 pe-2 h5" id="txtDateInformation">@txtDateInformation</p>
+                        </div>
+                        <input type="hidden" asp-for="TransactionDate" />
+                    </div>
+                </a>
+            </div>
+            <div id="divFromSaving" class="d-flex flex-column border-1 border-top border-dark bg-white">
+                <div class="d-flex form-check form-switch align-items-center justify-content-start p-0">
+                    <input asp-for="isSpendFromSavings" type="checkbox" class="ms-2 mt-3 form-check-input" checked="@isSavingsChecked" onclick="UpdateisSpendFromSavings()" />
+                    <label class="form-check-label text-dark mt-3 ps-3 mb-0 h5" for="isSpendFromSavings">
+                        Spend Savings Money?!
+                    </label>
                 </div>
-                <div id="divSavingCategory" class="border-1 border-top border-bottom border-dark" style="display: @SavingCategoryDisplay">
-                    <a asp-controller="Transaction" asp-action="SelectSaving" class="bg-light">
+                <div id="isSpendFromSavingSpacer" class="mb-3"></div>
+                <div id="divSavingCategory" class="border-1 border-dark" style="display: @SavingCategoryDisplay">
+                    <a asp-controller="Transaction" asp-action="SelectSaving" class="bg-white">
                         <div class="d-flex justify-content-between">
-                            <div class="text-left text-muted">
-                                <p class="text-dark mt-2 mb-2 ps-2"><strong>Saving Category</strong></p>
+                            <div class="text-left">
+                                <p class="text-dark mt-3 mb-3 ps-2 h5">Saving Category</p>
                             </div>
-                            <div class="text-right text-muted">
-                                <p class="text-@SavingColor mt-2 mb-2 pe-2" id="txtSavingInformation"><strong>@txtSavingInformation</strong></p>
+                            <div class="text-right">
+                                <p class="text-@SavingColor mt-3 mb-3 pe-2 h5" id="txtSavingInformation">@txtSavingInformation</p>
                             </div>
                         </div>
                     </a>
@@ -143,25 +173,9 @@
                     <input type="hidden" asp-for="SavingID" />
                 </div>
             </div>
-            <div id="divDate" class="border-1 border-top border-dark bg-white">
-                <a onclick="">
-                    <div class="d-flex justify-content-between">
-                        <div class="text-left text-muted">
-                            <p class="text-dark ps-2 mt-3 mb-3"><strong>Date</strong></p>
-                        </div>
-                        <div class="text-right text-muted">
-                            <p class="text-@DateColor mt-3 mb-3 pe-2" id="txtDateInformation"><strong>@txtDateInformation</strong></p>
-                        </div>
-                        <input type="hidden" asp-for="TransactionDate" />
-                    </div>
-                </a>
-            </div>
-            <div id="divNote" class="mt-4 mb-5 align-items-start">
-                <div>
-                    <p class="text-dark ms-2 me-2 mb-0 p-0 h3">Enter a note:</p>
-                </div>
+            <div id="divNote" class="mt-5 mb-4 align-items-start">
                 <div class="d-flex ms-2 me-2"> 
-                    <input asp-for="Notes" type="text" class="col-12 p-0 pt-2 m-0 border-bottom border-2 border-success text-muted bg-white text-left h4" />
+                    <input asp-for="Notes" type="text" class="col-12 p-0 pt-2 m-0 border-bottom border-3 border-primary text-muted bg-white text-left h3" placeholder="Enter a note:" />
                 </div>                
             </div>
         </div>
@@ -203,20 +217,34 @@
             });
     });
 
-    $(document).ready(function () {
-        $("#divFromSaving").hover(function () {
-            $(this).addClass('bg-light').removeClass('bg-white');
-        },
-            function () {
-                $(this).addClass('bg-white').removeClass('bg-light');
-            });
-    });
+    $(document).ready(@Html.Raw(jsloadIncoming))
 
-    $(document).ready(LoadTransactionOutgoing());
     
     document.querySelectorAll('input[name="TransactionToggleOption"]').forEach(radio => {
         radio.addEventListener('click', HandleTransactionRadioClick);
     });
+
+    function UpdateisSpendFromSavings(){
+        if (document.getElementById('isSpendFromSavings').checked) 
+        {
+            LoadisSpendFromSavingsTrue();
+        }
+        else
+        {
+            LoadisSpendFromSavingsFalse();
+        }
+    }
+
+    function LoadisSpendFromSavingsFalse()
+    {
+        document.getElementById('divSavingCategory').style.display = 'none'
+        document.getElementById('isSpendFromSavingSpacer').style.display = 'block'
+    }
+
+    function LoadisSpendFromSavingsTrue() {
+        document.getElementById('divSavingCategory').style.display = 'block'
+        document.getElementById('isSpendFromSavingSpacer').style.display = 'none'
+    }
 
     function HandleTransactionRadioClick() {
         if (document.getElementById('rdbOutgoing').checked) {
@@ -267,7 +295,11 @@
         });
     }
 
-
+    function UpdateHdnTransactionAmount() {
+        var txtBillAmount = document.getElementById('txtTransactionAmount').value;
+        var numBillAmount = txtBillAmount.replace('£', '').replace(',', '').replace('-', '');
+        document.getElementById('TransactionAmount').value = numBillAmount;
+    }
 
 
 

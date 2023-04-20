@@ -18,5 +18,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? Category { get; set; }
         public string? Payee { get; set; }
         public string? Notes { get; set; }
+        [ForeignKey("Categories")]
+        public int CategoryID { get; set; }
     }
 }

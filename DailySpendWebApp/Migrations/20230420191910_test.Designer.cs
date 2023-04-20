@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DailySpendBudgetWebApp.Migrations
+namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230412182054_SavingsUpdate")]
-    partial class SavingsUpdate
+    [Migration("20230420191910_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -297,6 +297,9 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<bool>("isClosed")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("isIncomeAddedToBalance")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("isInstantActive")
                         .HasColumnType("bit");
 
@@ -529,6 +532,9 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<bool>("canExceedGoal")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ddlSavingsPeriod")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("isAutoComplete")
                         .HasColumnType("bit");
 
@@ -559,17 +565,38 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoriesCategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Payee")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SavingID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SavingName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("TransactionAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("TransactionDate")
+                    b.Property<DateTime?>("TransactionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("TransactionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isIncome")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("isSpendFromSavings")
                         .HasColumnType("bit");
@@ -578,7 +605,7 @@ namespace DailySpendBudgetWebApp.Migrations
 
                     b.HasIndex("BudgetsBudgetID");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoriesCategoryID");
 
                     b.ToTable("Transactions");
                 });
@@ -694,13 +721,9 @@ namespace DailySpendBudgetWebApp.Migrations
                         .WithMany("Transactions")
                         .HasForeignKey("BudgetsBudgetID");
 
-                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", "Category")
+                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
+                        .HasForeignKey("CategoriesCategoryID");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.UserAccounts", b =>

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DailySpendBudgetWebApp.Migrations
+namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230314181008_230314dbupdates")]
-    partial class _230314dbupdates
+    [Migration("20230420191410_Reset")]
+    partial class Reset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,22 +33,28 @@ namespace DailySpendBudgetWebApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillID"), 1L, 1);
 
                     b.Property<decimal?>("BillAmount")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("BillCurrentBalance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("BillDailyValue")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime?>("BillDueDate")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("BillDuration")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BillName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BillType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BillValue")
+                        .HasColumnType("int");
 
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
@@ -56,14 +62,11 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("LastUpdatedValue")
+                    b.Property<decimal?>("RegularBillValue")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("RecuringPeriod")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RecuringType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("isClosed")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("isRecuring")
                         .HasColumnType("bit");
@@ -73,6 +76,48 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.HasIndex("BudgetsBudgetID");
 
                     b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.BudgetHstoryLastPeriod", b =>
+                {
+                    b.Property<int>("BudgetHistoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BudgetHistoryID"), 1L, 1);
+
+                    b.Property<decimal?>("BankBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("BudgetsBudgetID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("LeftToSPendBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("MoneyAvailableBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("TotalBillsLastPeriod")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("TotalEarnedLastPeriod")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("TotalSavedlastPeriod")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("TotalSpentLastPeriod")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("BudgetHistoryID");
+
+                    b.HasIndex("BudgetsBudgetID");
+
+                    b.ToTable("BudgetHstoryLastPeriod");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
@@ -107,7 +152,7 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<decimal>("DailySavingOutgoing")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("LeftToSPendBalance")
+                    b.Property<decimal?>("LeftToSpendBalance")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LeftToSpendDailyAmount")
@@ -155,29 +200,29 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<int?>("CurrencyDecimalDigits")
                         .HasColumnType("int");
 
-                    b.Property<string>("CurrencyDecimalSeparator")
+                    b.Property<int?>("CurrencyDecimalSeparator")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CurrencyGroupSeparator")
+                    b.Property<int?>("CurrencyGroupSeparator")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CurrencyPattern")
+                    b.Property<int?>("CurrencyPattern")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CurrencySymbol")
+                    b.Property<int?>("CurrencySymbol")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("DateSeperator")
+                    b.Property<int?>("DateSeperator")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("ShortDatePattern")
+                    b.Property<int?>("ShortDatePattern")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("int");
 
                     b.HasKey("SettingsID");
 
@@ -230,30 +275,32 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<DateTime>("DateOfIncomeEvent")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("IncomeActiveDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("IncomeAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("IncomeCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("IncomeDailyValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("IncomeName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecurringIncomePeriod")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RecurringIncomeType")
-                        .IsRequired()
+                    b.Property<string>("RecurringIncomeDuration")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isActive")
+                    b.Property<string>("RecurringIncomeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RecurringIncomeValue")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isClosed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("isMainIncome")
+                    b.Property<bool?>("isIncomeAddedToBalance")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("isInstantActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("isRecurringIncome")
@@ -264,6 +311,182 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.HasIndex("BudgetsBudgetID");
 
                     b.ToTable("IncomeEvents");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyDecimalDigits", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("CurrencyDecimalDigits")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_CurrencyDecimalDigits");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyDecimalSeparator", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("CurrencyDecimalSeparator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_CurrencyDecimalSeparators");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyGroupSeparator", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("CurrencyGroupSeparator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_CurrencyGroupSeparators");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencyPlacement", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("CurrencyPlacement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_CurrencyPlacements");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_CurrencySymbol", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CurrencySymbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_CurrencySymbols");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_DateFormat", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("DateFormat")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DateSeperatorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShortDatePatternID")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_DateFormats");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_DateSeperator", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("DateSeperator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_DateSeperators");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_NumberFormat", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<int>("CurrencyDecimalDigitsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrencyDecimalSeparatorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrencyGroupSeparatorID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumberFormat")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_NumberFormats");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.lut_ShortDatePattern", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<string>("ShortDatePattern")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("lut_ShortDatePatterns");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Savings", b =>
@@ -289,6 +512,9 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<decimal?>("LastUpdatedValue")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("PeriodSavingValue")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal?>("RegularSavingValue")
                         .HasColumnType("decimal(18,2)");
 
@@ -305,6 +531,9 @@ namespace DailySpendBudgetWebApp.Migrations
 
                     b.Property<bool>("canExceedGoal")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ddlSavingsPeriod")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isAutoComplete")
                         .HasColumnType("bit");
@@ -336,17 +565,38 @@ namespace DailySpendBudgetWebApp.Migrations
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoriesCategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Payee")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SavingID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SavingName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("TransactionAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("TransactionDate")
+                    b.Property<DateTime?>("TransactionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("TransactionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isIncome")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("isSpendFromSavings")
                         .HasColumnType("bit");
@@ -355,7 +605,7 @@ namespace DailySpendBudgetWebApp.Migrations
 
                     b.HasIndex("BudgetsBudgetID");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoriesCategoryID");
 
                     b.ToTable("Transactions");
                 });
@@ -421,6 +671,13 @@ namespace DailySpendBudgetWebApp.Migrations
                         .HasForeignKey("BudgetsBudgetID");
                 });
 
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.BudgetHstoryLastPeriod", b =>
+                {
+                    b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
+                        .WithMany("BudgetHistory")
+                        .HasForeignKey("BudgetsBudgetID");
+                });
+
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
                 {
                     b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", null)
@@ -464,13 +721,9 @@ namespace DailySpendBudgetWebApp.Migrations
                         .WithMany("Transactions")
                         .HasForeignKey("BudgetsBudgetID");
 
-                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", "Category")
+                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
+                        .HasForeignKey("CategoriesCategoryID");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.UserAccounts", b =>
@@ -485,6 +738,8 @@ namespace DailySpendBudgetWebApp.Migrations
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
                 {
                     b.Navigation("Bills");
+
+                    b.Navigation("BudgetHistory");
 
                     b.Navigation("Categories");
 

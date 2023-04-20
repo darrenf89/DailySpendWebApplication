@@ -13,10 +13,10 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<UserAccounts>? UserAccounts { get; set; }
         public DbSet<Budgets>? Budgets { get; set; }
         public DbSet<Bills>? Bills { get; set; }
-        public DbSet<Categories>? Categories { get; set; }
         public DbSet<IncomeEvents>? IncomeEvents { get; set; }
-        public DbSet<Savings>? Savings { get; set; }
+        public DbSet<Categories>? Categories { get; set; }
         public DbSet<Transactions>? Transactions { get; set; }
+        public DbSet<Savings>? Savings { get; set; }
         public DbSet<BudgetSettings>? BudgetSettings { get; set; }
         public DbSet<BudgetSettings>? BudgetHistory { get; set; }
         public DbSet<lut_CurrencySymbol> lut_CurrencySymbols {get; set;}

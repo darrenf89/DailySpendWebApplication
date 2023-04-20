@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.Json;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using DailySpendBudgetWebApp.Migrations;
+
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +36,6 @@ namespace DailySpendWebApp.Controllers
             _pt = pt;
         }
 
-        [ValidateAntiForgeryToken]
         public IActionResult AddTransaction(Transactions obj)
         {
 
@@ -47,23 +46,29 @@ namespace DailySpendWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SelelctPayee(Transactions obj)
+        public IActionResult SelectPayee(Transactions obj)
         {
-            Budgets?  Budget = _db.Budgets?
-            .Include(x=>x.Transactions.Select(t => t.Payee).Distinct())
-            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
-            .FirstOrDefault();
+            Budgets? Budget = _db.Budgets?
+                .Include(x => x.Transactions)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            var Transactions = Budget.Transactions.Select(t => t.Payee).Distinct();
 
             List<string> Payee = new List<string>();
-            foreach (Transactions transaction in Budget.Transactions)
+            foreach (string payee in Transactions)
             {
-                Payee.Add(transaction.Payee ?? "");
+                Payee.Add(payee ?? "");
             }
 
             Payee.Sort();
+            if (Payee.Count == 0) 
+            {
+                Payee.Add("No Payees");    
+            }
             ViewBag.Payees = Payee;
-
-            return View("SelelctPayee", obj);
+            TempData["PageHeading"] = "Select a Payee!";
+            return View("SelectPayee", obj);
         }
 
         [HttpPost]
@@ -73,20 +78,27 @@ namespace DailySpendWebApp.Controllers
 
             string SearchString = "%" + obj.Payee + "%" ?? "";
 
-            Budgets?  Budget = _db.Budgets?
-            .Include(x=>x.Transactions.Where(t => EF.Functions.Like(t.Payee, SearchString)).Select(t => t.Payee).Distinct())
-            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
-            .FirstOrDefault();
+            Budgets? Budget = _db.Budgets?
+                .Include(x => x.Transactions)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            var Transactions = Budget.Transactions.Where(t => EF.Functions.Like(t.Payee, SearchString)).Select(t => t.Payee).Distinct();
+
 
             List<string> Payee = new List<string>();
-            foreach (Transactions transaction in Budget.Transactions)
+            foreach (string? payee in Transactions)
             {
-                Payee.Add(transaction.Payee);
+                Payee.Add(payee);
             }
 
             Payee.Sort();
+            if (Payee.Count == 0)
+            {
+                Payee.Add("No Payees");
+            }
             ViewBag.Payees = Payee;
-
+            TempData["PageHeading"] = "Select a Payee!";
             return View("SelectPayee", obj);
         }
 

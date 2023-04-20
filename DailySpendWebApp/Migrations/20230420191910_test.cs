@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace DailySpendBudgetWebApp.Migrations
+namespace DailySpendWebApp.Migrations
 {
-    public partial class _231303 : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

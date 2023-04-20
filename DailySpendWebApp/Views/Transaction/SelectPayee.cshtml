@@ -1,8 +1,8 @@
-@model DailySpendBudgetWebApp.Models.Transactions
+﻿@model DailySpendBudgetWebApp.Models.Transactions
 
 @{
     ViewData["Title"] = "Add a Transaction";
-    Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
+    Layout = "~/Views/Shared/_LayoutNoFooter.cshtml";
 }
 
 <form method="post">
@@ -14,23 +14,30 @@
         <h3 class="text-success"><i class="bi bi-plus-circle-fill text-success"></i> Create "@Model.Payee" As A Payee?</h3>
     </div>
     @{
-        
-        string StartsWith = ViewBag.Payees[0].Substring(0,1).ToUpper();
-        <div>@StartsWith</div>
-        foreach(string item in ViewBag.Payees)
+        if (ViewBag.Payees[0] == "No Payees")
         {
-            if(StartsWith !=  item.Substring(0,1).ToUpper())
-            {
-                StartsWith = item.Substring(0,1).ToUpper();
-                <div>@StartsWith</div>
-            }
-            <div>
-                <a asp-controller="Transaction" asp-action="SelectSpecificPayee" asp-route-PayeeName="@item" >
-                    <div class="text-left text-muted">
-                        <p class="text-dark mt-3 mb-3 border-0 ps-2"><strong>@item</strong></p>
-                    </div>               
-                </a>
-            </div>
+            <div>You have not set up any Payee's Go ahead and do that!</div>
         }
+        else
+        {
+            string StartsWith = ViewBag.Payees[0].Substring(0, 1).ToUpper();
+            <div>@StartsWith</div>
+            foreach (string item in ViewBag.Payees)
+            {
+                if (StartsWith != item.Substring(0, 1).ToUpper())
+                {
+                    StartsWith = item.Substring(0, 1).ToUpper();
+                    <div>@StartsWith</div>
+                }
+                <div>
+                    <a asp-controller="Transaction" asp-action="SelectSpecificPayee" asp-route-PayeeName="@item">
+                        <div class="text-left text-muted">
+                            <p class="text-dark mt-3 mb-3 border-0 ps-2"><strong>@item</strong></p>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+        
     }
 </form>
