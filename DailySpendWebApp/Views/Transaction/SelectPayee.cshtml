@@ -3,18 +3,37 @@
 @{
     ViewData["Title"] = "Add a Transaction";
     Layout = "~/Views/Shared/_LayoutNoFooterNoBackButton.cshtml";
+
+    string ShowCreatePayee = "none";
+    if(Model.Payee != "" | !(Model.PayeeList.Contains(Model.Payee, StringComparer.OrdinalIgnoreCase)))
+    {
+        ShowCreatePayee = "flex";
+    }
+
+    string ShowClearButton = "display: none;";
+    if(Model.Payee != "")
+    {
+        ShowClearButton = "flex: 2 0 auto;";
+    }
 }
 
 <form method="post">
-    <div id="divPayeeSearch">
-        <input type="text" asp-for="Payee" placeholder="Pick the person you are going to pay!" onchange="" value="@Model.Payee" />
-        <button type="button" id="divClearButton"><i class="bi bi-x-octagon-fill"></i></button>
+    <div id="divBackButton" class="p2 mt-2 mb-1">
+        <button asp-action="PayeeBackToTransaction" asp-controller="Transaction" style="background-color: transparent; border: none;" class="sticky-top">
+            <i class="bi bi-arrow-bar-left text-white"></i>
+        </button>
     </div>
-    <div id="divCreateNewPayee">
+    <div id="divPayeeSearch" class="sticky-top" style="top: 40px" class="bg-primary">
+        <div class="d-flex">
+            <input type="text" asp-for="Payee" placeholder="Pick the person you are going to pay!" onchange="" value="@Model.Payee" style="flex: 8 0 auto; background-color: transparent; border: none;" class="border-bottom border-2 border-success"/>
+            <button type="button" id="divClearButton" style="@ShowClearButton background-color: transparent; border: none;" onclick=""><i class="bi bi-x-octagon-fill text-white"></i></button>
+        </div>
+    </div>
+    <div id="divCreateNewPayee" style="display: @ShowCreatePayee">
         <h3 class="text-success"><i class="bi bi-plus-circle-fill text-success"></i> Create "@Model.Payee" As A Payee?</h3>
     </div>
     @{
-        if (ViewBag.Payees[0] == "No Payees")
+        if (Model.PayeeList[0] == "No Payees")
         {
             <div>You have not set up any Payee's Go ahead and do that!</div>
         }
@@ -22,17 +41,17 @@
         {
             string StartsWith = ViewBag.Payees[0].Substring(0, 1).ToUpper();
             <div>@StartsWith</div>
-            foreach (string item in ViewBag.Payees)
+            foreach (string item in Model.PayeeList)
             {
                 if (StartsWith != item.Substring(0, 1).ToUpper())
                 {
                     StartsWith = item.Substring(0, 1).ToUpper();
-                    <div>@StartsWith</div>
+                    <div><h3 class="p-1 ps-3">@StartsWith</h3></div>
                 }
                 <div>
                     <a asp-controller="Transaction" asp-action="SelectSpecificPayee" asp-route-PayeeName="@item">
                         <div class="text-left text-muted">
-                            <p class="text-dark mt-3 mb-3 border-0 ps-2"><strong>@item</strong></p>
+                            <p class="text-dark mt-3 mb-3 border-0 ps-4"><strong>@item</strong></p>
                         </div>
                     </a>
                 </div>

@@ -66,7 +66,7 @@ namespace DailySpendWebApp.Controllers
             {
                 Payee.Add("No Payees");    
             }
-            ViewBag.Payees = Payee;
+            obj.PayeeList = Payee;
             TempData["PageHeading"] = "Select a Payee!";
             return View("SelectPayee", obj);
         }
@@ -78,26 +78,15 @@ namespace DailySpendWebApp.Controllers
 
             string SearchString = "%" + obj.Payee + "%" ?? "";
 
-            Budgets? Budget = _db.Budgets?
-                .Include(x => x.Transactions)
-                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
-                .FirstOrDefault();
-
-            var Transactions = Budget.Transactions.Where(t => EF.Functions.Like(t.Payee, SearchString)).Select(t => t.Payee).Distinct();
-
-
-            List<string> Payee = new List<string>();
-            foreach (string? payee in Transactions)
-            {
-                Payee.Add(payee);
-            }
+            List<string> Payee = obj.PayeeList.Where(payee => EF.Functions.Like(payee, SearchString)).Select(payee => payee).Distinct().ToList();
 
             Payee.Sort();
             if (Payee.Count == 0)
             {
                 Payee.Add("No Payees");
             }
-            ViewBag.Payees = Payee;
+            
+            obj.PayeeList = Payee;
             TempData["PageHeading"] = "Select a Payee!";
             return View("SelectPayee", obj);
         }
