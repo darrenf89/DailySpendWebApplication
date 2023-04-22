@@ -53,57 +53,98 @@ namespace DailySpendWebApp.Controllers
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefault();
 
-            var Transactions = Budget.Transactions.Select(t => t.Payee).Distinct();
-
-            List<string> Payee = new List<string>();
-            foreach (string payee in Transactions)
-            {
-                Payee.Add(payee ?? "");
-            }
+            var Payee = Budget.Transactions.Select(t => t.Payee).Distinct().ToList();
 
             Payee.Sort();
             if (Payee.Count == 0) 
             {
                 Payee.Add("No Payees");    
             }
+
             obj.PayeeList = Payee;
             TempData["PageHeading"] = "Select a Payee!";
+
+            ViewBag.Action = "PayeeBackToTransaction";
+            ViewBag.Controller = "Transaction";
+
             return View("SelectPayee", obj);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SearchPayee(Transactions obj)
+        public async Task<IActionResult> SearchPayee(Transactions obj)
         {
 
             string SearchString = "%" + obj.Payee + "%" ?? "";
 
-            List<string> Payee = obj.PayeeList.Where(payee => EF.Functions.Like(payee, SearchString)).Select(payee => payee).Distinct().ToList();
+            var Budget = await _db.Budgets
+                .Include(x => x.Transactions.Where(t => EF.Functions.Like(t.Payee, SearchString)))
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefaultAsync();
+
+            var Payee = Budget.Transactions.Select(t => t.Payee).Distinct().ToList();
+
+            Payee.Sort();
+            if (Payee.Count == 0)
+            {
+                Payee.Add("No Payees");
+            }  
+
+            return PartialView("_PayeeTablePV", Payee);
+        }
+
+        public async Task<IActionResult> PayeeTable()
+        {
+
+            Budgets? Budget = await _db.Budgets
+                .Include(x => x.Transactions)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefaultAsync();
+
+            var Payee = Budget.Transactions.Select(t => t.Payee).Distinct().ToList();
 
             Payee.Sort();
             if (Payee.Count == 0)
             {
                 Payee.Add("No Payees");
             }
-            
-            obj.PayeeList = Payee;
-            TempData["PageHeading"] = "Select a Payee!";
-            return View("SelectPayee", obj);
+
+            return PartialView("_PayeeTablePV", Payee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreatePayee(Transactions obj)
         {
+
+            Budgets? Budget = _db.Budgets
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            _db.Attach(Budget);
+            Budget.Transactions.Add(obj);
+
+            _db.SaveChanges();
+
             return View("AddTransaction", obj);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("Transaction/SelectSpecificPayee/{PayeeName}")]
+        [Route("Transaction/SelectSpecificPayee/{PayeeName?}")]
         public IActionResult SelectSpecificPayee(Transactions obj, string PayeeName)
         {
             obj.Payee = PayeeName;
+
+            Budgets? Budget = _db.Budgets
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+
+            _db.Attach(Budget);
+            Budget.Transactions.Add(obj);
+
+            _db.SaveChanges();
+
             return View("AddTransaction", obj);
         }
 

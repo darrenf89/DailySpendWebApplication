@@ -1,5 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Http;
 
+@{
+    string Action = ViewBag.Action;
+    string Controller = ViewBag.Controller;
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,34 +20,31 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
 </head>
 
-<body class="m-0 p-0 vh-100 bg-white">
-    <div class="infoouter">
-        <div class="d-flex">
-            <div id="infoinner" style="display: flex;" class="infoinner text-center align-items-center">
-                <button data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" class="btn btn-info btn-sm" style="margin: auto;"><i class="bi bi-info-circle text-white align-self-center p-0" style="font-size: 25px;"></i></button>
+
+<body class="m-0 p-0 vh-100" style="background-color: #ec6538; max-width: 900px;">
+    <form method="post" id="myForm">
+        <div id="backgroundimg" class="m-auto p-0">
+            <header class="sticky-top">
+                <nav class="navbar navbar-expand bg-primary p-0 m-0 border-bottom border-3 border-dark">
+                    <div class="container-fluid ps-1 justify-content-start mt-2 mb-1">
+                        <button asp-action="@Action" asp-controller="@Controller" style="background-color: transparent; border: none; z-index: 99;" class="ps-1">
+                            <i class="bi bi-arrow-left text-white h3 m-0 p-0"></i>
+                        </button>
+                        <h4 class="text-white ps-4 pt-2 pb-2 m-0">@TempData["PageHeading"]</h4>
+                    </div>
+                </nav>
+            </header>
+            <div style="max-width: 900px; margin: auto;" class="container ps-0 pe-0">
+                <main role="main" class="">
+                    @RenderBody()
+                </main>
             </div>
-            <div class="infobutton text-center">
-                <a style="margin:auto;" class="h-100" id="btnCloseInfoSticky" onclick="ShowHideInfo('infoinner', 'IconInfoSticky');"><i id="IconInfoSticky" class="bi bi-arrow-bar-left text-white"></i></a>
-            </div>
+    
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            @await RenderSectionAsync("Scripts", required: false)
         </div>
-    </div>
-    <div id="backgroundimg" class="m-auto p-0">
-        <header class="sticky-top">
-            <nav class="navbar navbar-expand bg-primary p-0 border-bottom border-3 border-dark">
-                <div class="container-fluid ps-4 justify-content-start mt-2 mb-1">
-                    <h4 class="text-white ps-5 pt-2 pb-2 m-0">@TempData["PageHeading"]</h4>
-                </div>
-            </nav>
-        </header>
-        <div style="max-width: 900px; margin: auto;" class="container ps-0 pe-0">
-            <main role="main" class="">
-                @RenderBody()
-            </main>
-        </div>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @await RenderSectionAsync("Scripts", required: false)
-    </div>
+    </form>
 </body>
 </html>

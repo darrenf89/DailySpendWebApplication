@@ -4,59 +4,123 @@
     ViewData["Title"] = "Add a Transaction";
     Layout = "~/Views/Shared/_LayoutNoFooterNoBackButton.cshtml";
 
-    string ShowCreatePayee = "none";
-    if(Model.Payee != "" | !(Model.PayeeList.Contains(Model.Payee, StringComparer.OrdinalIgnoreCase)))
+    string ShowCreatePayee = "flex";
+    if ((Model.Payee == "" | Model.Payee == null) & !(Model.PayeeList.Contains(Model.Payee, StringComparer.OrdinalIgnoreCase)))
     {
-        ShowCreatePayee = "flex";
+        ShowCreatePayee = "none";
     }
 
-    string ShowClearButton = "display: none;";
-    if(Model.Payee != "")
+    string ShowClearButton = "flex: 1 0 auto";
+    if ((Model.Payee == "" | Model.Payee == null))
     {
-        ShowClearButton = "flex: 2 0 auto;";
+        ShowClearButton = "display: none";
     }
 }
 
-<form method="post">
-    <div id="divBackButton" class="p2 mt-2 mb-1">
-        <button asp-action="PayeeBackToTransaction" asp-controller="Transaction" style="background-color: transparent; border: none;" class="sticky-top">
-            <i class="bi bi-arrow-bar-left text-white"></i>
-        </button>
-    </div>
-    <div id="divPayeeSearch" class="sticky-top" style="top: 40px" class="bg-primary">
-        <div class="d-flex">
-            <input type="text" asp-for="Payee" placeholder="Pick the person you are going to pay!" onchange="" value="@Model.Payee" style="flex: 8 0 auto; background-color: transparent; border: none;" class="border-bottom border-2 border-success"/>
-            <button type="button" id="divClearButton" style="@ShowClearButton background-color: transparent; border: none;" onclick=""><i class="bi bi-x-octagon-fill text-white"></i></button>
+<style>
+    #Payee {
+        outline: none;
+    }
+
+    #Payee::Placeholder {
+        color: white;
+    }
+</style>
+
+
+<div class="border-2 border-bottom border-muted" style="background-color: #f39b7e">
+    <div id="divPayeeSearch" class="sticky-top">
+        <div class="d-flex pt-3 mb-1 ms-1 me-1 ps-2 pe-2">
+            <input type="text" asp-for="Payee" placeholder="Pick the person you are going to pay!" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Pick the person you are going to pay!'" onchange="" value="@Model.Payee" style="flex: 13 0 auto; background-color: transparent; border: none;" class="border-bottom border-2 border-dark pb-2 h4 text-white" />
+            <button type="button" id="divClearButton" style="background-color: transparent; border: none; @(ShowClearButton);" onclick="ClearPayee()"><i class="bi bi-x-circle text-dark h1"></i></button>
         </div>
     </div>
-    <div id="divCreateNewPayee" style="display: @ShowCreatePayee">
-        <h3 class="text-success"><i class="bi bi-plus-circle-fill text-success"></i> Create "@Model.Payee" As A Payee?</h3>
+    <div id="divCreateNewPayee" style="display: @(ShowCreatePayee)" class="mb-1 ms-1 me-1 ps-2 pe-2">
+
+        <h5 class="text-dark ps-4">
+            <button type="submit" asp-action="CreatePayee" asp-controller="Transaction" style="background-color: transparent; border: none;">
+                <i class="bi bi-plus-circle-fill text-dark"></i>
+            </button> 
+            Create "
+        </h5>
+        <h5 class="text-dark" id="txtCreatePayee">@Model.Payee</h5>
+        <h5 class="text-dark">" As A Payee?</h5>
     </div>
+</div>
+<div id="myPartialViewDiv"></div>
+<input type="hidden" asp-for="TransactionID" />
+<input type="hidden" asp-for="TransactionType" />
+<input type="hidden" asp-for="isSpendFromSavings" />
+<input type="hidden" asp-for="SavingID" />
+<input type="hidden" asp-for="SavingName" />
+<input type="hidden" asp-for="TransactionDate" />
+<input type="hidden" asp-for="isIncome" />
+<input type="hidden" asp-for="TransactionAmount" />
+<input type="hidden" asp-for="Category" />
+<input type="hidden" asp-for="Notes" />
+<input type="hidden" asp-for="CategoryID" />
+
+<script>
+
+    var CurrentPayeeList = []
+
     @{
-        if (Model.PayeeList[0] == "No Payees")
+        foreach (var item in Model.PayeeList)
         {
-            <div>You have not set up any Payee's Go ahead and do that!</div>
+            @:CurrentPayeeList.push("@item")
+        }
+    }
+
+    $('#myPartialViewDiv').load("/Transaction/PayeeTable")
+
+    function ClearPayee()
+    {
+        $('#Payee').val('');
+        $('#divClearButton').css({ "display": "none", "flex": "0 0 auto" });
+        $('#divCreateNewPayee').css("display", "none");
+        $('#txtCreatePayee').html($('#Payee').val());
+    }
+
+    $('#Payee').keyup(ShowHideClearButton);
+
+    function ShowHideClearButton()
+    {
+        $.ajax({
+            url: '/Transaction/SearchPayee',
+            type: 'POST',
+            data:  $('#myForm').serialize(),
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+
+                return false;
+            }
+        });
+
+        if($('#Payee').val() == "")
+        {
+            $('#divClearButton').css({ "display": "none", "flex": "0 0 auto" });
+            $('#divCreateNewPayee').css( "display", "none");
+            $('#txtCreatePayee').html($('#Payee').val());
+        }
+        else if (CurrentPayeeList.includes($('#Payee').val())) 
+        {
+            $('#divClearButton').css({ "display": "flex", "flex": "1 0 auto" });
+            $('#divCreateNewPayee').css("display", "none");
+            $('#txtCreatePayee').html($('#Payee').val());
         }
         else
         {
-            string StartsWith = ViewBag.Payees[0].Substring(0, 1).ToUpper();
-            <div>@StartsWith</div>
-            foreach (string item in Model.PayeeList)
-            {
-                if (StartsWith != item.Substring(0, 1).ToUpper())
-                {
-                    StartsWith = item.Substring(0, 1).ToUpper();
-                    <div><h3 class="p-1 ps-3">@StartsWith</h3></div>
-                }
-                <div>
-                    <a asp-controller="Transaction" asp-action="SelectSpecificPayee" asp-route-PayeeName="@item">
-                        <div class="text-left text-muted">
-                            <p class="text-dark mt-3 mb-3 border-0 ps-4"><strong>@item</strong></p>
-                        </div>
-                    </a>
-                </div>
-            }
+            $('#divClearButton').css({ "display": "flex", "flex": "1 0 auto" });
+            $('#divCreateNewPayee').css("display", "flex");
+            $('#txtCreatePayee').html($('#Payee').val());
         }
-        
+
     }
-</form>
+
+
+
+</script>

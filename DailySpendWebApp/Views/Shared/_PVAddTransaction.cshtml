@@ -151,26 +151,22 @@
                 </a>
             </div>
             <div id="divFromSaving" class="d-flex flex-column border-1 border-top border-dark bg-white">
-                <div class="d-flex form-check form-switch align-items-center justify-content-start p-0">
-                    <input asp-for="isSpendFromSavings" type="checkbox" class="ms-2 mt-3 form-check-input" checked="@isSavingsChecked" onclick="UpdateisSpendFromSavings()" />
-                    <label class="form-check-label text-dark mt-3 ps-3 mb-0 h5" for="isSpendFromSavings">
-                        Spend Savings Money?!
-                    </label>
-                </div>
-                <div id="isSpendFromSavingSpacer" class="mb-3"></div>
-                <div id="divSavingCategory" class="border-1 border-dark" style="display: @SavingCategoryDisplay">
-                    <a asp-controller="Transaction" asp-action="SelectSaving" class="bg-white">
-                        <div class="d-flex justify-content-between">
-                            <div class="text-left">
-                                <p class="text-dark mt-3 mb-3 ps-2 h5">Saving Category</p>
+                <div class="d-flex form-check form-switch align-items-center justify-content-between p-0">
+                    <div class="d-flex justify-content-start align-items-center mt-3 mb-3">
+                        <input asp-for="isSpendFromSavings" type="checkbox" class="h5 ms-2 mt-0 mb-0 form-check-input" checked="@isSavingsChecked" onclick="UpdateisSpendFromSavings()" />
+                        <label class="form-check-label text-dark ps-3 mb-0 h5" for="isSpendFromSavings">
+                            Spend Savings?!
+                        </label>
+                    </div>
+                    <div id="divSavingCategory" class="border-1 border-dark mt-3 mb-3" style="display: @(SavingCategoryDisplay)">
+                        <a asp-controller="Transaction" asp-action="SelectSaving" class="bg-white">
+                            <div class="text-right d-flex justify-content-between">
+                                <p class="text-@SavingColor pe-2 h5 mb-0" id="txtSavingInformation">@txtSavingInformation</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-@SavingColor mt-3 mb-3 pe-2 h5" id="txtSavingInformation">@txtSavingInformation</p>
-                            </div>
-                        </div>
-                    </a>
-                    <input type="hidden" asp-for="SavingName" />
-                    <input type="hidden" asp-for="SavingID" />
+                        </a>
+                        <input type="hidden" asp-for="SavingName" />
+                        <input type="hidden" asp-for="SavingID" />
+                    </div>
                 </div>
             </div>
             <div id="divNote" class="mt-5 mb-4 align-items-start">
@@ -238,12 +234,10 @@
     function LoadisSpendFromSavingsFalse()
     {
         document.getElementById('divSavingCategory').style.display = 'none'
-        document.getElementById('isSpendFromSavingSpacer').style.display = 'block'
     }
 
     function LoadisSpendFromSavingsTrue() {
         document.getElementById('divSavingCategory').style.display = 'block'
-        document.getElementById('isSpendFromSavingSpacer').style.display = 'none'
     }
 
     function HandleTransactionRadioClick() {

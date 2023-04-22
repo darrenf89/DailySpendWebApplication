@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
 }
 <form method="post">
+    <input type="hidden" asp-for="TransactionID" />
     <input type="hidden" id="hdnServerDate" value='@ViewBag.CurrentDate' />
     <div class="d-flex flex-column align-items-center" style="background-color: transparent;">
         <div class="d-flex container align-items-center justify-content-center mt-4 pt-2">
