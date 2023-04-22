@@ -59,6 +59,11 @@
     string AmountDatatype = "NegativeCurrency";
     bool rdbIncomingString = false;
     bool rdbOutgoingString = true;
+    string txtTransactionAmount = "-" + String.Format("{0:c}", Model.TransactionAmount);
+    if(Model.TransactionAmount == 0 | Model.TransactionAmount == null)
+    {
+        txtTransactionAmount = "";
+    }
     if (Model.isIncome)
     {
         AmountColor = "AmountGreen";
@@ -66,7 +71,11 @@
         AmountDatatype = "PositiveCurrency";
         rdbIncomingString = true;
         rdbOutgoingString = false;
-
+        txtTransactionAmount = String.Format("{0:c}", Model.TransactionAmount);
+        if (Model.TransactionAmount == 0 | Model.TransactionAmount == null)
+        {
+            txtTransactionAmount = "";
+        }
     }
 
     string jsloadIncoming = "";
@@ -106,7 +115,7 @@
     </div>
     <div id="divIsRegularSavingSelector" class="card text-white bg-white mt-5 mb-3 shadow rounded-5 border-dark" >
         <div id="divTransactionAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-            <input id="txtTransactionAmount" type="text" value="" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="@AmountDatatype" placeholder="@AmountPlaceholder" class="@AmountColor pe-2 pt-2 pb-2 text-center" onchange="UpdateHdnTransactionAmount()" />
+            <input id="txtTransactionAmount" type="text" value="@txtTransactionAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="@AmountDatatype" placeholder="@AmountPlaceholder" class="@AmountColor pe-2 pt-2 pb-2 text-center" onchange="UpdateHdnTransactionAmount()" />
             <input asp-for="TransactionAmount" type="number" style="display:none;" />
             <span class="text-danger" asp-validation-for="TransactionAmount"></span>
         </div>

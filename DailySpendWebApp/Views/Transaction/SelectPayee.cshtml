@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_LayoutNoFooterNoBackButton.cshtml";
 
     string ShowCreatePayee = "flex";
-    if ((Model.Payee == "" | Model.Payee == null) & !(Model.PayeeList.Contains(Model.Payee, StringComparer.OrdinalIgnoreCase)))
+    if ((Model.Payee == "" | Model.Payee == null) | (Model.PayeeList.Contains(Model.Payee, StringComparer.OrdinalIgnoreCase)))
     {
         ShowCreatePayee = "none";
     }
@@ -28,7 +28,7 @@
 </style>
 
 
-<div class="border-2 border-bottom border-muted" style="background-color: #f39b7e">
+<div class="border-2 border-bottom border-muted mb-1" style="background-color: #f39b7e">
     <div id="divPayeeSearch" class="sticky-top">
         <div class="d-flex pt-3 mb-1 ms-1 me-1 ps-2 pe-2">
             <input type="text" asp-for="Payee" placeholder="Pick the person you are going to pay!" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Pick the person you are going to pay!'" onchange="" value="@Model.Payee" style="flex: 13 0 auto; background-color: transparent; border: none;" class="border-bottom border-2 border-dark pb-2 h4 text-white" />
@@ -45,6 +45,27 @@
         </h5>
         <h5 class="text-dark" id="txtCreatePayee">@Model.Payee</h5>
         <h5 class="text-dark">" As A Payee?</h5>
+    </div>
+</div>
+<div class="modal" id="divDeletePayeeModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-dark shadow">
+            <div class="modal-header bg-primary p-3 pt-3 pb-2">
+                <h5 class="modal-title text-white">Delete the Payee</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="divDeletePayeeModal" aria-label="Close" id="CloseModal">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="DeletePayeeInfo">
+                    <p class="text-muted m-0">If you delete this Payee any transactions assigned to it will be unassigned, you can reassign this by looking at your transactions</p>
+                </div>
+            </div>
+            <div class="modal-footer bg-primary p-1">
+                <button type="submit" id="btnDeletePayee" class="btn btn-dark" onclick="">Yes</button>
+                <button type="button" id="btnCancel" class="btn btn-danger" data-bs-dismiss="divDeletePayeeModal">No</button>
+            </div>
+        </div>
     </div>
 </div>
 <div id="myPartialViewDiv"></div>
@@ -120,6 +141,38 @@
         }
 
     }
+
+    function DeletePayeeModal(PayeeName) {
+        var onclickstring = "DeletePayeeName('" + PayeeName + "')"
+        $("#btnDeletePayee").attr("onclick", onclickstring);
+        document.getElementById("divDeletePayeeModal").style.display = "block"
+
+    }
+
+
+    function DeletePayeeName(PayeeName) {
+        $.post({
+            url: '/Transaction/DeleteSpecificPayee/' + PayeeName,
+            type: 'POST',
+            data: $('#myForm').serialize(),
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    }
+
+    $('#btnCancel').click(function() {
+        $('#divDeletePayeeModal').hide();
+    })
+
+    $('#CloseModal').click(function() {
+        $('#divDeletePayeeModal').hide();
+    })
 
 
 

@@ -11,15 +11,16 @@ namespace DailySpendBudgetWebApp.Models
         public bool isSpendFromSavings { get; set; } = false;
         [ForeignKey("Savings")]
         public int? SavingID { get; set; }
-        public string? SavingName { get; set; }
+        public string SavingName { get; set; } = "";
         public DateTime? TransactionDate { get; set; }
         public bool isIncome { get; set; } = false;
         public decimal TransactionAmount { get; set; }
-        public string? Category { get; set; }
-        public string? Payee { get; set; }
+        public string Category { get; set; } = "";
+        public string Payee { get; set; } = "";
         public string? Notes { get; set; }
         [ForeignKey("Categories")]
         public int CategoryID { get; set; }
+        public bool isTransactionCreated { get; set; } = false;
         [NotMapped]  
         public List<string> PayeeList { get; set; }
     }

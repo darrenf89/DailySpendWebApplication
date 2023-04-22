@@ -9,9 +9,8 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int CategoryID { get; set; }
         public string? CategoryName { get; set; }
-        public decimal? TotalCategorySpend { get; set; }
-        public int? LastTransactionID { get; set; }
-        public int? NumberOfTransactions { get; set; }
-        public List<Transactions>? Transactions { get; set; }
+        public bool isSubCategory { get; set; } = true;
+        public int CategoryGroupID { get; set; }
+
     }
 }

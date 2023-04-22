@@ -16,6 +16,7 @@ using Microsoft.Data.SqlClient.Server;
 using static System.Net.Mime.MediaTypeNames;
 using DailySpendWebApp.Services;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DailySpendWebApp.Controllers
 {
@@ -34,10 +35,34 @@ namespace DailySpendWebApp.Controllers
             _logger = logger;
             _db = db;
             _pt = pt;
+
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = "£";
+            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
+            nfi.NumberFormat.CurrencyGroupSeparator = ",";
+            nfi.NumberFormat.CurrencyDecimalDigits = 2;
+            nfi.NumberFormat.CurrencyPositivePattern = 0;
+
+            Thread.CurrentThread.CurrentCulture = nfi;
         }
 
         public IActionResult AddTransaction(Transactions obj)
         {
+            Budgets? Budget = _db.Budgets?
+                .Include(x => x.Transactions)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            Transactions T = new Transactions();
+
+            Budget.Transactions.Add(T);
+
+            _db.SaveChanges();
+
+            obj = T;            
 
             TempData["PageHeading"] = "Add a Transaction!";
             return View(obj);
@@ -67,6 +92,8 @@ namespace DailySpendWebApp.Controllers
             ViewBag.Action = "PayeeBackToTransaction";
             ViewBag.Controller = "Transaction";
 
+            obj.Payee = "";
+
             return View("SelectPayee", obj);
         }
 
@@ -75,14 +102,14 @@ namespace DailySpendWebApp.Controllers
         public async Task<IActionResult> SearchPayee(Transactions obj)
         {
 
-            string SearchString = "%" + obj.Payee + "%" ?? "";
+         string SearchString = "%" + obj.Payee + "%" ?? "";
 
             var Budget = await _db.Budgets
                 .Include(x => x.Transactions.Where(t => EF.Functions.Like(t.Payee, SearchString)))
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefaultAsync();
 
-            var Payee = Budget.Transactions.Select(t => t.Payee).Distinct().ToList();
+            var Payee = Budget.Transactions.Select(t => t.Payee).Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
 
             Payee.Sort();
             if (Payee.Count == 0)
@@ -101,7 +128,7 @@ namespace DailySpendWebApp.Controllers
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefaultAsync();
 
-            var Payee = Budget.Transactions.Select(t => t.Payee).Distinct().ToList();
+            var Payee = Budget.Transactions.Select(t => t.Payee).Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
 
             Payee.Sort();
             if (Payee.Count == 0)
@@ -117,12 +144,13 @@ namespace DailySpendWebApp.Controllers
         public IActionResult CreatePayee(Transactions obj)
         {
 
-            Budgets? Budget = _db.Budgets
-                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            Transactions? T = _db.Transactions
+                .Where(x => x.TransactionID == obj.TransactionID)
                 .FirstOrDefault();
 
-            _db.Attach(Budget);
-            Budget.Transactions.Add(obj);
+            _db.Attach(T);
+
+            T.Payee = obj.Payee;
 
             _db.SaveChanges();
 
@@ -130,22 +158,65 @@ namespace DailySpendWebApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("Transaction/SelectSpecificPayee/{PayeeName?}")]
         public IActionResult SelectSpecificPayee(Transactions obj, string PayeeName)
         {
             obj.Payee = PayeeName;
 
             Budgets? Budget = _db.Budgets
+                .Include(x => x.Transactions.Where(t => t.Payee == PayeeName))
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            _db.SaveChanges();
+
+            return View("AddTransaction", obj);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Transaction/DeleteSpecificPayee/{PayeeName?}")]
+        public IActionResult DeleteSpecificPayee(Transactions obj, string PayeeName)
+        {
+
+            Budgets? Budget = _db.Budgets
+                .Include(x => x.Transactions.Where(t => t.Payee == PayeeName))
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefault();
 
 
             _db.Attach(Budget);
-            Budget.Transactions.Add(obj);
+
+            foreach (Transactions T in Budget.Transactions)
+            {
+                T.Payee = "";
+                if (!T.isTransactionCreated & T.TransactionID != obj.TransactionID)
+                {
+                    _db.Remove(T);
+                }
+            }
 
             _db.SaveChanges();
 
-            return View("AddTransaction", obj);
+            Budget = _db.Budgets
+                .Include(x => x.Transactions)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            var Payee = Budget.Transactions.Select(t => t.Payee).Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
+
+
+            if (Payee.Count == 0)
+            {
+                Payee.Add("No Payees");
+            }
+
+
+            Payee.Sort();
+
+            return PartialView("_PayeeTablePV", Payee);
         }
 
         [HttpPost]

@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230422172418_istransacitoncreated")]
+    partial class istransacitoncreated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,14 +242,17 @@ namespace DailySpendWebApp.Migrations
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryGroupID")
-                        .HasColumnType("int");
-
                     b.Property<string>("CategoryName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isSubCategory")
-                        .HasColumnType("bit");
+                    b.Property<int?>("LastTransactionID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumberOfTransactions")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalCategorySpend")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("CategoryID");
 
@@ -560,8 +565,10 @@ namespace DailySpendWebApp.Migrations
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoriesCategoryID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CategoryID")
@@ -571,14 +578,12 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Payee")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SavingID")
                         .HasColumnType("int");
 
                     b.Property<string>("SavingName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TransactionAmount")
@@ -602,6 +607,8 @@ namespace DailySpendWebApp.Migrations
                     b.HasKey("TransactionID");
 
                     b.HasIndex("BudgetsBudgetID");
+
+                    b.HasIndex("CategoriesCategoryID");
 
                     b.ToTable("Transactions");
                 });
@@ -716,6 +723,10 @@ namespace DailySpendWebApp.Migrations
                     b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
                         .WithMany("Transactions")
                         .HasForeignKey("BudgetsBudgetID");
+
+                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("CategoriesCategoryID");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.UserAccounts", b =>
@@ -739,6 +750,11 @@ namespace DailySpendWebApp.Migrations
 
                     b.Navigation("Savings");
 
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("DailySpendBudgetWebApp.Models.Categories", b =>
+                {
                     b.Navigation("Transactions");
                 });
 
