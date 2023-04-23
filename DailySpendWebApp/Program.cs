@@ -25,7 +25,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddTransient<IEmailSenderCustom, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {

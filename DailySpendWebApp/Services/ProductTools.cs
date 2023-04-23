@@ -9,11 +9,23 @@ using System.Text;
 using DailySpendBudgetWebApp.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Globalization;
 
 namespace DailySpendWebApp.Services
 {
     public class ProductTools: IProductTools
     {
+        public class DefaultCategories
+        {
+            public string CatName { get; set; }
+            public List<SubCategories> SubCategories { get; set; }
+        }
+
+        public class SubCategories
+        {
+            public string SubCatName { get; set; }
+        }
 
         private readonly ApplicationDBContext _db;
 
@@ -454,6 +466,65 @@ namespace DailySpendWebApp.Services
             return "OK";
         }
 
+        public string CreateDefaultCategories(int BudgetID)
+        {           
+
+            string fileName = "wwwroot/JSON/DefaultCategories.json";
+            string jsonString = System.IO.File.ReadAllText(fileName, Encoding.UTF8);
+            List<DefaultCategories> DefaultCategories = JsonSerializer.Deserialize<List<DefaultCategories>>(jsonString)!;
+
+            Budgets? Budget = _db.Budgets?
+                .Include(x => x.Categories)
+                .Where(x => x.BudgetID == BudgetID)
+                .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            foreach(var category in DefaultCategories) 
+            {
+                Categories HeaderCat = new Categories();
+                HeaderCat.CategoryName = category.CatName;
+                HeaderCat.isSubCategory = false;
+                HeaderCat.CategoryGroupID = null;
+                Budget.Categories.Add(HeaderCat);
+
+                _db.SaveChanges();
+
+                foreach (var item in category.SubCategories)
+                {
+                    Categories SubCat = new Categories();
+                    SubCat.CategoryName = item.SubCatName;
+                    SubCat.isSubCategory = true;
+                    SubCat.CategoryGroupID = HeaderCat.CategoryID;
+                    Budget.Categories.Add(SubCat);
+                    _db.SaveChanges();
+                }
+            }
+
+            _db.SaveChanges();
+
+            return "OK";
+        }
+
+        public CultureInfo LoadCurrencySetting(int BudgetID)
+        {
+            BudgetSettings? BS = _db.BudgetSettings?.Where(b => b.BudgetID == BudgetID).FirstOrDefault();
+            lut_CurrencySymbol? Symbol = _db.lut_CurrencySymbols?.Where(s => s.id == BS.CurrencySymbol).FirstOrDefault();
+            lut_CurrencyDecimalSeparator? DecimalSep = _db.lut_CurrencyDecimalSeparators?.Where(d => d.id == BS.CurrencyDecimalSeparator).FirstOrDefault();
+            lut_CurrencyGroupSeparator? GroupSeparator = _db.lut_CurrencyGroupSeparators?.Where(g => g.id == BS.CurrencyGroupSeparator).FirstOrDefault();
+            lut_CurrencyDecimalDigits? DecimalDigits = _db.lut_CurrencyDecimalDigits?.Where(d => d.id == BS.CurrencyDecimalDigits).FirstOrDefault();
+            lut_CurrencyPlacement? CurrencyPositivePat = _db.lut_CurrencyPlacements?.Where(c => c.id == BS.CurrencyPattern).FirstOrDefault();
+
+            CultureInfo nfi = new CultureInfo("en-GB");
+
+            nfi.NumberFormat.CurrencySymbol = Symbol.CurrencySymbol;
+            nfi.NumberFormat.CurrencyDecimalSeparator = DecimalSep.CurrencyDecimalSeparator;
+            nfi.NumberFormat.CurrencyGroupSeparator = GroupSeparator.CurrencyGroupSeparator;
+            nfi.NumberFormat.CurrencyDecimalDigits = Convert.ToInt32(DecimalDigits.CurrencyDecimalDigits);
+            nfi.NumberFormat.CurrencyPositivePattern = CurrencyPositivePat.CurrencyPositivePatternRef;
+
+            return nfi;
+        }
     }
 
 }

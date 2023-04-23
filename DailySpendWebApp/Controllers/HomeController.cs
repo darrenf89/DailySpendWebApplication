@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
+using DailySpendWebApp.Services;
+using System.Globalization;
 
 namespace DailySpendBudgetWebApp.Controllers;
 
@@ -15,10 +17,27 @@ public class HomeController : Controller
 
     private readonly ApplicationDBContext _db;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDBContext db)
+    private readonly IProductTools _pt;
+
+    private readonly IHttpContextAccessor _ca;
+
+    public HomeController(ILogger<HomeController> logger, ApplicationDBContext db, IProductTools pt, IHttpContextAccessor ca)
     {
         _logger = logger;
         _db = db;
+        _pt = pt;
+        _ca = ca;
+
+        string? Email = _ca.HttpContext.User.Identity.Name;
+        var Users = _db.UserAccounts
+            .Where(x => x.Email == Email);
+        UserAccounts? UserAccount = Users.FirstOrDefault();
+
+        if (UserAccount.DefaultBudgetID != null)
+        {
+            Thread.CurrentThread.CurrentCulture = _pt.LoadCurrencySetting((int)UserAccount.DefaultBudgetID);
+        }
+
     }
 
     [Route("Home/Index/{id?}")]
@@ -53,6 +72,17 @@ public class HomeController : Controller
                 HttpContext.Session.SetInt32("_NewBudgetID", (int)UserAccount.DefaultBudgetID);
                 TempData["PageHeading"] = "Good Morning " + obj.NickName;
                 TempData["NickName"] = HttpContext.Session.GetString("_Name");
+
+                Budgets? Budget = _db.Budgets?
+                    .Include(b => b.Categories)
+                    .Where(b => b.BudgetID == (int)UserAccount.DefaultBudgetID)
+                    .FirstOrDefault();
+
+                //Load Default categories if none exist
+                if(Budget.Categories.Count == 0 | Budget.Categories.Count == null)
+                {
+                    _pt.CreateDefaultCategories((int)UserAccount.DefaultBudgetID);
+                }
 
                 if (ReMess == "BillCreated")
                 {

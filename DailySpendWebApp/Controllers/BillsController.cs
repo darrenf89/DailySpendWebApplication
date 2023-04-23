@@ -1,6 +1,7 @@
 ﻿using DailySpendBudgetWebApp.Controllers;
 using DailySpendBudgetWebApp.Data;
 using DailySpendBudgetWebApp.Models;
+using DailySpendWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,13 @@ namespace DailySpendWebApp.Controllers
         private readonly ILogger<SavingsController> _logger;
 
         private readonly ApplicationDBContext _db;
-        public BillsController(ILogger<SavingsController> logger, ApplicationDBContext db)
+
+        private readonly IProductTools _pt;
+        public BillsController(ILogger<SavingsController> logger, ApplicationDBContext db, IProductTools pt)
         {
             _logger = logger;
             _db = db;
+            _pt = pt;
         }
 
         public IActionResult AddBill()

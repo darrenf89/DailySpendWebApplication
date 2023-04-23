@@ -10,35 +10,89 @@
     <script src="~/js/site.js"></script>
 </head>
 <body class="m-0 p-0">
-    <header class="sticky-top">
-        <nav class="navbar navbar-expand bg-primary p-0">
-            <div class="container-fluid ps-4 pe-1">
-                <h5 class="text-white m-0">@TempData["PageHeading"]</h5>
-                <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarColor01">
-                    <ul class="navbar-nav">
-                        <li style="line-height: normal;" class="nav-item dropdown">
-                            <a class="p-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i style="font-size: 40px" class="bi bi-list text-white"></i></a>
-                            <div class="dropdown-menu border-primary shadow-lg" style="background-color: White;  top: 25px; left: -300%;">
-                                <a class="dropdown-item text-primary" asp-action="CreateABudget" asp-controller="Budgets">Create a Budget</a>
-                                <a class="dropdown-item text-primary" href="#">Another action</a>
-                                <a class="dropdown-item text-primary" href="#">Something</a>
-                                <div class="dropdown-divider border-primary"></div>
-                                <a class="dropdown-item text-primary" href="#">Separated link</a>
-                            </div>
+    
+    <div style="max-width: 900px; margin: auto; padding-top: 45px;" class="container-fluid ps-2 pe-2 bg-white">
+        <div class="row flex-nowrap">   
+            <div class="bg-dark p-0 m-0 w-100 h-100" style="display: none; opacity: 0.5; height: 100vh; max-height: 100vh;" id="divSideBarcover"></div>
+            <div class="px-0 bg-dark" id="divSideBar" style="height: 100vh; max-height: 100vh; display: none">                
+                <div class="d-flex flex-column align-items-start px-3 pt-3 text-white h-100">
+                    <ul class="nav nav-pills flex-column mb-0 align-items-start pt-5" id="menu">
+                        <li class="nav-item pt-2">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi bi-calendar4 text-white"></i> <span class="ms-1 text-white">Pay Details</span>
+                            </a>
+                        </li>
+                        <li class="nav-item pt-2">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi bi-arrow-left-right text-white"></i> <span class="ms-1 text-white">Transactions</span>
+                            </a>
+                        </li>
+                        <li class="nav-item pt-2">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi bi-piggy-bank text-white"></i> <span class="ms-1 text-white">Savings</span>
+                            </a>
+                        </li>
+                        <li class="nav-item pt-2">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi bi-receipt-cutoff text-white"></i> <span class="ms-1 text-white">Bills</span>
+                            </a>
+                        </li>
+                        <li class="nav-item pt-2">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi bi-graph-up-arrow text-white"></i> <span class="ms-1 text-white">Income</span>
+                            </a>
+                        </li>
+                        <li class="nav-item pt-2">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi bi-tags-fill text-white"></i> <span class="ms-1 text-white">Categories</span>
+                            </a>
                         </li>
                     </ul>
+                    <div class="dropdown pb-5 mb-2 mt-auto">
+                        <div class="mb-5">
+                            <img src="~/img/logoFiles/ForWeb/png/ColorlogobackgroundOrangePurple.png" style="background-color: transparent; width: 100%" />
+                        </div>
+                        <a href="#" class="container-fluid d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle pe-2"></i>
+                            <span class="d-inline mx-1">Account</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                            <li><a class="dropdown-item" href="#">New Budget</a></li>
+                            <li><a class="dropdown-item" href="#">Budget Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Change Budget</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-white" asp-controller="Accounts" asp-action="Logout">logout</a></li>
+                        </ul>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand bg-primary p-0">
+            <div class="container-fluid ps-2 pe-4 pe-1">                
+                <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarColor01">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <a class="p-0 fs-2" onclick="ShowHideSideBar();">
+                            <i style="font-size: 30px" class="bi bi bi-list text-white"></i>
+                        </a>
+                    </div>
+                </div>
+                <h5 class="text-white m-0">@TempData["PageHeading"]</h5>
             </div>
         </nav>
     </header>
-    <div style="max-width: 900px; margin: auto; min-height: 100vh;" class="container ps-2 pe-2 bg-white">
-        <p style="font-size: 11px" class="text-end text-muted mb-1"><span>Not @TempData["NickName"] please </span><a class="text-primary" asp-controller="Accounts" asp-action="Logout">logout</a></p>
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div style="max-width: 900px; margin: auto;" class="container-fluid p-1 bg-white">
+        <div class="row flex-nowrap"> 
+            <main role="main" class="pb-3 pt-1 col-12" id="main">
+                @RenderBody()
+            </main>
+        </div>
     </div>
-
-    <footer class="sticky-bottom border-top border-dark border-3" style="width: 100%; max-width: 900px; line-height: normal;">
+    <footer class="fixed-bottom border-top border-dark border-3" style="width: 100%; max-width: 900px; line-height: normal; margin-left: auto; margin-right: auto">
         <div class="d-flex align-items-center justify-content-between bg-primary p-1 pb-2">
             <div class="d-flex flex-column align-items-center col-2">
                 <a class="m-1" asp-action="Index" asp-controller="Home"><i class="bi bi-columns-gap text-white" style="font-size: 20px"></i></a>
@@ -57,6 +111,56 @@
             </div>
         </div>
     </footer>
+
+    <style>
+        #divSideBar, #content {
+            height: 100%;
+            overflow: auto;
+        }
+
+        #divSideBar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 99;
+            width: 40%;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.5);
+            /*transition: width 4.35s;*/
+        }
+
+        #divSideBarcover{
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 99;
+        }
+    </style>
+
+    <script>
+
+        function ShowHideSideBar()
+        {
+            if ($('#divSideBar').is(":visible"))
+            {
+                //document.getElementById('divSideBar').style.display = 'none';
+                $('#divSideBarcover').toggle()
+                $('#divSideBar').toggle("slow", function () {
+                    // Animation complete.
+                })
+            }
+            else
+            {
+                $('#divSideBarcover').toggle()
+                //document.getElementById('divSideBar').style.display = 'flex';
+                $('#divSideBar').toggle("slow", function () {
+                    
+                    // Animation complete.
+                })
+            }
+        }
+
+    </script>
+ 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

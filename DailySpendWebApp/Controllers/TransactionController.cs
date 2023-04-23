@@ -161,15 +161,9 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         [Route("Transaction/SelectSpecificPayee/{PayeeName?}")]
         public IActionResult SelectSpecificPayee(Transactions obj, string PayeeName)
-        {
+        {            
+
             obj.Payee = PayeeName;
-
-            Budgets? Budget = _db.Budgets
-                .Include(x => x.Transactions.Where(t => t.Payee == PayeeName))
-                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
-                .FirstOrDefault();
-
-            _db.SaveChanges();
 
             return View("AddTransaction", obj);
         }

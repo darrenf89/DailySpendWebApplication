@@ -1,4 +1,5 @@
 ﻿using System.Drawing.Printing;
+using System.Globalization;
 using System.Security.Policy;
 using DailySpendBudgetWebApp.Data;
 using DailySpendBudgetWebApp.Models;
@@ -16,6 +17,8 @@ namespace DailySpendWebApp.Services
         public string CalculateNextDateWorkingDays(ref DateTime NextDate, DateTime LastDate, int Value);
         public string CalculateNextDateOfEveryMonth(ref DateTime NextDate, DateTime LastDate, int Value);
         public string CalculateNextDateLastOfTheMonth(ref DateTime NextDate, DateTime LastDate, string? Duration);
+        public string CreateDefaultCategories(int BudgetID);
+        public CultureInfo LoadCurrencySetting(int BudgetID);
 
     }
 }

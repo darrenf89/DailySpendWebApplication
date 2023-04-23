@@ -10,7 +10,7 @@ namespace DailySpendBudgetWebApp.Models
         public int CategoryID { get; set; }
         public string? CategoryName { get; set; }
         public bool isSubCategory { get; set; } = true;
-        public int CategoryGroupID { get; set; }
+        public int? CategoryGroupID { get; set; }
 
     }
 }
