@@ -60,6 +60,8 @@
     bool rdbIncomingString = false;
     bool rdbOutgoingString = true;
     string txtTransactionAmount = "-" + String.Format("{0:c}", Model.TransactionAmount);
+    string isIncomeDisplay = "flex";
+    string txtSaving = "Spend";
     if(Model.TransactionAmount == 0 | Model.TransactionAmount == null)
     {
         txtTransactionAmount = "";
@@ -72,6 +74,8 @@
         rdbIncomingString = true;
         rdbOutgoingString = false;
         txtTransactionAmount = String.Format("{0:c}", Model.TransactionAmount);
+        isIncomeDisplay = "none";
+        txtSaving = "Add to";
         if (Model.TransactionAmount == 0 | Model.TransactionAmount == null)
         {
             txtTransactionAmount = "";
@@ -133,8 +137,8 @@
                 </button>
                 <input type="hidden" asp-for="Payee" value="@Model.Payee" />
             </div>
-            <div id="divCategory" class="border-1 border-top border-dark bg-white">
-                <a asp-controller="Transaction" asp-action="SelectCategory">
+            <div id="divCategory" class="border-1 border-top border-dark bg-white" style="display: @isIncomeDisplay">
+                <button asp-controller="Transaction" asp-action="SelectCategory" style="background-color: transparent; border: none;" class="col-12 p-0">
                     <div class="d-flex justify-content-between">
                         <div class="text-left">
                             <p class="text-dark mt-3 mb-3 ps-2 h5">Category</p>
@@ -143,7 +147,7 @@
                             <p id="txtCategoryInformation" class="text-@CategoryColor mt-3 mb-3 pe-2 h5">@txtCategoryInformation</p>
                         </div>
                     </div>                    
-                </a>
+                </button>
                 <input type="hidden" asp-for="Category" />
                 <input type="hidden" asp-for="CategoryID" />
             </div>
@@ -164,8 +168,8 @@
                 <div class="d-flex form-check form-switch align-items-center justify-content-between p-0">
                     <div class="d-flex justify-content-start align-items-center mt-3 mb-3">
                         <input asp-for="isSpendFromSavings" type="checkbox" class="h5 ms-2 mt-0 mb-0 form-check-input" checked="@isSavingsChecked" onclick="UpdateisSpendFromSavings()" />
-                        <label class="form-check-label text-dark ps-3 mb-0 h5" for="isSpendFromSavings">
-                            Spend Savings?!
+                        <label class="form-check-label text-dark ps-3 mb-0 h5" for="isSpendFromSavings" id="txtSaving">
+                            @txtSaving Savings?!
                         </label>
                     </div>
                     <div id="divSavingCategory" class="border-1 border-dark mt-3 mb-3" style="display: @(SavingCategoryDisplay)">
@@ -267,6 +271,8 @@
         document.getElementById('divOutgoing').style.backgroundColor = '#fff';
         document.getElementById('rdbOutgoing').checked = false;
         document.getElementById('rdbIncoming').checked = true;
+        document.getElementById('divCategory').style.display = 'none';
+        $('#txtSaving').html('Add to Savings?!');
         $('#txtTransactionAmount').addClass('AmountGreen').removeClass('AmountRed');
         $('#txtTransactionAmount').attr('data-type', 'PositiveCurrency');
         $('#txtTransactionAmount').attr('placeholder', '£0.00');
@@ -286,6 +292,8 @@
         document.getElementById('divOutgoing').style.backgroundColor = '#e95420';
         document.getElementById('rdbOutgoing').checked = true;
         document.getElementById('rdbIncoming').checked = false;
+        document.getElementById('divCategory').style.display = 'flex';
+        $('#txtSaving').html('Spend Savings?!');
         $('#txtTransactionAmount').addClass('AmountRed').removeClass('AmountGreen');
         $('#txtTransactionAmount').attr('data-type', 'NegativeCurrency');
         $('#txtTransactionAmount').attr('placeholder', '-£0.00');

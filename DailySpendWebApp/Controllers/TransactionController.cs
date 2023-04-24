@@ -170,10 +170,14 @@ namespace DailySpendWebApp.Controllers
                 .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefault();
 
-            Transactions? T = budget.Transactions.Where(t => t.Payee == PayeeName & t.Category != "").OrderByDescending(t => t.TransactionID).FirstOrDefault();
+            Transactions? T = budget.Transactions.Where(t => t.Payee == PayeeName & t.Category != "" & !t.isIncome).OrderByDescending(t => t.TransactionID).FirstOrDefault();
 
-            obj.Category = T.Category;
-            obj.CategoryID = T.CategoryID;
+            if (T != null)
+            {
+                obj.Category = T.Category ?? "";
+                obj.CategoryID = T.CategoryID;
+            }
+
 
 
             return View("AddTransaction", obj);
@@ -256,6 +260,8 @@ namespace DailySpendWebApp.Controllers
             ViewBag.Action = "CategoryBackToTransaction";
             ViewBag.Controller = "Transaction";
 
+            TempData["PageHeading"] = "Select a Category!";
+
             return View(obj);
         }
 
@@ -274,7 +280,7 @@ namespace DailySpendWebApp.Controllers
             obj.Category = Category.CategoryName;
             obj.CategoryID = Category.CategoryID;        
 
-            return View("AddTransacion", obj);
+            return View("AddTransaction", obj);
         }
 
     }
