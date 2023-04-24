@@ -1,0 +1,47 @@
+﻿@model DailySpendBudgetWebApp.Models.Transactions
+
+@{
+    ViewData["Title"] = "Your Categories";
+    Layout = "~/Views/Shared/_LayoutNoFooterNoBackButton.cshtml";
+}
+
+@{
+    List<Categories> CategoryList = ViewBag.CategoryList;
+    int CurrentCategoryGroupID = 0;
+    int i = 0;
+    bool CompleteHeaderCategory = false;
+    while(CategoryList.Count > 0)
+    {
+        if(!CategoryList[i].isSubCategory & !CompleteHeaderCategory)
+        {
+            CurrentCategoryGroupID = CategoryList[i].CategoryID;
+            CompleteHeaderCategory = true;
+            <div><h4 class="m-0 ps-3 pt-2 pb-2 text-white border-2 border-bottom border-muted h4">@CategoryList[i].CategoryName</h4></div>
+            CategoryList.RemoveAt(i);
+        }
+        else
+        {
+            if(CategoryList[i].isSubCategory & CategoryList[i].CategoryGroupID == CurrentCategoryGroupID)
+            {
+                <div style="background-color: #f39b7e" class="border-2 border-bottom border-muted d-flex justify-content-between">
+                    <button type="submit" asp-controller="Transaction" asp-action="SelectSpecificCategory" asp-route-PayeeName="@CategoryList[i].CategoryID" style="background-color: transparent; border: none; text-align: left;" class="col-12">
+                        <div>
+                            <p class="m-0 pt-2 pb-2 ps-4 text-white text-left"><strong>@CategoryList[i].CategoryName</strong></p>
+                        </div>
+                    </button>
+                </div>
+                CategoryList.RemoveAt(i);
+            }
+            else
+            {
+                i = i + 1;
+            }
+        }
+
+        if(i == CategoryList.Count)
+        {
+            i = 0;
+            CompleteHeaderCategory = false;
+        }
+    }
+}

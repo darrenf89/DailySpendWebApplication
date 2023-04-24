@@ -485,10 +485,10 @@ namespace DailySpendWebApp.Services
                 Categories HeaderCat = new Categories();
                 HeaderCat.CategoryName = category.CatName;
                 HeaderCat.isSubCategory = false;
-                HeaderCat.CategoryGroupID = null;
                 Budget.Categories.Add(HeaderCat);
 
                 _db.SaveChanges();
+                HeaderCat.CategoryGroupID =  HeaderCat.CategoryID;
 
                 foreach (var item in category.SubCategories)
                 {
@@ -497,8 +497,9 @@ namespace DailySpendWebApp.Services
                     SubCat.isSubCategory = true;
                     SubCat.CategoryGroupID = HeaderCat.CategoryID;
                     Budget.Categories.Add(SubCat);
-                    _db.SaveChanges();
+                    
                 }
+                _db.SaveChanges();
             }
 
             _db.SaveChanges();

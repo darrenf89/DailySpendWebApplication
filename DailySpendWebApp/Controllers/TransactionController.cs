@@ -165,6 +165,17 @@ namespace DailySpendWebApp.Controllers
 
             obj.Payee = PayeeName;
 
+            Budgets? budget = _db.Budgets
+                .Include(b => b.Transactions)
+                .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            Transactions? T = budget.Transactions.Where(t => t.Payee == PayeeName & t.Category != "").OrderByDescending(t => t.TransactionID).FirstOrDefault();
+
+            obj.Category = T.Category;
+            obj.CategoryID = T.CategoryID;
+
+
             return View("AddTransaction", obj);
         }
 
@@ -221,7 +232,50 @@ namespace DailySpendWebApp.Controllers
             return View("AddTransaction", obj);
         }
 
-        
+                [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CategoryBackToTransaction(Transactions obj)
+        {
+            
+            return View("AddTransaction", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SelectCategory(Transactions obj)
+        {
+            Budgets? Budget = _db.Budgets?
+                .Include(b =>b.Categories)
+                .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            List<Categories> CategoryList = Budget.Categories.OrderByDescending(c => c.isSubCategory).ToList(); 
+
+            ViewBag.CategoryList = CategoryList;
+
+            ViewBag.Action = "CategoryBackToTransaction";
+            ViewBag.Controller = "Transaction";
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("/Transaction/SelectSpecificCategory/{CategoryID?}")]
+        public IActionResult SelectSpecificCategory(Transactions obj, int? CategoryID)
+        {
+            Budgets? Budget = _db.Budgets?
+                .Include(b =>b.Categories)
+                .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+            
+            Categories Category = Budget.Categories.Where(c => c.CategoryID == CategoryID).First();
+
+            obj.Category = Category.CategoryName;
+            obj.CategoryID = Category.CategoryID;        
+
+            return View("AddTransacion", obj);
+        }
 
     }
 }
