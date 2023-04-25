@@ -30,6 +30,8 @@
     <div id="BillsInfo"></div>
     <div id="SavingsInfo"></div>
 </div>
+<partial name="~/Views/Shared/_PVDatePicker.cshtml" />
+<button type="button" class="btn btn-primary" onclick="OpenModal();">Open modal</button>
 <div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
     <div class="d-flex">
         <div id="SnackBarMessage" class="col-11 pe-1"></div>
@@ -38,6 +40,11 @@
 </div>
 
 <script>
+
+    function OpenModal(){
+        document.getElementById('DatePickerContainter').style.display = 'block';
+    }
+
     document.addEventListener("load", CheckReMessage('@ReMess'));
 
     function CheckReMessage(ReMess){
