@@ -253,7 +253,7 @@ namespace DailySpendWebApp.Controllers
                 .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefault();
 
-            List<Categories> CategoryList = Budget.Categories.OrderByDescending(c => c.isSubCategory).ToList(); 
+            List<Categories> CategoryList = Budget.Categories.OrderBy(c => c.isSubCategory).ToList(); 
 
             ViewBag.CategoryList = CategoryList;
 
@@ -282,6 +282,5 @@ namespace DailySpendWebApp.Controllers
 
             return View("AddTransaction", obj);
         }
-
     }
 }
