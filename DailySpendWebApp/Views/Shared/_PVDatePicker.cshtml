@@ -113,12 +113,17 @@
         var PerviousMonthDay = firstDay
         PerviousMonthDay.setDate(PerviousMonthDay.getDate() - NumberOfDaysLastMonth)
 
+        var weekNumber = 1
         //ToDo: loop through and add the firstweek Values and set the Styling / any onclicks ==Use Math.ceil==
         for (var i = PerviousMonthDay.getDate(); i < (PerviousMonthDay.getDate() + NumberOfDaysLastMonth); i++) 
         {
             var Day = new Date(year, month, i).getDay()
             var DayString = weekday[Day]
 
+
+
+
+            weekNumber++
         }
 
         for (var i = 1; i <= lastDay.getDate(); i++)
