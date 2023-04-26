@@ -4,7 +4,7 @@
             <div  id="DatePickerHeader" class="modal-header bg-primary p-0">
                 <div class="d-flex justify-content-between align-items-center col-12">
                     <div id="divPreviousMonth" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnPreviousMonth"><i class="bi bi-arrow-left-square text-white"></i></button></div>
-                    <div id="divCurrentMonth" class="py-1 m-0"><h3 id="txtCurrentMonth" class="m-0 text-white">March</h3></div>
+                    <div id="divCurrentMonth" class="py-1 m-0"><h3 id="txtCurrentMonth" class="m-0 text-white"></h3></div>
                     <div id="divNextMonth" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnNextMonth"><i class="bi bi-arrow-right-square text-white"></i></button></div>
                 </div>
             </div>
@@ -20,53 +20,53 @@
                         <h5 class="text-primary text-center" style="width: 13%;">Sun</h5>
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="FirstWeekOfMonth">
-                        <button id="btnMon1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtMon1" class="text-white text-center m-0 py-2">27</h5></button><input type="hidden" id="hdnMon1" />
-                        <button id="btnTue1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtTue1" class="text-white text-center m-0 py-2">28</h5></button><input type="hidden" id="hdnTue1" />
-                        <button id="btnWed1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtWed1" class="text-white text-center m-0 py-2">29</h5></button><input type="hidden" id="hdnWed1" />
-                        <button id="btnThu1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtThu1" class="text-white text-center m-0 py-2">30</h5></button><input type="hidden" id="hdnThu1" />
-                        <button id="btnFri1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtFri1" class="text-white text-center m-0 py-2">31</h5></button><input type="hidden" id="hdnFri1" />
-                        <button id="btnSat1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat1')" class="border border-1 border-primary rounded-5"><h5 id="txtSat1" class="text-dark text-center m-0 py-2">1</h5></button><input type="hidden" id="hdnSat1" />
-                        <button id="btnSun1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun1')" class="border border-1 border-primary rounded-5"><h5 id="txtSun1" class="text-dark text-center m-0 py-2">2</h5></button><input type="hidden" id="hdnSun1" />
+                        <button id="btnMon1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtMon1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnMon1" />
+                        <button id="btnTue1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtTue1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnTue1" />
+                        <button id="btnWed1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtWed1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnWed1" />
+                        <button id="btnThu1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtThu1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnThu1" />
+                        <button id="btnFri1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtFri1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnFri1" />
+                        <button id="btnSat1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat1')" class="border border-1 border-primary rounded-5"><h5 id="txtSat1" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSat1" />
+                        <button id="btnSun1" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun1')" class="border border-1 border-primary rounded-5"><h5 id="txtSun1" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSun1" />
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="SecondWeekOfMonth">
-                        <button id="btnMon2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon2')" class="border border-1 border-primary rounded-5"><h5 id="txtMon2" class="text-dark text-center m-0 py-2">3</h5></button><input type="hidden" id="hdnMon2" />
-                        <button id="btnTue2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue2')" class="border border-1 border-primary rounded-5"><h5 id="txtTue2" class="text-dark text-center m-0 py-2">4</h5></button><input type="hidden" id="hdnTue2" />
-                        <button id="btnWed2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed2')" class="border border-1 border-primary rounded-5"><h5 id="txtWed2" class="text-dark text-center m-0 py-2">5</h5></button><input type="hidden" id="hdnWed2" />
-                        <button id="btnThu2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu2')" class="border border-1 border-primary rounded-5"><h5 id="txtThu2" class="text-dark text-center m-0 py-2">6</h5></button><input type="hidden" id="hdnThu2" />
-                        <button id="btnFri2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri2')" class="border border-1 border-primary rounded-5"><h5 id="txtFri2" class="text-dark text-center m-0 py-2">7</h5></button><input type="hidden" id="hdnFri2" />
-                        <button id="btnSat2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat2')" class="border border-1 border-primary rounded-5"><h5 id="txtSat2" class="text-dark text-center m-0 py-2">8</h5></button><input type="hidden" id="hdnSat2" />
-                        <button id="btnSun2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun2')" class="border border-1 border-primary rounded-5"><h5 id="txtSun2" class="text-dark text-center m-0 py-2">9</h5></button><input type="hidden" id="hdnSun2" />
+                        <button id="btnMon2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon2')" class="border border-1 border-primary rounded-5"><h5 id="txtMon2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnMon2" />
+                        <button id="btnTue2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue2')" class="border border-1 border-primary rounded-5"><h5 id="txtTue2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnTue2" />
+                        <button id="btnWed2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed2')" class="border border-1 border-primary rounded-5"><h5 id="txtWed2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnWed2" />
+                        <button id="btnThu2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu2')" class="border border-1 border-primary rounded-5"><h5 id="txtThu2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnThu2" />
+                        <button id="btnFri2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri2')" class="border border-1 border-primary rounded-5"><h5 id="txtFri2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnFri2" />
+                        <button id="btnSat2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat2')" class="border border-1 border-primary rounded-5"><h5 id="txtSat2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSat2" />
+                        <button id="btnSun2" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun2')" class="border border-1 border-primary rounded-5"><h5 id="txtSun2" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSun2" />
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="ThirdWeekOfMonth">
-                        <button id="btnMon3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon3')" class="border border-1 border-primary rounded-5"><h5 id="txtMon3" class="text-dark text-center m-0 py-2">10</h5></button><input type="hidden" id="hdnMon3" />
-                        <button id="btnTue3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue3')" class="border border-1 border-primary rounded-5"><h5 id="txtTue3" class="text-dark text-center m-0 py-2">11</h5></button><input type="hidden" id="hdnTue3" />
-                        <button id="btnWed3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed3')" class="border border-1 border-primary rounded-5"><h5 id="txtWed3" class="text-dark text-center m-0 py-2">12</h5></button><input type="hidden" id="hdnWed3" />
-                        <button id="btnThu3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu3')" class="border border-1 border-primary rounded-5"><h5 id="txtThu3" class="text-dark text-center m-0 py-2">13</h5></button><input type="hidden" id="hdnThu3" />
-                        <button id="btnFri3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri3')" class="border border-1 border-primary rounded-5"><h5 id="txtFri3" class="text-dark text-center m-0 py-2">14</h5></button><input type="hidden" id="hdnFri3" />
-                        <button id="btnSat3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat3')" class="border border-1 border-primary rounded-5"><h5 id="txtSat3" class="text-dark text-center m-0 py-2">15</h5></button><input type="hidden" id="hdnSat3" />
-                        <button id="btnSun3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun3')" class="border border-1 border-primary rounded-5"><h5 id="txtSun3" class="text-dark text-center m-0 py-2">16</h5></button><input type="hidden" id="hdnSun3" />
+                        <button id="btnMon3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon3')" class="border border-1 border-primary rounded-5"><h5 id="txtMon3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnMon3" />
+                        <button id="btnTue3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue3')" class="border border-1 border-primary rounded-5"><h5 id="txtTue3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnTue3" />
+                        <button id="btnWed3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed3')" class="border border-1 border-primary rounded-5"><h5 id="txtWed3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnWed3" />
+                        <button id="btnThu3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu3')" class="border border-1 border-primary rounded-5"><h5 id="txtThu3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnThu3" />
+                        <button id="btnFri3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri3')" class="border border-1 border-primary rounded-5"><h5 id="txtFri3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnFri3" />
+                        <button id="btnSat3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat3')" class="border border-1 border-primary rounded-5"><h5 id="txtSat3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSat3" />
+                        <button id="btnSun3" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun3')" class="border border-1 border-primary rounded-5"><h5 id="txtSun3" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSun3" />
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="FourthWeekOfMonth">
-                        <button id="btnMon4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon4')" class="border border-1 border-primary rounded-5"><h5 id="txtMon4" class="text-dark text-center m-0 py-2">17</h5></button><input type="hidden" id="hdnMon4" />
-                        <button id="btnTue4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue4')" class="border border-1 border-primary rounded-5"><h5 id="txtTue4" class="text-dark text-center m-0 py-2">18</h5></button><input type="hidden" id="hdnTue4" />
-                        <button id="btnWed4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed4')" class="border border-1 border-primary rounded-5"><h5 id="txtWed4" class="text-dark text-center m-0 py-2">19</h5></button><input type="hidden" id="hdnWed4" />
-                        <button id="btnThu4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu4')" class="border border-1 border-primary rounded-5"><h5 id="txtThu4" class="text-dark text-center m-0 py-2">20</h5></button><input type="hidden" id="hdnThu4" />
-                        <button id="btnFri4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri4')" class="border border-1 border-primary rounded-5"><h5 id="txtFri4" class="text-dark text-center m-0 py-2">21</h5></button><input type="hidden" id="hdnFri4" />
-                        <button id="btnSat4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat4')" class="border border-1 border-primary rounded-5"><h5 id="txtSat4" class="text-dark text-center m-0 py-2">22</h5></button><input type="hidden" id="hdnSat4" />
-                        <button id="btnSun4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun4')" class="border border-1 border-primary rounded-5"><h5 id="txtSun4" class="text-dark text-center m-0 py-2">23</h5></button><input type="hidden" id="hdnSun4" />
+                        <button id="btnMon4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon4')" class="border border-1 border-primary rounded-5"><h5 id="txtMon4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnMon4" />
+                        <button id="btnTue4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue4')" class="border border-1 border-primary rounded-5"><h5 id="txtTue4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnTue4" />
+                        <button id="btnWed4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed4')" class="border border-1 border-primary rounded-5"><h5 id="txtWed4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnWed4" />
+                        <button id="btnThu4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu4')" class="border border-1 border-primary rounded-5"><h5 id="txtThu4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnThu4" />
+                        <button id="btnFri4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri4')" class="border border-1 border-primary rounded-5"><h5 id="txtFri4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnFri4" />
+                        <button id="btnSat4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat4')" class="border border-1 border-primary rounded-5"><h5 id="txtSat4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSat4" />
+                        <button id="btnSun4" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun4')" class="border border-1 border-primary rounded-5"><h5 id="txtSun4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSun4" />
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="FifthWeekOfMonth">
-                        <button id="btnMon5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon5')" class="border border-1 border-primary rounded-5"><h5 id="txtMon5" class="text-dark text-center m-0 py-2">24</h5></button><input type="hidden" id="hdnMon5" />
-                        <button id="btnTue5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue5')" class="border border-1 border-primary rounded-5 bg-dark shadow"><h5 id="txtTue5" class="text-white text-center m-0 py-2">25</h5></button><input type="hidden" id="hdnTue5" />
-                        <button id="btnWed5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed5')" class="border border-1 border-primary rounded-5"><h5 id="txtWed5" class="text-dark text-center m-0 py-2">26</h5></button><input type="hidden" id="hdnWed5" />
-                        <button id="btnThu5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu5')" class="border border-1 border-primary rounded-5"><h5 id="txtThu5" class="text-dark text-center m-0 py-2">27</h5></button><input type="hidden" id="hdnThu5" />
-                        <button id="btnFri5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri5')" class="border border-1 border-primary rounded-5"><h5 id="txtFri5" class="text-dark text-center m-0 py-2">28</h5></button><input type="hidden" id="hdnFri5" />
-                        <button id="btnSat5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat5')" class="border border-1 border-primary rounded-5"><h5 id="txtSat5" class="text-dark text-center m-0 py-2">29</h5></button><input type="hidden" id="hdnSat5" />
-                        <button id="btnSun5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun5')" class="border border-1 border-primary rounded-5"><h5 id="txtSun5" class="text-dark text-center m-0 py-2">30</h5></button><input type="hidden" id="hdnSun5" />
+                        <button id="btnMon5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Mon5')" class="border border-1 border-primary rounded-5"><h5 id="txtMon5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnMon5" />
+                        <button id="btnTue5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Tue5')" class="border border-1 border-primary rounded-5 bg-dark shadow"><h5 id="txtTue5" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnTue5" />
+                        <button id="btnWed5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Wed5')" class="border border-1 border-primary rounded-5"><h5 id="txtWed5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnWed5" />
+                        <button id="btnThu5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Thu5')" class="border border-1 border-primary rounded-5"><h5 id="txtThu5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnThu5" />
+                        <button id="btnFri5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Fri5')" class="border border-1 border-primary rounded-5"><h5 id="txtFri5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnFri5" />
+                        <button id="btnSat5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sat5')" class="border border-1 border-primary rounded-5"><h5 id="txtSat5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSat5" />
+                        <button id="btnSun5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun5')" class="border border-1 border-primary rounded-5"><h5 id="txtSun5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSun5" />
                     </div>
                 </div>
             </div>
-            <div class="modal-footer py-2 mx-3 border-2 border-top border-dark">
+            <div class="modal-footer pt-3 pb-3 mx-3 border-2 border-top border-dark">
                 <div class="col-6 m-0">
                     <button type="button" style="background-color: transparent; border: none;" onclick="SelectTodaysDate()"><p class="m-0 text-info">Today</p></button><input type="hidden" id="hdnToday" />
                 </div>
@@ -83,43 +83,55 @@
 
 <script>
 
+    $(document).ready(function () {
+        var year = 2023
+        var month = 5
+        var day = 26
+        LoadWindow(year, month, day);
+        console.log('PageLoaded')
+    });
+
+    $('#DatePickerContainter').on("load", function () {
+        LoadWindow(2023, 04, 1);
+        console.log('Date Picker Loaded')
+    });
+
+
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
     function SelectTodaysDate()
     {
-        var Today = = new Date()
+        var Today = new Date()
         //TODO: Get the divDate based on todays date.
 
-        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-        var CurrentDate = Date.parse($('#hdnCurrentSelectedDate').val())
+        var CurrentDate = new Date($('#hdnCurrentSelectedDate').val())
         var CurrentSelectedDiv = $('#hdnCurrentSelectedDiv').val()
         
         var CurrentMonth = month[CurrentDate.getMonth()]
 
         if(CurrentMonth == $('#txtCurrentMonth').html())
         {
-            $('#btn' + CurrentSelectedDiv).removeClass().AddClass('border border-1 border-primary rounded-5');
-            $('#txt' + CurrentSelectedDiv).removeClass().AddClass('text-dark text-center m-0 py-2');            
+            $('#btn' + CurrentSelectedDiv).removeClass().addClass('border border-1 border-primary rounded-5');
+            $('#txt' + CurrentSelectedDiv).removeClass().addClass('text-dark text-center m-0 py-2');            
             $('#btn' + CurrentSelectedDiv).prop('disabled', false);  
         }
 
-        $('#btn' + divDate).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
-        $('#txt' + divDate).removeClass().AddClass('text-white text-center m-0 py-2');            
+        $('#btn' + divDate).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
+        $('#txt' + divDate).removeClass().addClass('text-white text-center m-0 py-2');            
         $('#btn' + divDate).prop('disabled', false);
 
         $('#hdnCurrentSelectedDate').val($('#hdn'+ divDate).val());
         $('#hdnCurrentSelectedDiv').val(divDate)
     }
 
-    function LoadWindow(year, month-1, day)
+    function LoadWindow(year, months, day)
     {
-        var Today = = new Date()
+        months = months - 1
+        var Today = new Date()
         $('#hdnToday').val(Today) 
 
-        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-        var CurrentDate = nnew Date(year, month, day);
+        var CurrentDate = new Date(year, months, day);
         var CurrentMonth = month[CurrentDate.getMonth()];
 
         var LastDate = new Date();
@@ -154,11 +166,11 @@
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
-            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonth = Math.ceil(j/7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
             
-            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
-            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
             $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
             $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
             $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
@@ -170,16 +182,16 @@
         {
             var LoopDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), i);
 
-            var Day = new LoopDate.getDay()
+            var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
-            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonth = Math.ceil(j/7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
             
-            if(LoopDate == CurrentDate)
+            if(LoopDate.getDate() == CurrentDate.getDate())
             {
-                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
-                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
                 $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
                 $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
                 $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
@@ -189,8 +201,8 @@
             }
             else
             {
-                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5');
-                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-dark text-center m-0 py-2');
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-primary rounded-5');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-dark text-center m-0 py-2');
                 $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
                 $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
                 $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
@@ -208,20 +220,19 @@
         }
 
         var NextMonthDay = lastDay
-        NextMonthDay.setDate(NextMonthDay.getDate() + NumberOfDaysLastMonth)
+        NextMonthDay.setDate(NextMonthDay.getDate() + NumberOfDaysNextMonth)
         
-        for (var i = 1; i <= (NumberOfDaysNextMonth); i++) 
-        {
+        for (var i = 1; i <= NumberOfDaysNextMonth; i++) {
             var LoopDate = new Date(NextMonthDay.getFullYear(), NextMonthDay.getMonth(), i);
 
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
-            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonth = Math.ceil(j/7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
             
-            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
-            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
             $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
             $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
             $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
@@ -233,23 +244,21 @@
 
     function SelectDate(divDate)
     {
-        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-        var CurrentDate = Date.parse($('#hdnCurrentSelectedDate').val())
+        var CurrentDate = new Date($('#hdnCurrentSelectedDate').val())
         var CurrentSelectedDiv = $('#hdnCurrentSelectedDiv').val()
         
         var CurrentMonth = month[CurrentDate.getMonth()]
 
         if(CurrentMonth == $('#txtCurrentMonth').html())
         {
-            $('#btn' + CurrentSelectedDiv).removeClass().AddClass('border border-1 border-primary rounded-5');
-            $('#txt' + CurrentSelectedDiv).removeClass().AddClass('text-dark text-center m-0 py-2');            
+            $('#btn' + CurrentSelectedDiv).removeClass().addClass('border border-1 border-primary rounded-5');
+            $('#txt' + CurrentSelectedDiv).removeClass().addClass('text-dark text-center m-0 py-2');            
             $('#btn' + CurrentSelectedDiv).prop('disabled', false);  
         }
 
-        $('#btn' + divDate).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
-        $('#txt' + divDate).removeClass().AddClass('text-white text-center m-0 py-2');            
+        $('#btn' + divDate).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
+        $('#txt' + divDate).removeClass().addClass('text-white text-center m-0 py-2');            
         $('#btn' + divDate).prop('disabled', false);
 
         $('#hdnCurrentSelectedDate').val($('#hdn'+ divDate).val());
@@ -257,23 +266,24 @@
 
     }
 
-    function ChangeMonth(year, month)
-    {
-        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    function ChangeMonth(year, months) {
 
-        var CurrentDate = Date.parse($('#hdnCurrentSelectedDate').val())
+        var CurrentDate = new Date($('#hdnCurrentSelectedDate').val())
         var CurrentSelectedDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), CurrentDate.getDate())
 
-        var firstDay = nnew Date(year, month, 1);
-        var lastDay = nnew Date(year, month+1, 0);
-        var CurrentMonth = month[firstDay.getMonth()];
+        var CurrentDateRequest = new Date(year, months, 2);
+        var CurrentMonthRequest = month[CurrentDateRequest.getMonth()];
 
-        var LastDate = new Date(date.setMonth(date.getMonth() - 1));
+        var firstDay = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth(), 1);
+        var lastDay = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth() + 1, 0);
 
-        var NextDate = new Date(date.setMonth(date.getMonth() + 1));
+        var LastDate = new Date()
+        LastDate.setMonth(CurrentDateRequest.getMonth() - 1)
 
-        $('#txtCurrentMonth').html(CurrentMonth);
+        var NextDate = new Date()        
+        NextDate.setMonth(CurrentDateRequest.getMonth() + 1)
+
+        $('#txtCurrentMonth').html(CurrentMonthRequest);
         $("#btnPreviousMonth").attr("onclick", "ChangeMonth('" + LastDate.getFullYear() + "','" + LastDate.getMonth() + "')");
         $("#btnNextMonth").attr("onclick", "ChangeMonth('" + NextDate.getFullYear() + "','" + NextDate.getMonth() + "')");
 
@@ -296,11 +306,11 @@
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
-            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonth = Math.ceil(j/7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
             
-            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
-            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
             $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
             $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
             $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
@@ -310,18 +320,18 @@
 
         for (var i = 1; i <= lastDay.getDate(); i++)
         {
-            var LoopDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), i);
+            var LoopDate = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth(), i);
 
-            var Day = new LoopDate.getDay()
+            var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
-            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonth = Math.ceil(j/7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
             
-            if(LoopDate == CurrentSelectedDate)
+            if (LoopDate.getDate() == CurrentSelectedDate.getDate() && LoopDate.getMonth() == CurrentSelectedDate.getMonth()) 
             {
-                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
-                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
                 $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
                 $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
                 $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
@@ -331,8 +341,8 @@
             }
             else
             {
-                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5');
-                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-dark text-center m-0 py-2');
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-primary rounded-5');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-dark text-center m-0 py-2');
                 $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
                 $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
                 $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
@@ -344,32 +354,32 @@
 
         var Day = lastDay.getDay()
         var NumberOfDaysNextMonth = 7 - Day
-        if (NumberOfDaysNextMonth == 7)
-        {
+        if (NumberOfDaysNextMonth == 7) {
             NumberOfDaysNextMonth = 0
         }
 
         var NextMonthDay = lastDay
-        NextMonthDay.setDate(NextMonthDay.getDate() + NumberOfDaysLastMonth)
-        
-        for (var i = 1; i <= (NumberOfDaysNextMonth); i++) 
-        {
+        NextMonthDay.setDate(NextMonthDay.getDate() + NumberOfDaysNextMonth)
+
+        for (var i = 1; i <= NumberOfDaysNextMonth; i++) {
             var LoopDate = new Date(NextMonthDay.getFullYear(), NextMonthDay.getMonth(), i);
 
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
-            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonth = Math.ceil(j / 7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
-            
-            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
-            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
             $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
-            $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+            $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);
             $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
 
             j++
         }
+
+
     }
 
 </script>
