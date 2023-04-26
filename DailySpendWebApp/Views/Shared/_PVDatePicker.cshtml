@@ -68,12 +68,13 @@
             </div>
             <div class="modal-footer py-2 mx-3 border-2 border-top border-dark">
                 <div class="col-6 m-0">
-                    <button type="button" style="background-color: transparent; border: none;" onclick="SelectDate('Today')"><p class="m-0 text-info">Today</p></button><input type="hidden" id="hdnToday" />
+                    <button type="button" style="background-color: transparent; border: none;" onclick="SelectTodaysDate()"><p class="m-0 text-info">Today</p></button><input type="hidden" id="hdnToday" />
                 </div>
                 <div class="d-flex m-0 justify-content-between col-6">
                     <button type="button" style="background-color: transparent; border: none;" onclick="CloseModal()"><h5 class="m-0 text-danger pe-3">Cancel</h5></button>
                     <button type="button" style="background-color: transparent; border: none;" onclick="ConfirmSelectDate()"><h5 class="m-0 text-success pe-2">OK</h5></button>
                     <input type="hidden" value="" id="hdnCurrentSelectedDate" />
+                    <input type="hidden" value="" id="hdnCurrentSelectedDiv" />
                 </div>
             </div>
         </div>
@@ -82,19 +83,50 @@
 
 <script>
 
+    function SelectTodaysDate()
+    {
+        var Today = = new Date()
+        //TODO: Get the divDate based on todays date.
+
+        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+        var CurrentDate = Date.parse($('#hdnCurrentSelectedDate').val())
+        var CurrentSelectedDiv = $('#hdnCurrentSelectedDiv').val()
+        
+        var CurrentMonth = month[CurrentDate.getMonth()]
+
+        if(CurrentMonth == $('#txtCurrentMonth').html())
+        {
+            $('#btn' + CurrentSelectedDiv).removeClass().AddClass('border border-1 border-primary rounded-5');
+            $('#txt' + CurrentSelectedDiv).removeClass().AddClass('text-dark text-center m-0 py-2');            
+            $('#btn' + CurrentSelectedDiv).prop('disabled', false);  
+        }
+
+        $('#btn' + divDate).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
+        $('#txt' + divDate).removeClass().AddClass('text-white text-center m-0 py-2');            
+        $('#btn' + divDate).prop('disabled', false);
+
+        $('#hdnCurrentSelectedDate').val($('#hdn'+ divDate).val());
+        $('#hdnCurrentSelectedDiv').val(divDate)
+    }
+
     function LoadWindow(year, month-1, day)
     {
+        var Today = = new Date()
+        $('#hdnToday').val(Today) 
+
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
         var CurrentDate = nnew Date(year, month, day);
         var CurrentMonth = month[CurrentDate.getMonth()];
 
-        var LastDate = new Date(date.setMonth(date.getMonth() - 1));
-        var LastMonth = month[LastDate.getMonth()];
+        var LastDate = new Date();
+        LastDate.setMonth(CurrentDate.getMonth() - 1);
 
-        var NextDate = new Date(date.setMonth(date.getMonth() + 1));
-        var NextMonth = month[NextDate.getMonth()];
+        var NextDate = new Date();
+        NextDate.setMonth(CurrentDate.getMonth() + 1)
 
         $('#txtCurrentMonth').html(CurrentMonth);
         $("#btnPreviousMonth").attr("onclick", "ChangeMonth('" + LastDate.getFullYear() + "','" + LastDate.getMonth() + "')");
@@ -153,6 +185,7 @@
                 $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
 
                 $('#hdnCurrentSelectedDate').val(LoopDate);
+                $('#hdnCurrentSelectedDiv').val(nWeekOfTheMonthTxt);
             }
             else
             {
@@ -195,19 +228,148 @@
 
             j++
         }
-        
 
     }
 
     function SelectDate(divDate)
     {
+        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+        var CurrentDate = Date.parse($('#hdnCurrentSelectedDate').val())
+        var CurrentSelectedDiv = $('#hdnCurrentSelectedDiv').val()
+        
+        var CurrentMonth = month[CurrentDate.getMonth()]
+
+        if(CurrentMonth == $('#txtCurrentMonth').html())
+        {
+            $('#btn' + CurrentSelectedDiv).removeClass().AddClass('border border-1 border-primary rounded-5');
+            $('#txt' + CurrentSelectedDiv).removeClass().AddClass('text-dark text-center m-0 py-2');            
+            $('#btn' + CurrentSelectedDiv).prop('disabled', false);  
+        }
+
+        $('#btn' + divDate).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
+        $('#txt' + divDate).removeClass().AddClass('text-white text-center m-0 py-2');            
+        $('#btn' + divDate).prop('disabled', false);
+
+        $('#hdnCurrentSelectedDate').val($('#hdn'+ divDate).val());
+        $('#hdnCurrentSelectedDiv').val(divDate)
 
     }
 
-    function ChangeMonth(month)
+    function ChangeMonth(year, month)
     {
+        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+        var CurrentDate = Date.parse($('#hdnCurrentSelectedDate').val())
+        var CurrentSelectedDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), CurrentDate.getDate())
 
+        var firstDay = nnew Date(year, month, 1);
+        var lastDay = nnew Date(year, month+1, 0);
+        var CurrentMonth = month[firstDay.getMonth()];
+
+        var LastDate = new Date(date.setMonth(date.getMonth() - 1));
+
+        var NextDate = new Date(date.setMonth(date.getMonth() + 1));
+
+        $('#txtCurrentMonth').html(CurrentMonth);
+        $("#btnPreviousMonth").attr("onclick", "ChangeMonth('" + LastDate.getFullYear() + "','" + LastDate.getMonth() + "')");
+        $("#btnNextMonth").attr("onclick", "ChangeMonth('" + NextDate.getFullYear() + "','" + NextDate.getMonth() + "')");
+
+        var Day = firstDay.getDay()
+        var NumberOfDaysLastMonth = Day - 1
+        if (NumberOfDaysLastMonth < 0)
+        {
+            NumberOfDaysLastMonth = 6
+        }
+
+        var PerviousMonthDay = firstDay
+        PerviousMonthDay.setDate(PerviousMonthDay.getDate() - NumberOfDaysLastMonth)
+
+        var j = 1
+        //ToDo: loop through and add the firstweek Values and set the Styling / any onclicks ==Use Math.ceil==
+        for (var i = PerviousMonthDay.getDate(); i < (PerviousMonthDay.getDate() + NumberOfDaysLastMonth); i++) 
+        {
+            var LoopDate = new Date(PerviousMonthDay.getFullYear(), PerviousMonthDay.getMonth(), i);
+
+            var Day = LoopDate.getDay()
+            var DayString = weekday[Day]
+
+            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
+            
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+            $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+            $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
+
+            j++
+        }
+
+        for (var i = 1; i <= lastDay.getDate(); i++)
+        {
+            var LoopDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), i);
+
+            var Day = new LoopDate.getDay()
+            var DayString = weekday[Day]
+
+            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
+            
+            if(LoopDate == CurrentSelectedDate)
+            {
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+                $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+                $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+                $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
+
+                $('#hdnCurrentSelectedDate').val(LoopDate);
+                $('#hdnCurrentSelectedDiv').val(nWeekOfTheMonthTxt);
+            }
+            else
+            {
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-dark text-center m-0 py-2');
+                $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+                $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+                $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
+            }
+
+            j++
+
+        }
+
+        var Day = lastDay.getDay()
+        var NumberOfDaysNextMonth = 7 - Day
+        if (NumberOfDaysNextMonth == 7)
+        {
+            NumberOfDaysNextMonth = 0
+        }
+
+        var NextMonthDay = lastDay
+        NextMonthDay.setDate(NextMonthDay.getDate() + NumberOfDaysLastMonth)
+        
+        for (var i = 1; i <= (NumberOfDaysNextMonth); i++) 
+        {
+            var LoopDate = new Date(NextMonthDay.getFullYear(), NextMonthDay.getMonth(), i);
+
+            var Day = LoopDate.getDay()
+            var DayString = weekday[Day]
+
+            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
+            
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+            $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+            $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
+
+            j++
+        }
     }
 
 </script>
