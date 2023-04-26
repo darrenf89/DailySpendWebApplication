@@ -3,9 +3,9 @@
         <div class="modal-content shadow border-dark border-1" style="margin-top: 40%">
             <div  id="DatePickerHeader" class="modal-header bg-primary p-0">
                 <div class="d-flex justify-content-between align-items-center col-12">
-                    <div id="divPreviousMonth" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="SelectPreviousMonth()" id="btnPreviousMonth"><i class="bi bi-arrow-left-square text-white"></i></button></div>
+                    <div id="divPreviousMonth" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnPreviousMonth"><i class="bi bi-arrow-left-square text-white"></i></button></div>
                     <div id="divCurrentMonth" class="py-1 m-0"><h3 id="txtCurrentMonth" class="m-0 text-white">March</h3></div>
-                    <div id="divNextMonth" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="SelectNextMonth()" id="btnNextMonth"><i class="bi bi-arrow-right-square text-white"></i></button></div>
+                    <div id="divNextMonth" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnNextMonth"><i class="bi bi-arrow-right-square text-white"></i></button></div>
                 </div>
             </div>
             <div class="modal-body px-3 py-2">
@@ -82,7 +82,7 @@
 
 <script>
 
-    function LoadWindow(year, month, day)
+    function LoadWindow(year, month-1, day)
     {
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -97,8 +97,8 @@
         var NextMonth = month[NextDate.getMonth()];
 
         $('#txtCurrentMonth').html(CurrentMonth);
-        $("#btnPreviousMonth").attr("onclick", "SelectMonth('" + LastMonth + "')");
-        $("#btnNextMonth").attr("onclick", "SelectMonth('" + NextMonth + "')");
+        $("#btnPreviousMonth").attr("onclick", "ChangeMonth('" + LastDate.getFullYear() + "','" + LastDate.getMonth() + "')");
+        $("#btnNextMonth").attr("onclick", "ChangeMonth('" + NextDate.getFullYear() + "','" + NextDate.getMonth() + "')");
 
         var firstDay = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), 1);
         var lastDay = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth() + 1, 0);
@@ -113,25 +113,89 @@
         var PerviousMonthDay = firstDay
         PerviousMonthDay.setDate(PerviousMonthDay.getDate() - NumberOfDaysLastMonth)
 
-        var weekNumber = 1
+        var j = 1
         //ToDo: loop through and add the firstweek Values and set the Styling / any onclicks ==Use Math.ceil==
         for (var i = PerviousMonthDay.getDate(); i < (PerviousMonthDay.getDate() + NumberOfDaysLastMonth); i++) 
         {
-            var Day = new Date(year, month, i).getDay()
+            var LoopDate = new Date(PerviousMonthDay.getFullYear(), PerviousMonthDay.getMonth(), i);
+
+            var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
+            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
+            
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+            $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+            $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
 
-
-
-            weekNumber++
+            j++
         }
 
         for (var i = 1; i <= lastDay.getDate(); i++)
         {
-            var Day = new Date(year, month, i).getDay()
+            var LoopDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), i);
+
+            var Day = new LoopDate.getDay()
             var DayString = weekday[Day]
 
+            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
+            
+            if(LoopDate == CurrentDate)
+            {
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5 bg-dark shadow');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+                $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+                $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+                $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
+
+                $('#hdnCurrentSelectedDate').val(LoopDate);
+            }
+            else
+            {
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-1 border-primary rounded-5');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-dark text-center m-0 py-2');
+                $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+                $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+                $('#btn' + nWeekOfTheMonthTxt).prop('disabled', false);
+            }
+
+            j++
+
         }
+
+        var Day = lastDay.getDay()
+        var NumberOfDaysNextMonth = 7 - Day
+        if (NumberOfDaysNextMonth == 7)
+        {
+            NumberOfDaysNextMonth = 0
+        }
+
+        var NextMonthDay = lastDay
+        NextMonthDay.setDate(NextMonthDay.getDate() + NumberOfDaysLastMonth)
+        
+        for (var i = 1; i <= (NumberOfDaysNextMonth); i++) 
+        {
+            var LoopDate = new Date(NextMonthDay.getFullYear(), NextMonthDay.getMonth(), i);
+
+            var Day = LoopDate.getDay()
+            var DayString = weekday[Day]
+
+            var nWeekOfTheMonth = Math.Ceil(j/7)
+            var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
+            
+            $('#btn' + nWeekOfTheMonthTxt).removeClass().AddClass('border border-0 bg-secondary rounded-5');
+            $('#txt' + nWeekOfTheMonthTxt).removeClass().AddClass('text-white text-center m-0 py-2');
+            $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+            $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+            $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
+
+            j++
+        }
+        
 
     }
 
@@ -140,7 +204,7 @@
 
     }
 
-    function SelectMonth(month)
+    function ChangeMonth(month)
     {
 
 
