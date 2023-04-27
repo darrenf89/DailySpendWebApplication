@@ -152,7 +152,7 @@
                 <input type="hidden" asp-for="CategoryID" />
             </div>
             <div id="divDate" class="border-1 border-top border-dark bg-white">
-                <a onclick="">
+                <a onclick="OpenModal()">
                     <div class="d-flex justify-content-between">
                         <div class="text-left">
                             <p class="text-dark ps-2 mb-3 mt-3 h5">Date</p>
@@ -190,6 +190,8 @@
             </div>
         </div>
     </div>
+    <div id="myPartialViewDiv">
+    </div>
 </div>
 
 <style>
@@ -199,6 +201,27 @@
 </style>
 
 <script>
+  function OpenModal(){
+        document.getElementById('DatePickerContainter').style.display = 'block';
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'get',
+            url: '/Home/LoadDatePicker/',
+            data: { textElement: 'txtTransactionAmount',
+            InputElement: 'TransactionAmount',
+            DateFormat:'dd MMMM yyyy'},
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    })
 
     $(document).ready(function () {
         $("#divCategory").hover(function () {
