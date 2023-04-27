@@ -1,3 +1,12 @@
+@{
+    string InputedYear = ViewBag.Year;
+    string InputedMonth = ViewBag.Month;
+    string InputedDay = ViewBag.Day;
+    string textElement = ViewBag.textElement;
+    string InputElement = ViewBag.InputElement;
+    string DateFormat = ViewBag.StringFormat;
+}
+
 <div id="DatePickerContainter" class="modal" role="dialog">
     <div id="DatePicker" class="modal-dialog p-5">
         <div class="modal-content shadow border-dark border-1" style="margin-top: 40%">
@@ -5,12 +14,12 @@
                 <div class="d-flex justify-content-between align-items-center col-12" id="divHeaderMonthView">
                     <div id="divPreviousMonth" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnPreviousMonth"><i class="bi bi-arrow-left-square text-white"></i></button></div>
                     <button id="btnChangeToYear" style="background-color: transparent; border: none;" onclick="SwitchToYear()">                        
-                        <div id="divCurrentMonth" class="py-1 m-0"><h3 id="txtCurrentMonth" class="m-0 text-white"></h3></div>
+                        <div id="divCurrentMonth" class="py-1 m-0"><i class="bi bi-check2-square m-0 text-white h3"></i><h3 id="txtCurrentMonth" class="m-0 text-white"></h3></div>
                     </button>
                     <div id="divNextMonth" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnNextMonth"><i class="bi bi-arrow-right-square text-white"></i></button></div>
                 </div>
                 <div class="d-none justify-content-between align-items-center col-12" id="divHeaderYearView" style="display: none">
-                    <div id="divPreviousYeara" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeYear()" id="btnPreviousYear"><i class="bi bi-arrow-up-square text-white"></i></button></div>
+                    <div id="divPreviousYear" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeYear()" id="btnPreviousYear"><i class="bi bi-arrow-up-square text-white"></i></button></div>
                     <div id="divCurrentYear" class="py-1 m-0"><h3 id="txtCurrentYear" class="m-0 text-white"></h3></div>
                     <div id="divNextYear" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeYear()" id="btnNextYear"><i class="bi bi-arrow-down-square text-white"></i></button></div>
                 </div>
@@ -74,19 +83,19 @@
                 </div>
                 <div class="m-0 p-0 d-none flex-column align-items-center" id="divYearView">
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="FirstYearDiv">
-                        <button id="btnY1" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtY1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY1" />
-                        <button id="btnY2" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y2')" class="border border-0 bg-secondary rounded-5"><h5 id="txtY2" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY2" />
-                        <button id="btnY3" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y3')" class="border border-0 bg-secondary rounded-5"><h5 id="txtY3" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY3" />
+                        <button id="btnY1" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y1')" class="border border-0 bg-secondary rounded-5"><h4 id="txtY1" class="text-white text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY1" />
+                        <button id="btnY2" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y2')" class="border border-0 bg-secondary rounded-5"><h4 id="txtY2" class="text-white text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY2" />
+                        <button id="btnY3" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y3')" class="border border-0 bg-secondary rounded-5"><h4 id="txtY3" class="text-white text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY3" />
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="SecondYearDiv">
-                        <button id="btnY4" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y4')" class="border border-1 border-primary rounded-5"><h5 id="txtY4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY4" />
-                        <button id="btnY5" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y5')" class="border border-1 border-primary rounded-5"><h5 id="txtY5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY5" />
-                        <button id="btnY6" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y6')" class="border border-1 border-primary rounded-5"><h5 id="txtY6" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY6" />
+                        <button id="btnY4" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y4')" class="border border-1 border-primary rounded-5"><h4 id="txtY4" class="text-dark text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY4" />
+                        <button id="btnY5" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y5')" class="border border-1 border-primary rounded-5"><h4 id="txtY5" class="text-dark text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY5" />
+                        <button id="btnY6" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y6')" class="border border-1 border-primary rounded-5"><h4 id="txtY6" class="text-dark text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY6" />
                     </div>
                     <div class="d-flex justify-content-between align-items-center m-1 col-12" id="ThirdYearDiv">
-                        <button id="btnY7" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y7')" class="border border-1 border-primary rounded-5"><h5 id="txtY7" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY7" />
-                        <button id="btnY8" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y8')" class="border border-1 border-primary rounded-5"><h5 id="txtY8" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY8" />
-                        <button id="btnY9" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y9')" class="border border-1 border-primary rounded-5"><h5 id="txtY9" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY9" />
+                        <button id="btnY7" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y7')" class="border border-1 border-primary rounded-5"><h4 id="txtY7" class="text-dark text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY7" />
+                        <button id="btnY8" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y8')" class="border border-1 border-primary rounded-5"><h4 id="txtY8" class="text-dark text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY8" />
+                        <button id="btnY9" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y9')" class="border border-1 border-primary rounded-5"><h4 id="txtY9" class="text-dark text-center m-0 py-3"></h4></button><input type="hidden" id="hdnY9" />
                     </div>
                 </div>
             </div>
@@ -108,12 +117,12 @@
 <script>
 
     $(document).ready(function () {
-        var year = 2023
-        var months = 5
-        var day = 26
+        var year = @InputedYear
+        var months = @InputedMonth
+        var day = @InputedDay
         $('#txtCurrentYear').html(year);
         LoadWindow(year, months, day);
-        console.log('PageLoaded')
+        console.log('DatePickerPageLoaded')
     });
 
     function CloseModal()
@@ -123,6 +132,62 @@
 
     function ConfirmSelectDate()
     {
+
+    }
+
+    function SelectYear(YearText)
+    {
+        $('#divHeaderMonthView').removeClass('d-none').addClass('d-flex');
+        $('#divMonthView').removeClass('d-none').addClass('d-flex');
+
+        $('#divHeaderYearView').removeClass('d-flex').addClass('d-none');
+        $('#divYearView').removeClass('d-flex').addClass('d-none');
+
+        var SelectedDate = new Date($('#hdn' + YearText).val())
+        var SelectedMonth = SelectedDate.getMonth()
+        var SelectedDay = SelectedDate.getDate()
+        var SelectedYear = SelectedDate.getFullYear()
+
+        $('#hdnCurrentSelectedDate').val(SelectedDate)
+        ChangeMonth(SelectedYear, SelectedMonth)
+      
+    }
+
+    function ChangeYear(year)
+    {
+        var CurrentSelectedDate = new Date($('#hdnCurrentSelectedDate').val())
+        var SelectedMonth = CurrentSelectedDate.getMonth()
+        var SelectedDay = CurrentSelectedDate.getDate()
+        var SelectedYear = CurrentSelectedDate.getFullYear()
+
+        var FirstYear = year - 4
+        var NextYear = year + 3
+        var PreviousYear = year - 3
+
+        $("#btnPreviousYear").attr("onclick", "ChageYear('" + PreviousYear + "')");
+        $("#btnNextYear").attr("onclick", "ChangeYear('" + NextYear + "')");
+
+        for(var i = FirstYear; i <= (FirstYear + 9); i++)
+        {
+            var LoopDate = new Date(i, SelectedMonth, SelectedDay);
+
+            var nYearTxt =  "Y" + i;
+
+            if(i == SelectedYear)
+            {
+                $('#btn' + nYearTxt).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
+                $('#txt' + nYearTxt).removeClass().addClass('text-white text-center m-0 py-3');
+                $('#txt' + nYearTxt).html(i);
+                $('#hdn' + nYearTxt).val(LoopDate);             
+            }
+            else
+            {
+                $('#btn' + nYearTxt).removeClass().addClass('border border-1 border-primary rounded-5');
+                $('#txt' + nYearTxt).removeClass().addClass('text-dark text-center m-0 py-3');
+                $('#txt' + nYearTxt).html(i);
+                $('#hdn' + nYearTxt).val(LoopDate);  
+            }
+        }
 
     }
 
@@ -136,10 +201,37 @@
 
         var CurrentSelectedDate = new Date($('#hdnCurrentSelectedDate').val())
         var SelectedMonth = CurrentSelectedDate.getMonth()
+        var SelectedDay = CurrentSelectedDate.getDate()
+        var SelectedYear = CurrentSelectedDate.getFullYear()
 
+        var FirstYear = SelectedYear - 4
+        var NextYear = SelectedYear + 3
+        var PreviousYear = SelectedYear - 3
 
-        var CurrentYear = $('#txtCurrentYear').val()
-        var FirstYear = CurrentYear - 4
+        $("#btnPreviousYear").attr("onclick", "ChageYear('" + PreviousYear + "')");
+        $("#btnNextYear").attr("onclick", "ChangeYear('" + NextYear + "')");
+
+        for(var i = FirstYear; i <= (FirstYear + 9); i++)
+        {
+            var LoopDate = new Date(i, SelectedMonth, SelectedDay);
+
+            var nYearTxt =  "Y" + i;
+
+            if(i == SelectedYear)
+            {
+                $('#btn' + nYearTxt).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
+                $('#txt' + nYearTxt).removeClass().addClass('text-white text-center m-0 py-3');
+                $('#txt' + nYearTxt).html(i);
+                $('#hdn' + nYearTxt).val(LoopDate);             
+            }
+            else
+            {
+                $('#btn' + nYearTxt).removeClass().addClass('border border-1 border-primary rounded-5');
+                $('#txt' + nYearTxt).removeClass().addClass('text-dark text-center m-0 py-3');
+                $('#txt' + nYearTxt).html(i);
+                $('#hdn' + nYearTxt).val(LoopDate);  
+            }
+        }
 
 
     }
