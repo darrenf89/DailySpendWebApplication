@@ -45,6 +45,22 @@
         document.getElementById('DatePickerContainter').style.display = 'block';
     }
 
+    function test(){
+        $.ajax({
+            type: 'get',
+            url: '/Transaction/DeleteSpecificPayee/',
+            data: { client: 'mikescafe' },
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    }
+
     document.addEventListener("load", CheckReMessage('@ReMess'));
 
     function CheckReMessage(ReMess){

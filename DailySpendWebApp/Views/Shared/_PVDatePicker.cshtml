@@ -2,14 +2,21 @@
     <div id="DatePicker" class="modal-dialog p-5">
         <div class="modal-content shadow border-dark border-1" style="margin-top: 40%">
             <div  id="DatePickerHeader" class="modal-header bg-primary p-0">
-                <div class="d-flex justify-content-between align-items-center col-12">
+                <div class="d-flex justify-content-between align-items-center col-12" id="divHeaderMonthView">
                     <div id="divPreviousMonth" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnPreviousMonth"><i class="bi bi-arrow-left-square text-white"></i></button></div>
-                    <div id="divCurrentMonth" class="py-1 m-0"><h3 id="txtCurrentMonth" class="m-0 text-white"></h3></div>
+                    <button id="btnChangeToYear" style="background-color: transparent; border: none;" onclick="SwitchToYear()">                        
+                        <div id="divCurrentMonth" class="py-1 m-0"><h3 id="txtCurrentMonth" class="m-0 text-white"></h3></div>
+                    </button>
                     <div id="divNextMonth" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeMonth()" id="btnNextMonth"><i class="bi bi-arrow-right-square text-white"></i></button></div>
+                </div>
+                <div class="d-none justify-content-between align-items-center col-12" id="divHeaderYearView" style="display: none">
+                    <div id="divPreviousYeara" class="ps-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeYear()" id="btnPreviousYear"><i class="bi bi-arrow-up-square text-white"></i></button></div>
+                    <div id="divCurrentYear" class="py-1 m-0"><h3 id="txtCurrentYear" class="m-0 text-white"></h3></div>
+                    <div id="divNextYear" class="pe-4 py-1 m-0"><button type="button" style="background-color: transparent; border: none; text-align: left; font-size: 20pt" onclick="ChangeYear()" id="btnNextYear"><i class="bi bi-arrow-down-square text-white"></i></button></div>
                 </div>
             </div>
             <div class="modal-body px-3 py-2">
-                <div class="m-0 p-0 d-flex flex-column align-items-center">
+                <div class="m-0 p-0 d-flex flex-column align-items-center" id="divMonthView">
                     <div class="d-flex justify-content-between align-items-center m-1 col-12 border-2 border-bottom border-dark" id="DayOfWeekHeader">
                         <h5 class="text-primary text-center" style="width: 13%;">Mon</h5>
                         <h5 class="text-primary text-center" style="width: 13%;">Tue</h5>
@@ -65,6 +72,23 @@
                         <button id="btnSun5" style="background-color: transparent; border: none; width: 13%;" onclick="SelectDate('Sun5')" class="border border-1 border-primary rounded-5"><h5 id="txtSun5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnSun5" />
                     </div>
                 </div>
+                <div class="m-0 p-0 d-none flex-column align-items-center" id="divYearView">
+                    <div class="d-flex justify-content-between align-items-center m-1 col-12" id="FirstYearDiv">
+                        <button id="btnY1" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y1')" class="border border-0 bg-secondary rounded-5"><h5 id="txtY1" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY1" />
+                        <button id="btnY2" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y2')" class="border border-0 bg-secondary rounded-5"><h5 id="txtY2" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY2" />
+                        <button id="btnY3" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y3')" class="border border-0 bg-secondary rounded-5"><h5 id="txtY3" class="text-white text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY3" />
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center m-1 col-12" id="SecondYearDiv">
+                        <button id="btnY4" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y4')" class="border border-1 border-primary rounded-5"><h5 id="txtY4" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY4" />
+                        <button id="btnY5" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y5')" class="border border-1 border-primary rounded-5"><h5 id="txtY5" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY5" />
+                        <button id="btnY6" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y6')" class="border border-1 border-primary rounded-5"><h5 id="txtY6" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY6" />
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center m-1 col-12" id="ThirdYearDiv">
+                        <button id="btnY7" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y7')" class="border border-1 border-primary rounded-5"><h5 id="txtY7" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY7" />
+                        <button id="btnY8" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y8')" class="border border-1 border-primary rounded-5"><h5 id="txtY8" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY8" />
+                        <button id="btnY9" style="background-color: transparent; border: none; width: 30%;" onclick="SelectYear('Y9')" class="border border-1 border-primary rounded-5"><h5 id="txtY9" class="text-dark text-center m-0 py-2"></h5></button><input type="hidden" id="hdnY9" />
+                    </div>
+                </div>
             </div>
             <div class="modal-footer pt-3 pb-3 mx-3 border-2 border-top border-dark">
                 <div class="col-6 m-0">
@@ -85,16 +109,40 @@
 
     $(document).ready(function () {
         var year = 2023
-        var month = 5
+        var months = 5
         var day = 26
-        LoadWindow(year, month, day);
+        $('#txtCurrentYear').html(year);
+        LoadWindow(year, months, day);
         console.log('PageLoaded')
     });
 
-    $('#DatePickerContainter').on("load", function () {
-        LoadWindow(2023, 04, 1);
-        console.log('Date Picker Loaded')
-    });
+    function CloseModal()
+    {
+        document.getElementById('DatePickerContainter').style.display = 'none';
+    }
+
+    function ConfirmSelectDate()
+    {
+
+    }
+
+    function SwitchToYear()
+    {
+        $('#divHeaderMonthView').removeClass('d-flex').addClass('d-none');
+        $('#divMonthView').removeClass('d-flex').addClass('d-none');
+
+        $('#divHeaderYearView').removeClass('d-none').addClass('d-flex');
+        $('#divYearView').removeClass('d-none').addClass('d-flex');
+
+        var CurrentSelectedDate = new Date($('#hdnCurrentSelectedDate').val())
+        var SelectedMonth = CurrentSelectedDate.getMonth()
+
+
+        var CurrentYear = $('#txtCurrentYear').val()
+        var FirstYear = CurrentYear - 4
+
+
+    }
 
 
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -102,27 +150,25 @@
 
     function SelectTodaysDate()
     {
-        var Today = new Date()
-        //TODO: Get the divDate based on todays date.
+        var TodaysDate = new Date()
+        var CurrentMonth = month[TodaysDate.getMonth()]
 
-        var CurrentDate = new Date($('#hdnCurrentSelectedDate').val())
-        var CurrentSelectedDiv = $('#hdnCurrentSelectedDiv').val()
-        
-        var CurrentMonth = month[CurrentDate.getMonth()]
+        var SelectedMonth = $('#txtCurrentMonth').html()
 
-        if(CurrentMonth == $('#txtCurrentMonth').html())
+        var year = TodaysDate.getFullYear()
+        var months = TodaysDate.getMonth() + 1
+        var day = TodaysDate.getDate()
+
+        if (CurrentMonth == SelectedMonth) 
         {
-            $('#btn' + CurrentSelectedDiv).removeClass().addClass('border border-1 border-primary rounded-5');
-            $('#txt' + CurrentSelectedDiv).removeClass().addClass('text-dark text-center m-0 py-2');            
-            $('#btn' + CurrentSelectedDiv).prop('disabled', false);  
+            LoadWindow(year,months,day)
         }
-
-        $('#btn' + divDate).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
-        $('#txt' + divDate).removeClass().addClass('text-white text-center m-0 py-2');            
-        $('#btn' + divDate).prop('disabled', false);
-
-        $('#hdnCurrentSelectedDate').val($('#hdn'+ divDate).val());
-        $('#hdnCurrentSelectedDiv').val(divDate)
+        else
+        {
+            $('#hdnCurrentSelectedDate').val(TodaysDate)
+            months = months - 1
+            ChangeMonth(year, months)
+        }
     }
 
     function LoadWindow(year, months, day)
@@ -134,18 +180,19 @@
         var CurrentDate = new Date(year, months, day);
         var CurrentMonth = month[CurrentDate.getMonth()];
 
-        var LastDate = new Date();
-        LastDate.setMonth(CurrentDate.getMonth() - 1);
+        var firstDay = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), 1);
+        var lastDay = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth() + 1, 0);
 
-        var NextDate = new Date();
-        NextDate.setMonth(CurrentDate.getMonth() + 1)
+        var LastDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), 1);
+        LastDate.setDate(LastDate.getDate() - 1)
+
+        var NextDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth() + 1, 0);
+        NextDate.setDate(NextDate.getDate() + 1)
 
         $('#txtCurrentMonth').html(CurrentMonth);
         $("#btnPreviousMonth").attr("onclick", "ChangeMonth('" + LastDate.getFullYear() + "','" + LastDate.getMonth() + "')");
         $("#btnNextMonth").attr("onclick", "ChangeMonth('" + NextDate.getFullYear() + "','" + NextDate.getMonth() + "')");
 
-        var firstDay = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), 1);
-        var lastDay = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth() + 1, 0);
 
         var Day = firstDay.getDay()
         var NumberOfDaysLastMonth = Day - 1
@@ -277,11 +324,11 @@
         var firstDay = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth(), 1);
         var lastDay = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth() + 1, 0);
 
-        var LastDate = new Date()
-        LastDate.setMonth(CurrentDateRequest.getMonth() - 1)
+        var LastDate = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth(), 1);
+        LastDate.setDate(LastDate.getDate() - 1)
 
-        var NextDate = new Date()        
-        NextDate.setMonth(CurrentDateRequest.getMonth() + 1)
+        var NextDate = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth() + 1, 0);
+        NextDate.setDate(NextDate.getDate() + 1)
 
         $('#txtCurrentMonth').html(CurrentMonthRequest);
         $("#btnPreviousMonth").attr("onclick", "ChangeMonth('" + LastDate.getFullYear() + "','" + LastDate.getMonth() + "')");
