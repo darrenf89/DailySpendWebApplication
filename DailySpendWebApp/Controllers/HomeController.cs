@@ -40,6 +40,20 @@ public class HomeController : Controller
 
     }
 
+    [Route("Home/LoadDatePicker/{textElement?}/{InputElement?}/{DateFormat?}")]
+    public IActionResult LoadDatePicker(string? textElement, string? InputElement, string? DateFormat)
+    {
+        ViewBag.Day = "26";
+        ViewBag.Month = "5";
+        ViewBag.Year = "2023";
+
+        ViewBag.textElement = textElement;
+        ViewBag.InputElement = InputElement;
+        ViewBag.StringFormat = DateFormat;
+
+        return PartialView("_PVDatePicker");
+    }
+
     [Route("Home/Index/{id?}")]
     [Route("Home/Index/{id?}/{ReMess?}")]
     public IActionResult Index(int? id, string? ReMess)

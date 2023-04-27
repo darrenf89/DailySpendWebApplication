@@ -30,7 +30,9 @@
     <div id="BillsInfo"></div>
     <div id="SavingsInfo"></div>
 </div>
-<partial name="~/Views/Shared/_PVDatePicker.cshtml" />
+@*<partial name="~/Views/Shared/_PVDatePicker.cshtml" />*@
+    <div id="myPartialViewDiv">
+    </div>
 <button type="button" class="btn btn-primary" onclick="OpenModal();">Open modal</button>
 <div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
     <div class="d-flex">
@@ -45,11 +47,14 @@
         document.getElementById('DatePickerContainter').style.display = 'block';
     }
 
-    function test(){
-        $.ajax({
-            type: 'get',
-            url: '/Transaction/DeleteSpecificPayee/',
-            data: { client: 'mikescafe' },
+    $(document).ready(function () {
+        $.get({
+            url: '/Home/LoadDatePicker/',
+            data: {
+                textElement: 'txtTransactionAmount',
+                InputElement: 'TransactionAmount',
+                DateFormat: 'dd MMMM yyyy'
+            },
 
             success: function (result) {
                 $("#myPartialViewDiv").html(result);
@@ -59,7 +64,7 @@
                 return false;
             }
         });
-    }
+    })
 
     document.addEventListener("load", CheckReMessage('@ReMess'));
 

@@ -206,12 +206,13 @@
     }
 
     $(document).ready(function () {
-        $.ajax({
-            type: 'get',
+        $.get({
             url: '/Home/LoadDatePicker/',
-            data: { textElement: 'txtTransactionAmount',
-            InputElement: 'TransactionAmount',
-            DateFormat:'dd MMMM yyyy'},
+            data: {
+                textElement: 'txtTransactionAmount',
+                InputElement: 'TransactionAmount',
+                DateFormat: 'dd MMMM yyyy'
+            },
 
             success: function (result) {
                 $("#myPartialViewDiv").html(result);
