@@ -36,6 +36,134 @@
 //    setTimeout(function () { x.className = x.className.replace("show", ""); }, 10900);
 //}
 
+ function FormatBudgetSettingsDate (dateObject, seperator, DatePattern, IncludeDay) {
+
+    const monthFull = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const weekdayFull = ["Sunday", "Monday", "Tueday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const monthShort = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    const weekdayShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    var DatePattern = DatePattern.toLowerCase();
+    var d = new Date(dateObject);
+
+    var weekday = d.getDay();
+    if (IncludeDay == "Full")
+    {
+        weekday = weekdayFull[weekday]
+    }
+    else if (IncludeDay == "Short")
+    {
+        weekday = weekdayShort[weekday]
+    }
+
+    var month = d.getMonth();
+    if (DatePattern.includes("mmmm"))
+    {
+        month = monthFull[month]
+    }
+    else if (DatePattern.includes("mmm"))
+    {
+        month = monthShort[month]
+    }
+    else if (DatePattern.includes("mm"))
+    {
+        month = month + 1
+        if (month < 10)
+        {
+            month = "0" + month;
+        }
+        else
+        {
+            month.toString()
+        }
+    }
+
+    var year = d.getFullYear().toString();
+    if (DatePattern.includes("yyyy"))
+    {
+        var year = year
+    }
+    else if (DatePattern.includes("yy"))
+    {
+        var year = year.slice(- 2)
+    }
+
+    var day = d.getDate();
+    if (day < 10)
+    {
+        day = "0" + day;
+    }
+
+    var CurrentString = ""
+    if (DatePattern.charAt(0) == 'y') {
+        var CurrentString = "y"
+        var First = year
+    }
+    else if (DatePattern.charAt(0) == 'd') {
+        var CurrentString = "d"
+        var First = day
+    }
+    else if (DatePattern.charAt(0) == 'm') {
+        var CurrentString = "m"
+        var First = month
+    }
+
+    j=2
+    for (var i = 1; i < DatePattern.length; i++)
+    {
+
+        if (DatePattern.charAt(i) != CurrentString)
+        {
+            if (DatePattern.charAt(i) == 'y') {
+                var CurrentString = "y"
+                if (j == 2)
+                {
+                    var Second = year
+                }
+                else if (j == 3)
+                {
+                    var Third = year
+                }
+                
+            }
+            else if (DatePattern.charAt(i) == 'd') {
+                var CurrentString = "d"
+                if (j == 2)
+                {
+                    var Second = day
+                }
+                else if (j == 3)
+                {
+                    var Third = day
+                }
+            }
+            else if (DatePattern.charAt(i) == 'm') {
+                var CurrentString = "m"
+                if (j == 2)
+                {
+                    var Second = month
+                }
+                else if (j == 3)
+                {
+                    var Third = month
+                }
+            }
+
+            j++
+        }
+    }
+
+
+    var date = First + seperator + Second + seperator + Third
+
+    if (IncludeDay != "None")
+    {
+        var date = weekday + "  " + date;
+    }
+
+
+    return date;
+};
 
 
 

@@ -282,5 +282,45 @@ namespace DailySpendWebApp.Controllers
 
             return View("AddTransaction", obj);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SelectSaving(Transactions obj)
+        {
+            Budgets? Budget = _db.Budgets?
+                .Include(b => b.Savings.Where(s => s.isSavingsClosed == false))
+                .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            List<Savings> SavingsList = Budget.Savings.ToList();
+
+            ViewBag.SavingsList = SavingsList;
+
+            ViewBag.Action = "CategoryBackToTransaction";
+            ViewBag.Controller = "Transaction";
+
+            TempData["PageHeading"] = "Select a Saving Category!";
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("/Transaction/SelectSpecificSaving/{SelectSavingID?}")]
+        public IActionResult SelectSpecificSaving(Transactions obj, int SelectSavingID)
+        {
+            Budgets? Budget = _db.Budgets?
+                .Include(b => b.Savings)
+                .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            Savings Saving = Budget.Savings.Where(c => c.SavingID == SelectSavingID).First();
+
+            obj.SavingName = Saving.SavingsName;
+            obj.SavingID = Saving.SavingID;
+
+            return View("AddTransaction", obj);
+        }
+
     }
 }

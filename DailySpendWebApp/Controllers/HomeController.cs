@@ -40,16 +40,29 @@ public class HomeController : Controller
 
     }
 
-    [Route("Home/LoadDatePicker/{textElement?}/{InputElement?}/{DateFormat?}")]
-    public IActionResult LoadDatePicker(string? textElement, string? InputElement, string? DateFormat)
+    [Route("Home/LoadDatePicker/{textElement?}/{InputElement?}/{DatePattern?}/{IncludeDay?}/{Seperator?}")]
+    public IActionResult LoadDatePicker(string? textElement, string? InputElement, string? DatePattern, string? IncludeDay, string? Seperator)
     {
-        ViewBag.Day = "26";
-        ViewBag.Month = "5";
-        ViewBag.Year = "2023";
+        DateTime Today = DateTime.Now;
+        string Day = Today.Day.ToString();
+        string Month = Today.Month.ToString();
+        string Year = Today.Year.ToString();
+
+        ViewBag.Day = Day;
+        ViewBag.Month = Month;
+        ViewBag.Year = Year;
 
         ViewBag.textElement = textElement;
         ViewBag.InputElement = InputElement;
-        ViewBag.StringFormat = DateFormat;
+
+        if (Seperator == "Space")
+        {
+            Seperator = " ";
+        }
+
+        ViewBag.seperator = Seperator;
+        ViewBag.DatePattern = DatePattern;
+        ViewBag.IncludeDay = IncludeDay; 
 
         return PartialView("_PVDatePicker");
     }

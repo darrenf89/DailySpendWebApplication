@@ -1,0 +1,117 @@
+﻿@model DailySpendBudgetWebApp.Models.Transactions
+
+@{
+    ViewData["Title"] = "Your Savings";
+    Layout = "~/Views/Shared/_LayoutNoFooterNoBackButton.cshtml";
+}
+
+@{
+    <div style="background-color: transparent" class="border-2 border-bottom border-muted d-flex justify-content-between col-12 py-2">
+    </div>
+    List<Savings> SavingsList = ViewBag.SavingsList;
+    if(Model.isIncome)
+    {
+        foreach (Savings Saving in SavingsList)
+        {
+            string SavingType = "";
+            string CurrentBalance = String.Format("{0:c}", Saving.CurrentBalance);
+            string SavingsGoal = String.Format("{0:c}", Saving.SavingsGoal);
+            if (!Saving.isRegularSaving & Saving.ddlSavingsPeriod == "PerPayPeriod")
+            {
+                SavingType = "Envelope";
+            }
+            else
+            {
+                SavingType = "Regular";
+            }
+
+
+            <div style="background-color: transparent" class="border-2 border-bottom border-muted d-flex justify-content-between col-12">
+                <button type="submit" asp-controller="Transaction" asp-action="SelectSpecificSaving" asp-route-SelectSavingID="@Saving.SavingID" style="background-color: transparent; border: none; text-align: left; width: 100%" class="m-0 p-0">
+                    <div class="d-flex container-fluid align-items-center py-2" style="background-color: #f39b7e">
+                        <div class=" d-flex col-2 align-items-center"><span class="badge rounded-pill bg-dark py-2 px-2 shadow" style="font-size: 6pt; border: solid 1px black">@SavingType</span></div>
+                        <p class="m-0 pt-2 pb-2 text-white text-left h6 col-5" style="vertical-align: middle;"><strong>@Saving.SavingsName</strong></p>
+                        <div class=" d-flex col-5 align-items-center justify-content-around">
+                            <div class=" d-flex align-items-center col-5"><span class="badge rounded-pill bg-success py-2 px-2 shadow" style="font-size: 8pt; width: 100%; border: solid 1px darkgreen; overflow: scroll">@CurrentBalance</span></div>
+                            <div class=" d-flex align-items-center col-5"><span class="badge rounded-pill bg-success py-2 px-2 shadow" style="font-size: 8pt; width: 100%; border: solid 1px darkgreen; overflow: scroll">@SavingsGoal</span></div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        }
+    }
+    else
+    {
+        foreach (Savings Saving in SavingsList)
+        {
+            string SavingType = "";
+            string CurrentBalance = String.Format("{0:c}", Saving.CurrentBalance);
+            string SavingsGoal = String.Format("{0:c}", Saving.SavingsGoal);
+            if (!Saving.isRegularSaving & Saving.ddlSavingsPeriod == "PerPayPeriod")
+            {
+                SavingType = "Envelope";
+            }
+            else
+            {
+                SavingType = "Regular";
+            }
+
+            string CurrencyColor = "";
+            string BorderColor = "";
+
+            if (Model.TransactionAmount > Saving.CurrentBalance)
+            {
+                CurrencyColor = "danger";
+                BorderColor = "darkred";
+            }
+            else
+            {
+                CurrencyColor = "success";
+                BorderColor = "darkgreen";
+            }
+
+            <div style="background-color: transparent" class="border-2 border-bottom border-muted d-flex justify-content-between col-12">
+                <button type="submit" asp-controller="Transaction" asp-action="SelectSpecificSaving" asp-route-SelectSavingID="@Saving.SavingID" style="background-color: transparent; border: none; text-align: left; width: 100%" class="m-0 p-0">
+                    <div class="d-flex container-fluid align-items-center py-2" style="background-color: #f39b7e">
+                        <div class=" d-flex col-2 align-items-center"><span class="badge rounded-pill bg-dark py-2 px-2 shadow" style="font-size: 6pt; border: solid 1px black">@SavingType</span></div>
+                        <p class="m-0 pt-2 pb-2 text-white text-left h6 col-5" style="vertical-align: middle;"><strong>@Saving.SavingsName</strong></p>
+                        <div class=" d-flex col-5 align-items-center justify-content-around">
+                            <div class=" d-flex align-items-center col-5"><span class="badge rounded-pill bg-@(CurrencyColor) py-2 px-2 shadow" style="font-size: 8pt; width: 100%; border: solid 1px @(BorderColor); overflow: scroll">@CurrentBalance</span></div>
+                            <div class=" d-flex align-items-center col-5"><span class="badge rounded-pill bg-success py-2 px-2 shadow" style="font-size: 8pt; width: 100%; border: solid 1px darkgreen; overflow: scroll">@SavingsGoal</span></div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        }
+    }
+
+}
+
+<style>
+    #Payee {
+        outline: none;
+    }
+
+    #Payee::Placeholder {
+        color: white;
+    }
+</style>
+
+
+<input type="hidden" asp-for="TransactionID" />
+<input type="hidden" asp-for="TransactionType" />
+<input type="hidden" asp-for="isSpendFromSavings" />
+<input type="hidden" asp-for="SavingID" />
+<input type="hidden" asp-for="SavingName" />
+<input type="hidden" asp-for="TransactionDate" />
+<input type="hidden" asp-for="isIncome" />
+<input type="hidden" asp-for="TransactionAmount" />
+<input type="hidden" asp-for="Category" />
+<input type="hidden" asp-for="Notes" />
+<input type="hidden" asp-for="CategoryID" />
+
+<script>
+
+
+
+</script>

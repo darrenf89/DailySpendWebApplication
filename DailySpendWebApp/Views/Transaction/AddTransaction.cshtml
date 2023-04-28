@@ -22,6 +22,8 @@
         </footer>
     </div>
 </form>
+<div id="myPartialViewDiv">
+</div>
 <div class="fixed-top">
     <div class="d-flex container justify-content-end">
         <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
@@ -29,6 +31,34 @@
 </div>
 
 <script>
+    
+    function OpenModal() {
+        document.getElementById('DatePickerContainter').style.display = 'block';
+    }
+
+    $(document).ready(function () {
+        $.get({
+            url: '/Home/LoadDatePicker/',
+            data: {
+                textElement: 'txtDateInformation',
+                InputElement: 'TransactionDate',
+                DatePattern: 'ddmmmmyyyy',
+                IncludeDay: 'None',
+                Seperator: 'Space'
+            },
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    })
+
+
+
 
   
 

@@ -28,29 +28,30 @@
     }
 
 
-    string txtSavingInformation = "";
-    string SavingColor = "";
+    string txtSavingInformation = "Select Category";
+    string SavingColor = "dark";
     bool isSavingsChecked = false;
     string SavingCategoryDisplay = "none";
-    if (Model.isSpendFromSavings & (Model.SavingName != null | Model.SavingName != ""))
+    if (Model.isSpendFromSavings & Model.SavingName != null & Model.SavingName != "")
     {
         txtSavingInformation = @Model.SavingName;
         SavingColor = "primary";
         isSavingsChecked = true;
         SavingCategoryDisplay = "flex";
-
     }
-    else
+    else if (Model.isSpendFromSavings)
     {
         txtSavingInformation = "Select Category";
         SavingColor = "dark";
+        isSavingsChecked = true;
+        SavingCategoryDisplay = "flex";
     }
 
-    string txtDateInformation = DateTime.Now.ToString("dd MMMM yyyy");
+    string txtDateInformation = "Select Date";
     string DateColor = "dark";
     if(Model.TransactionDate != null)
     {
-        txtSavingInformation = @Model.TransactionDate.GetValueOrDefault().ToString("dd MMMM yyyy");
+        txtDateInformation = @Model.TransactionDate.GetValueOrDefault().ToString("dd MMMM yyyy");
         DateColor = "primary";
     }
 
@@ -152,7 +153,7 @@
                 <input type="hidden" asp-for="CategoryID" />
             </div>
             <div id="divDate" class="border-1 border-top border-dark bg-white">
-                <a onclick="OpenModal()">
+                <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 100%">
                     <div class="d-flex justify-content-between">
                         <div class="text-left">
                             <p class="text-dark ps-2 mb-3 mt-3 h5">Date</p>
@@ -162,7 +163,7 @@
                         </div>
                         <input type="hidden" asp-for="TransactionDate" />
                     </div>
-                </a>
+                </button>
             </div>
             <div id="divFromSaving" class="d-flex flex-column border-1 border-top border-dark bg-white">
                 <div class="d-flex form-check form-switch align-items-center justify-content-between p-0">
@@ -173,11 +174,11 @@
                         </label>
                     </div>
                     <div id="divSavingCategory" class="border-1 border-dark mt-3 mb-3" style="display: @(SavingCategoryDisplay)">
-                        <a asp-controller="Transaction" asp-action="SelectSaving" class="bg-white">
+                        <button asp-controller="Transaction" asp-action="SelectSaving" style="background-color: transparent; border: none;" class="col-12 p-0">
                             <div class="text-right d-flex justify-content-between">
                                 <p class="text-@SavingColor pe-2 h5 mb-0" id="txtSavingInformation">@txtSavingInformation</p>
                             </div>
-                        </a>
+                        </button>
                         <input type="hidden" asp-for="SavingName" />
                         <input type="hidden" asp-for="SavingID" />
                     </div>
@@ -190,8 +191,6 @@
             </div>
         </div>
     </div>
-    <div id="myPartialViewDiv">
-    </div>
 </div>
 
 <style>
@@ -201,28 +200,20 @@
 </style>
 
 <script>
-  function OpenModal(){
-        document.getElementById('DatePickerContainter').style.display = 'block';
-    }
 
-    $(document).ready(function () {
-        $.get({
-            url: '/Home/LoadDatePicker/',
-            data: {
-                textElement: 'txtTransactionAmount',
-                InputElement: 'TransactionAmount',
-                DateFormat: 'dd MMMM yyyy'
-            },
+    document.getElementById('TransactionDate').addEventListener('change', function () {
+        console.log('hidden input value changed');
 
-            success: function (result) {
-                $("#myPartialViewDiv").html(result);
-            },
+        if ($('#txtDateInformation').html() == "Select Date") 
+        {
+            $('#txtDateInformation').removeClass().addClass('text-dark mt-3 mb-3 pe-2 h5')
+        }
+        else
+        {
+            $('#txtDateInformation').removeClass().addClass('text-primary mt-3 mb-3 pe-2 h5')
+        }       
 
-            error: function (xhr, exception) {
-                return false;
-            }
-        });
-    })
+    });
 
     $(document).ready(function () {
         $("#divCategory").hover(function () {
