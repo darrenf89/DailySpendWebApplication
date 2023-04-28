@@ -298,6 +298,9 @@ namespace DailySpendWebApp.Controllers
 
             ViewBag.Action = "CategoryBackToTransaction";
             ViewBag.Controller = "Transaction";
+            ViewBag.TypeSortDirection = "down";
+            ViewBag.BalanceSortDirection = "down";
+            ViewBag.NameSortDirection = "down";
 
             TempData["PageHeading"] = "Select a Saving Category!";
 
@@ -321,6 +324,67 @@ namespace DailySpendWebApp.Controllers
 
             return View("AddTransaction", obj);
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("/Transaction/SelectSpecificSaving/{direction?}/{sortcolumn?}")]
+        public IActionResult SelectSavingSort(Transactions obj, string direction, string sortcolumn)
+        {
+            Budgets? Budget = _db.Budgets?
+                .Include(b => b.Savings.Where(s => s.isSavingsClosed == false))
+                .Where(b => b.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            List<Savings> SavingsList = Budget.Savings.ToList();
+
+            if (sortcolumn == "Type")
+            {
+                if (direction == "up")
+                {
+
+                }
+                else if (direction == "down")
+                {
+
+                }
+            }
+            else if(sortcolumn == "Name")
+            {
+                if (direction == "up")
+                {
+
+                }
+                else if (direction == "down")
+                {
+
+                }
+            }
+            else if (sortcolumn == "Balance")
+            {
+                if (direction == "up")
+                {
+
+                }
+                else if (direction == "down")
+                {
+
+                }
+            }
+
+            ViewBag.SavingsList = SavingsList;
+
+            ViewBag.Action = "CategoryBackToTransaction";
+            ViewBag.Controller = "Transaction";
+            ViewBag.TypeSortDirection = "up";
+            ViewBag.BalanceSortDirection = "up";
+            ViewBag.NameSortDirection = "up";
+
+            TempData["PageHeading"] = "Select a Saving Category!";
+
+            return View("SelectSaving", obj);
+        }
+        
 
     }
 }
