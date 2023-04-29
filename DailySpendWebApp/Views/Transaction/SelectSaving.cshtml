@@ -40,9 +40,6 @@
     string BalanceSortDirection = ViewBag.BalanceSortDirection;
     string NameSortDirection = ViewBag.NameSortDirection;
 
-}
-
-@{
     <div id="divTransactionAmount" class="row justify-content-center align-items-center ms-2 me-2 my-3">
         <input id="txtTransactionAmount" type="text" value="@(txtTransactionAmount)" style="cursor: pointer; width: 40%; font-size: 20pt; background: @backgroundcolor" data-type="@(AmountDatatype)" placeholder="@AmountPlaceholder" class="@(AmountColor) pe-2 pt-2 pb-2 text-center rounded-5 shadow border border-@AmountBorderColor border-2" disabled/>
     </diV>
@@ -57,7 +54,6 @@
                 <h6 style="width: 70%" class="text-left mb-0 text-white"><i class="bi bi-sort-@NameSortDirection-alt"></i> Name</h6>
             </button>
         </div>
-
         <div class="col-3 d-flex justify-content-end">
             <button type="submit" style="background-color: transparent; border: none; text-align: left; width: 100%" asp-controller="Transaction" asp-action="SelectSavingSort" asp-route-direction="@BalanceSortDirection" asp-route-sortcolumn="Balance">
                 <h6 style="width: 100%" class="col-12 text-center mb-0 text-white"><i class="bi bi-sort-@BalanceSortDirection-alt"></i> Balance</h6>
@@ -120,7 +116,7 @@
                 CurrencyColor = "danger";
                 BorderColor = "darkred";
                 <div style="background-color: transparent" class="border-2 border-bottom border-muted d-flex justify-content-between col-12">
-                    <button type="button" onclick="CantSelectSaving('@Saving.SavingsName')" style="background-color: transparent; border: none; text-align: left; width: 100%" class="m-0 p-0">
+                    <button type="button" onclick="CantSelectSaving('@Saving.SavingsName', '@CurrentBalance', '@(txtTransactionAmount)')" style="background-color: transparent; border: none; text-align: left; width: 100%" class="m-0 p-0">
                         <div class="d-flex container-fluid align-items-center py-2" style="background-color: #f39b7e">
                             <div class=" d-flex col-3 align-items-center"><span class="badge rounded-pill bg-dark py-2 px-2 shadow" style="font-size: 8pt; border: solid 1px black; width: 70%">@SavingType</span></div>
                             <p class="m-0 pt-2 pb-2 text-white text-left h5 col-6" style="vertical-align: middle;"><strong>@Saving.SavingsName</strong></p>
@@ -152,6 +148,23 @@
 
 }
 
+    <div class="modal" id="CantSelectSavingModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-white">Can't use that Saving Category!</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="CantSelectSavinginfo">
+                    </div>
+                </div>
+                <div class="modal-footer bg-primary p-1 border-top border-primary border-3">
+                    <button type="button" id="btnCancelCantSelectSaving" class="btn btn-success" data-bs-dismiss="IncomesModal" onclick="CancelCantSelectSaving()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <style>
     #Payee {
         outline: none;
@@ -177,6 +190,24 @@
 
 <script>
 
+    function CantSelectSaving(Name, Balance, Amount)
+    {
+        $('#CantSelectSavingModal').show()
+        if (Balance == '£0.00')
+        {
+            var Details = Name + ' doesnt have any money allocated to it, howd you expect to spend money you dont have?!'
+        }
+        else
+        {
+            var Details = Name + ' only has ' + Balance + ' allocated to it so you cant spend ' + Amount + '! Seems Obvious, please select another Savings or dont spend the money'
+        }
+        $('#CantSelectSavinginfo').html(Details)
+        $('#CantSelectSavinginfo').addClass('text-dark')
+    }
 
+    function CancelCantSelectSaving()
+    {
+        $('#CantSelectSavingModal').hide()
+    }
 
 </script>

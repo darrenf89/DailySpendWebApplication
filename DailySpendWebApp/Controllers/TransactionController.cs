@@ -342,33 +342,51 @@ namespace DailySpendWebApp.Controllers
             {
                 if (direction == "up")
                 {
-
+                    SavingsList = Budget.Savings.OrderByDescending(s => s.isRegularSaving).ToList();
+                    ViewBag.TypeSortDirection = "down";
+                    ViewBag.BalanceSortDirection = "down";
+                    ViewBag.NameSortDirection = "down";
                 }
                 else if (direction == "down")
                 {
-
+                    SavingsList = Budget.Savings.OrderBy(s => s.isRegularSaving).ToList();
+                    ViewBag.TypeSortDirection = "up";
+                    ViewBag.BalanceSortDirection = "down";
+                    ViewBag.NameSortDirection = "down";
                 }
             }
             else if(sortcolumn == "Name")
             {
                 if (direction == "up")
                 {
-
+                    SavingsList = Budget.Savings.OrderByDescending(s => s.SavingsName).ToList();
+                    ViewBag.TypeSortDirection = "down";
+                    ViewBag.BalanceSortDirection = "down";
+                    ViewBag.NameSortDirection = "down";
                 }
                 else if (direction == "down")
                 {
-
+                    SavingsList = Budget.Savings.OrderBy(s => s.SavingsName).ToList();
+                    ViewBag.TypeSortDirection = "down";
+                    ViewBag.BalanceSortDirection = "down";
+                    ViewBag.NameSortDirection = "up";
                 }
             }
             else if (sortcolumn == "Balance")
             {
                 if (direction == "up")
                 {
-
+                    SavingsList = Budget.Savings.OrderByDescending(s => s.CurrentBalance).ToList();
+                    ViewBag.TypeSortDirection = "down";
+                    ViewBag.BalanceSortDirection = "down";
+                    ViewBag.NameSortDirection = "down";
                 }
                 else if (direction == "down")
                 {
-
+                    SavingsList = Budget.Savings.OrderBy(s => s.CurrentBalance).ToList();
+                    ViewBag.TypeSortDirection = "down";
+                    ViewBag.BalanceSortDirection = "up";
+                    ViewBag.NameSortDirection = "down";
                 }
             }
 
@@ -376,9 +394,6 @@ namespace DailySpendWebApp.Controllers
 
             ViewBag.Action = "CategoryBackToTransaction";
             ViewBag.Controller = "Transaction";
-            ViewBag.TypeSortDirection = "up";
-            ViewBag.BalanceSortDirection = "up";
-            ViewBag.NameSortDirection = "up";
 
             TempData["PageHeading"] = "Select a Saving Category!";
 
