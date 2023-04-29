@@ -14,7 +14,7 @@ using System.Globalization;
 
 namespace DailySpendWebApp.Services
 {
-    public class ProductTools: IProductTools
+    public class ProductTools : IProductTools
     {
         public class DefaultCategories
         {
@@ -29,10 +29,10 @@ namespace DailySpendWebApp.Services
 
         private readonly ApplicationDBContext _db;
 
-        public ProductTools( ApplicationDBContext db)
+        public ProductTools(ApplicationDBContext db)
         {
             _db = db;
-        }        
+        }
 
         public string UpdateBudgetCreateSavings(int BudgetID)
         {
@@ -40,8 +40,8 @@ namespace DailySpendWebApp.Services
             {
                 return "No Budget Detected";
             }
-            else 
-            { 
+            else
+            {
 
                 Budgets? Budget = _db.Budgets?
                     .Include(x => x.Savings.Where(s => s.isSavingsClosed == false))
@@ -52,11 +52,11 @@ namespace DailySpendWebApp.Services
 
                 foreach (Savings Saving in Budget.Savings)
                 {
-                    if(Saving.isRegularSaving)
+                    if (Saving.isRegularSaving)
                     {
                         if (!Saving.isDailySaving)
                         {
-                            if(Saving.SavingsType == "TargetAmount")
+                            if (Saving.SavingsType == "TargetAmount")
                             {
                                 //Recalculate Date and daily amount
                                 Saving.RegularSavingValue = Saving.PeriodSavingValue / DaysBetweenPay;
@@ -67,7 +67,7 @@ namespace DailySpendWebApp.Services
                                 DateTime Today = DateTime.UtcNow;
                                 Saving.GoalDate = Today.AddDays(NumberOfDays);
 
-                            }   
+                            }
                             else if (Saving.SavingsType == "SavingsBuilder")
                             {
                                 //Recalculate daily amount.
@@ -78,7 +78,7 @@ namespace DailySpendWebApp.Services
                     _db.SaveChanges();
                 }
             }
-            return "OK"; 
+            return "OK";
         }
 
         public string UpdateBudgetCreateIncome(int BudgetID)
@@ -114,8 +114,8 @@ namespace DailySpendWebApp.Services
                                 DateTime NextIncomeDate = CalculateNextDate(Income.DateOfIncomeEvent, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
                                 DateTime NextPayDay = Budget.NextIncomePayday ?? default;
                                 DateTime PayDayAfterNext = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
-                                if (NextIncomeDate.Date < NextPayDay.Date) 
-                                { 
+                                if (NextIncomeDate.Date < NextPayDay.Date)
+                                {
                                     while (NextIncomeDate.Date < NextPayDay.Date)
                                     {
                                         Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance + Income.IncomeAmount;
@@ -126,7 +126,7 @@ namespace DailySpendWebApp.Services
                                 }
                                 else
                                 {
-                                    while (NextIncomeDate.Date > PayDayAfterNext) 
+                                    while (NextIncomeDate.Date > PayDayAfterNext)
                                     {
                                         NextPayDay = PayDayAfterNext;
                                         PayDayAfterNext = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
@@ -176,7 +176,7 @@ namespace DailySpendWebApp.Services
                             Income.isIncomeAddedToBalance = true;
                         }
                     }
-                    
+
                 }
             }
             _db.SaveChanges();
@@ -199,11 +199,11 @@ namespace DailySpendWebApp.Services
                     .Where(x => x.BudgetID == BudgetID)
                     .FirstOrDefault();
 
-                int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date  - DateTime.Today.Date).Days;
+                int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
 
                 foreach (Savings Saving in Budget.Savings)
                 {
-                    if(Saving.isRegularSaving & Saving.SavingsType == "SavingsBuilder")
+                    if (Saving.isRegularSaving & Saving.SavingsType == "SavingsBuilder")
                     {
                         DailySavingOutgoing += Saving.RegularSavingValue ?? 0;
                         PeriodTotalSavingOutgoing += ((Saving.RegularSavingValue ?? 0) * DaysToPayDay);
@@ -217,7 +217,7 @@ namespace DailySpendWebApp.Services
                         {
                             PeriodTotalSavingOutgoing += ((Saving.RegularSavingValue ?? 0) * DaysToSaving);
                         }
-                        else 
+                        else
                         {
                             PeriodTotalSavingOutgoing += ((Saving.RegularSavingValue ?? 0) * DaysToPayDay);
                         }
@@ -264,14 +264,14 @@ namespace DailySpendWebApp.Services
                     else
                     {
                         PeriodTotalBillOutgoing += (Bill.RegularBillValue ?? 0) * DaysToPayDay;
-                    }                  
-                    
+                    }
+
                 }
 
                 Budget.DailyBillOutgoing = DailyBillOutgoing;
                 Budget.LeftToSpendBalance = Budget.LeftToSpendBalance - PeriodTotalBillOutgoing;
                 Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance - PeriodTotalBillOutgoing;
-                
+
             }
             _db.SaveChanges();
             return "OK";
@@ -284,20 +284,20 @@ namespace DailySpendWebApp.Services
 
             if (Type == "Everynth")
             {
-                status = CalculateNextDateEverynth(ref NextDate,  LastDate, Value,  Duration);
+                status = CalculateNextDateEverynth(ref NextDate, LastDate, Value, Duration);
             }
             else if (Type == "WorkingDays")
             {
-                status = CalculateNextDateWorkingDays(ref NextDate,  LastDate,  Value);
+                status = CalculateNextDateWorkingDays(ref NextDate, LastDate, Value);
             }
             else if (Type == "OfEveryMonth")
             {
-                status = CalculateNextDateOfEveryMonth(ref NextDate,  LastDate,  Value);
+                status = CalculateNextDateOfEveryMonth(ref NextDate, LastDate, Value);
             }
             else if (Type == "LastOfTheMonth")
             {
-                status = CalculateNextDateLastOfTheMonth(ref NextDate,  LastDate, Duration);
-            } 
+                status = CalculateNextDateLastOfTheMonth(ref NextDate, LastDate, Duration);
+            }
 
             if (status == "OK")
             {
@@ -307,7 +307,7 @@ namespace DailySpendWebApp.Services
             {
                 throw new Exception(status);
             }
-            
+
         }
 
         public string CalculateNextDateEverynth(ref DateTime NextDate, DateTime LastDate, int Value, string? Duration)
@@ -336,7 +336,7 @@ namespace DailySpendWebApp.Services
 
                 NextDate = LastDate.AddDays(DaysBetween);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return ex.Message;
             }
@@ -392,9 +392,9 @@ namespace DailySpendWebApp.Services
 
                 NextDate = NextCurrentDate.Date;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                return ex.Message;            
+                return ex.Message;
             }
 
             return "OK";
@@ -406,9 +406,9 @@ namespace DailySpendWebApp.Services
             {
                 NextDate = LastDate.AddMonths(1);
             }
-            catch(Exception ex) 
-            { 
-                return ex.Message; 
+            catch (Exception ex)
+            {
+                return ex.Message;
             }
 
             return "OK";
@@ -467,7 +467,7 @@ namespace DailySpendWebApp.Services
         }
 
         public string CreateDefaultCategories(int BudgetID)
-        {           
+        {
 
             string fileName = "wwwroot/JSON/DefaultCategories.json";
             string jsonString = System.IO.File.ReadAllText(fileName, Encoding.UTF8);
@@ -480,7 +480,7 @@ namespace DailySpendWebApp.Services
 
             _db.Attach(Budget);
 
-            foreach(var category in DefaultCategories) 
+            foreach (var category in DefaultCategories)
             {
                 Categories HeaderCat = new Categories();
                 HeaderCat.CategoryName = category.CatName;
@@ -488,7 +488,7 @@ namespace DailySpendWebApp.Services
                 Budget.Categories.Add(HeaderCat);
 
                 _db.SaveChanges();
-                HeaderCat.CategoryGroupID =  HeaderCat.CategoryID;
+                HeaderCat.CategoryGroupID = HeaderCat.CategoryID;
 
                 foreach (var item in category.SubCategories)
                 {
@@ -497,7 +497,7 @@ namespace DailySpendWebApp.Services
                     SubCat.isSubCategory = true;
                     SubCat.CategoryGroupID = HeaderCat.CategoryID;
                     Budget.Categories.Add(SubCat);
-                    
+
                 }
                 _db.SaveChanges();
             }
@@ -526,6 +526,34 @@ namespace DailySpendWebApp.Services
 
             return nfi;
         }
-    }
+
+        public string TransactTransaction(ref Transactions T, int? BudgetID)
+        {
+            Budgets? Budget = _db.Budgets?
+                .Where(x => x.BudgetID == BudgetID)
+                .FirstOrDefault();
+
+            if (BudgetID == 0)
+            {
+                return "Couldnt find budget";
+            }
+            else 
+            {
+
+                if (T.isIncome)
+                {
+
+                }
+                else
+                {
+
+                }
+                return "OK";
+            }
+
+        }
+
+
+}
 
 }

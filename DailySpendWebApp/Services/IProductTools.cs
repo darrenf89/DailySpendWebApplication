@@ -19,6 +19,7 @@ namespace DailySpendWebApp.Services
         public string CalculateNextDateLastOfTheMonth(ref DateTime NextDate, DateTime LastDate, string? Duration);
         public string CreateDefaultCategories(int BudgetID);
         public CultureInfo LoadCurrencySetting(int BudgetID);
+        public string TransactTransaction(ref Transactions T, int? BudgetID);
 
     }
 }

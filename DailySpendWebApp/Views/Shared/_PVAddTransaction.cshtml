@@ -32,19 +32,20 @@
     string SavingColor = "dark";
     bool isSavingsChecked = false;
     string SavingCategoryDisplay = "none";
-    if (Model.isSpendFromSavings & Model.SavingName != null & Model.SavingName != "")
-    {
-        txtSavingInformation = @Model.SavingName;
-        SavingColor = "primary";
-        isSavingsChecked = true;
-        SavingCategoryDisplay = "flex";
-    }
-    else if (Model.isSpendFromSavings)
+    if (Model.isSpendFromSavings & (Model.SavingName == null | Model.SavingName == ""))
     {
         txtSavingInformation = "Select Category";
         SavingColor = "dark";
         isSavingsChecked = true;
         SavingCategoryDisplay = "flex";
+    }
+    else if (Model.isSpendFromSavings)
+    {
+        txtSavingInformation = @Model.SavingName;
+        SavingColor = "primary";
+        isSavingsChecked = true;
+        SavingCategoryDisplay = "flex";
+
     }
 
     string txtDateInformation = "Select Date";
@@ -149,8 +150,8 @@
                         </div>
                     </div>                    
                 </button>
-                <input type="hidden" asp-for="Category" />
-                <input type="hidden" asp-for="CategoryID" />
+                <input type="hidden" asp-for="Category" value="@Model.Category"/>
+                <input type="hidden" asp-for="CategoryID" value="@Model.CategoryID" />
             </div>
             <div id="divDate" class="border-1 border-top border-dark bg-white">
                 <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 100%">
@@ -161,7 +162,7 @@
                         <div class="text-right">
                             <p class="text-@DateColor mt-3 mb-3 pe-2 h5" id="txtDateInformation">@txtDateInformation</p>
                         </div>
-                        <input type="hidden" asp-for="TransactionDate" />
+                        <input type="hidden" asp-for="TransactionDate" value="@Model.TransactionDate" />
                     </div>
                 </button>
             </div>
@@ -179,18 +180,20 @@
                                 <p class="text-@(SavingColor) pe-2 h5 m-0" id="txtSavingInformation">@(txtSavingInformation)</p>
                             </div>
                         </button>
-                        <input type="hidden" asp-for="SavingName" />
-                        <input type="hidden" asp-for="SavingID" />
+                        <input type="hidden" asp-for="SavingName" value="@Model.SavingName" />
+                        <input type="hidden" asp-for="SavingID" value="@Model.SavingID" />
                     </div>
                 </div>
             </div>
             <div id="divNote" class="mt-5 mb-4 align-items-start">
                 <div class="d-flex ms-2 me-2"> 
-                    <input asp-for="Notes" type="text" class="col-12 p-0 pt-2 m-0 border-bottom border-3 border-primary text-muted bg-white text-left h3" placeholder="Enter a note:" />
+                    <input asp-for="Notes" type="text" class="col-12 p-0 pt-2 m-0 border-bottom border-3 border-primary text-muted bg-white text-left h3" placeholder="Enter a note:" value="@Model.Notes" />
                 </div>                
             </div>
         </div>
     </div>
+    <div class="text-cneter p-4"><strong><span class="text-danger" asp-validation-for="TransactionID"></span></strong></div>
+    
 </div>
 
 <style>
@@ -200,6 +203,14 @@
 </style>
 
 <script>
+
+    function ClearSelectedSaving()
+    {
+        $('#SavingName').val('')
+        $('#SavingID').val('')
+        $('#txtSavingInformation').html('Select Category')
+        $('#txtSavingInformation').removeClass().addClass('text-dark pe-2 h5 m-0')
+    }
 
     document.getElementById('TransactionDate').addEventListener('change', function () {
         console.log('hidden input value changed');
@@ -263,6 +274,7 @@
     function LoadisSpendFromSavingsFalse()
     {
         document.getElementById('divSavingCategory').style.display = 'none'
+        ClearSelectedSaving()
     }
 
     function LoadisSpendFromSavingsTrue() {
@@ -270,6 +282,7 @@
     }
 
     function HandleTransactionRadioClick() {
+        ClearSelectedSaving()
         if (document.getElementById('rdbOutgoing').checked) {
             LoadTransactionOutgoing();
             NegativeformatCurrency($("#txtTransactionAmount"))

@@ -7,21 +7,21 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int TransactionID { get; set; }
-        public string? TransactionType { get; set; }
         public bool isSpendFromSavings { get; set; } = false;
         [ForeignKey("Savings")]
         public int? SavingID { get; set; }
-        public string SavingName { get; set; } = "";
+        public string? SavingName { get; set; } = "";
         public DateTime? TransactionDate { get; set; }
+        public DateTime? WhenAdded { get; set; } = DateTime.UtcNow;
         public bool isIncome { get; set; } = false;
-        public decimal TransactionAmount { get; set; }
-        public string Category { get; set; } = "";
-        public string Payee { get; set; } = "";
+        public decimal? TransactionAmount { get; set; }
+        public string? Category { get; set; } = "";
+        public string? Payee { get; set; } = "";
         public string? Notes { get; set; }
         [ForeignKey("Categories")]
-        public int CategoryID { get; set; }
-        public bool isTransactionCreated { get; set; } = false;
-        [NotMapped]  
-        public List<string> PayeeList { get; set; }
+        public int? CategoryID { get; set; }
+        public bool isTransacted { get; set; } = false;
+        [NotMapped]
+        public List<string> PayeeList { get; set; } = new List<string>();
     }
 }

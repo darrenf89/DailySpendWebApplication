@@ -17,6 +17,7 @@ using static System.Net.Mime.MediaTypeNames;
 using DailySpendWebApp.Services;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Transactions;
 
 namespace DailySpendWebApp.Controllers
 {
@@ -47,22 +48,107 @@ namespace DailySpendWebApp.Controllers
             Thread.CurrentThread.CurrentCulture = nfi;
         }
 
-        public IActionResult AddTransaction(Transactions obj)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateTransactionSavingsAdd(Transactions obj)
         {
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateTransactionSavingsSubtract(Transactions obj)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateTransaction(Transactions obj)
+        {
+            if(obj.TransactionAmount == null | obj.TransactionAmount == 0)
+            {
+                ModelState.AddModelError("TransactionID", "* You cant add a Zero value transaction ... I assume you meant to spend some money?!");
+            }
+            else if(obj.TransactionDate == null | obj.TransactionDate.ToString() == "")
+            {
+                ModelState.AddModelError("TransactionID", "* You have to enter a date for the transaction. Dont worry it can be today, yesterday or tomoorow ... or any day just enter one!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("AddTransaction", obj);
+            }
+
             Budgets? Budget = _db.Budgets?
                 .Include(x => x.Transactions)
+                .Include(x => x.Savings)
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefault();
 
             _db.Attach(Budget);
 
             Transactions T = new Transactions();
-
             Budget.Transactions.Add(T);
+
+            T = obj;
+
+            if (T.isIncome)
+            {
+                T.Category = null;
+                T.CategoryID = 0;
+            }
+
+            if(T.isSpendFromSavings)
+            {
+                Savings S = Budget.Savings.Where(s => s.SavingID == T.SavingID).First();
+                ViewBag.SavingsGoal = String.Format("{0:c}", S.SavingsGoal);
+                ViewBag.CurrentBalance = String.Format("{0:c}", S.CurrentBalance);
+                if (T.isIncome)
+                {
+                    if(S.SavingsGoal != null | S.SavingsGoal != 0)
+                    {
+                        ViewBag.Stage = "ConfirmSavingSpendIncome";
+                    }
+                    
+                }
+                else
+                {
+                    if (S.SavingsGoal != null | S.SavingsGoal != 0)
+                    {
+                        ViewBag.Stage = "ConfirmSavingSpendOutcome";
+                    }
+                }
+                
+                return View("AddTransaction", obj);
+            }
+            else
+            {
+                T.SavingID = 0;
+                T.SavingName = null;
+            }
+
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+            DateOnly TransactionDate = DateOnly.FromDateTime(T.TransactionDate ?? DateTime.Now);
+
+            if (TransactionDate <= currentDate)
+            {
+                string status = _pt.TransactTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                if (status != "OK")
+                {
+                    ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
+                    return View("AddTransaction", obj);
+                }
+            }
 
             _db.SaveChanges();
 
-            obj = T;            
+            TempData["PageHeading"] = "Add a Transaction!";
+            return RedirectToAction("Index", "Home");
+
+        }
+
+        public IActionResult AddTransaction(Transactions obj)
+        {           
 
             TempData["PageHeading"] = "Add a Transaction!";
             return View(obj);
@@ -144,16 +230,6 @@ namespace DailySpendWebApp.Controllers
         public IActionResult CreatePayee(Transactions obj)
         {
 
-            Transactions? T = _db.Transactions
-                .Where(x => x.TransactionID == obj.TransactionID)
-                .FirstOrDefault();
-
-            _db.Attach(T);
-
-            T.Payee = obj.Payee;
-
-            _db.SaveChanges();
-
             return View("AddTransaction", obj);
         }
 
@@ -201,10 +277,7 @@ namespace DailySpendWebApp.Controllers
             foreach (Transactions T in Budget.Transactions)
             {
                 T.Payee = "";
-                if (!T.isTransactionCreated & T.TransactionID != obj.TransactionID)
-                {
-                    _db.Remove(T);
-                }
+                _db.SaveChanges();
             }
 
             _db.SaveChanges();
