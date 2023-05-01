@@ -52,6 +52,18 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateTransactionSavingsAdd(Transactions obj)
         {
+
+            Budgets? Budget = _db.Budgets?
+                .Include(x => x.Transactions)
+                .Include(x => x.Savings)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            Transaction T = 
+
+            string status = _pt.TransactSavingsTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
             return RedirectToAction("Index", "Home");
         }
 
@@ -59,6 +71,7 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateTransactionSavingsSubtract(Transactions obj)
         {
+            
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
@@ -253,8 +266,6 @@ namespace DailySpendWebApp.Controllers
                 obj.Category = T.Category ?? "";
                 obj.CategoryID = T.CategoryID;
             }
-
-
 
             return View("AddTransaction", obj);
         }

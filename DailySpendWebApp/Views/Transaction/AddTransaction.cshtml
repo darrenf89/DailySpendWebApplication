@@ -4,11 +4,41 @@
     ViewData["Title"] = "Add a Transaction";
     Layout = "~/Views/Shared/_LayoutForHomeLogon.cshtml";
     string TransactionConfirmationAmount = String.Format("{0:c}", Model.TransactionAmount);
+    string CurrentBalanceConfirmation = "";
+    if(@ViewBag.CurrentBalance != null)
+    {
+        CurrentBalanceConfirmation = Html.Raw(@ViewBag.CurrentBalance);
+    }
+
+    string SavingsGoalConfirmation = "";
+    if(@ViewBag.SavingsGoal != null)
+    {
+        SavingsGoalConfirmation = Html.Raw(@ViewBag.SavingsGoal);
+    }
 }
 
 <form method="post">
     <input type="hidden" asp-for="TransactionID" />
     <input type="hidden" id="hdnServerDate" value='@ViewBag.CurrentDate' />
+    <div class="modal" id="ConfirmSavingModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary p-3 pt-3 pb-2 border-bottom border-primary border-3">
+                    <h5 class="modal-title text-white">What should we do with you the Savings?</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="ConfirmSavinginfo">
+                        <p id="ConfirmSavinginfop1"></p>
+                        <p id="ConfirmSavinginfop2"></p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-primary p-1 border-top border-primary border-3">
+                    <button asp-action="CreateTransactionSavingsAdd" asp-controller="Transaction" type="submit" id="btnSavingsAdd" class="btn btn-danger"></button>
+                    <button asp-action="CreateTransactionSavingsSubtract" asp-controller="Transaction" type="submit" id="btnSavingsSubtract" class="btn btn-success"></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="d-flex flex-column align-items-center" style="background-color: transparent;">
         <div class="d-flex container align-items-center justify-content-center mt-4 pt-2">
             <h3 class="text-white">@TempData["PageHeading"]</h3>
@@ -17,25 +47,6 @@
             <img src="~/img/logoFiles/ForWeb/png/JustlogoOrange.png" class="shadow rounded-circle" style="max-width: 75px; background-color: transparent;" />
         </div>        
         <partial name="_PVAddTransaction"></partial>
-        <div class="modal" id="ConfirmSavingModal">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary p-3 pt-3 pb-2 border-bottom border-primary border-3">
-                        <h5 class="modal-title text-white">What should we do with you the Savings?</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div id="ConfirmSavinginfo">
-                            <p id="ConfirmSavinginfop1"></p>
-                            <p id="ConfirmSavinginfop2"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer bg-primary p-1 border-top border-primary border-3">
-                        <button asp-action="CreateTransactionSavingsAdd" asp-controller="Transaction" type="submit" id="btnSavingsAdd" class="btn btn-danger"></button>
-                        <button asp-action="CreateTransactionSavingsSubtract" asp-controller="Transaction" type="submit" id="btnSavingsSubtract" class="btn btn-success"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <footer class="sticky-bottom m-0 p-0" style="width: 100%">
             <div class="d-flex flex-column align-items-center justify-content-center">
                 <button asp-action="CreateTransaction" asp-controller="Transaction" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Transaction</button>
@@ -78,7 +89,7 @@
         });
     })
 
-    $(document).ready(CheckStage())
+    document.addEventListener("load", CheckStage());
 
     function CheckStage() 
     {
@@ -92,12 +103,12 @@
             $('#btnSavingsSubtract').html('Increase Goal Amount');
         }
 
-        if ('@ViewBag.Stage' == 'ConfirmSavingSpendOutcome') {
+        if ('@ViewBag.Stage' == 'ConfirmSavingSpendOutcome') 
+        {
             var TransactionAmount = '@TransactionConfirmationAmount'
             $('#ConfirmSavingModal').show();
-            $('#ConfirmSavingModal').html('');
             $('#ConfirmSavinginfop1').html('You are spending ' + TransactionAmount + ' from @Model.SavingName how would you like us to handle this?');
-            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @ViewBag.CurrentBalance and a goal is @ViewBag.SavingsGoal. Do you want to decrease the Saving Goal by the same amount as the Balance?');
+            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @CurrentBalanceConfirmation and a goal is @SavingsGoalConfirmation. Do you want to decrease the Saving Goal by the same amount as the Balance?');
             $('#btnSavingsAdd').html('Maintain Goal');
             $('#btnSavingsSubtract').html('Increase Goal Amount');
         }
