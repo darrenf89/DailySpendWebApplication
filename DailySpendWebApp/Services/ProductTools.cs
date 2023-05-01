@@ -533,27 +533,47 @@ namespace DailySpendWebApp.Services
                 .Where(x => x.BudgetID == BudgetID)
                 .FirstOrDefault();
 
+            _db.Attach(Budget);
+
             if (BudgetID == 0)
             {
                 return "Couldnt find budget";
             }
-            else 
+            else
             {
 
                 if (T.isIncome)
                 {
-
+                    Budget.BankBalance += T.TransactionAmount;
+                    Budget.MoneyAvailableBalance += T.TransactionAmount;
+                    Budget.LeftToSpendBalance += T.TransactionAmount;
+                    //Recalculate how much you have left to spen
+                    int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
+                    Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
                 }
                 else
                 {
-
+                    Budget.BankBalance -= T.TransactionAmount;
+                    Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                    Budget.LeftToSpendBalance -= T.TransactionAmount;
+                    Budget.LeftToSpendDailyAmount -= T.TransactionAmount ?? 0;
                 }
-                return "OK";
+
+                T.isTransacted = true;
+                _db.SaveChanges();
+
+                return "OK";                
             }
 
         }
 
+        public string TransactSavingsTransaction(ref Transactions T, int? BudgetID)
+        {
+            return "OK";
+        }
 
-}
+
+
+    }
 
 }

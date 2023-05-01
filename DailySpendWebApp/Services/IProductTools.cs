@@ -20,6 +20,7 @@ namespace DailySpendWebApp.Services
         public string CreateDefaultCategories(int BudgetID);
         public CultureInfo LoadCurrencySetting(int BudgetID);
         public string TransactTransaction(ref Transactions T, int? BudgetID);
+        public string TransactSavingsTransaction(ref Transactions T, int? BudgetID);
 
     }
 }

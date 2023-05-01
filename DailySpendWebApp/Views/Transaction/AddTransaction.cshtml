@@ -7,13 +7,13 @@
     string CurrentBalanceConfirmation = "";
     if(@ViewBag.CurrentBalance != null)
     {
-        CurrentBalanceConfirmation = Html.Raw(@ViewBag.CurrentBalance);
+        CurrentBalanceConfirmation = @ViewBag.CurrentBalance;
     }
 
     string SavingsGoalConfirmation = "";
     if(@ViewBag.SavingsGoal != null)
     {
-        SavingsGoalConfirmation = Html.Raw(@ViewBag.SavingsGoal);
+        SavingsGoalConfirmation = @ViewBag.SavingsGoal;
     }
 }
 
@@ -108,7 +108,7 @@
             var TransactionAmount = '@TransactionConfirmationAmount'
             $('#ConfirmSavingModal').show();
             $('#ConfirmSavinginfop1').html('You are spending ' + TransactionAmount + ' from @Model.SavingName how would you like us to handle this?');
-            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @CurrentBalanceConfirmation and a goal is @SavingsGoalConfirmation. Do you want to decrease the Saving Goal by the same amount as the Balance?');
+            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to decrease the Saving Goal by the same amount as the Balance?');
             $('#btnSavingsAdd').html('Maintain Goal');
             $('#btnSavingsSubtract').html('Increase Goal Amount');
         }

@@ -61,7 +61,10 @@ namespace DailySpendWebApp.Controllers
 
             _db.Attach(Budget);
 
-            Transaction T = 
+            Transactions T = Budget.Transactions.Where(t => t.TransactionID == obj.TransactionID).First();
+            T.SavingsSpendType = obj.SavingsSpendType;
+
+            _db.SaveChanges();
 
             string status = _pt.TransactSavingsTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
             return RedirectToAction("Index", "Home");
@@ -151,6 +154,10 @@ namespace DailySpendWebApp.Controllers
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
                     return View("AddTransaction", obj);
                 }
+            }
+            else
+            {
+                T.isTransacted = false;
             }
 
             _db.SaveChanges();
