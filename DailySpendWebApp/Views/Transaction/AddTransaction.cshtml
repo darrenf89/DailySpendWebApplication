@@ -97,9 +97,9 @@
         {
             var TransactionAmount = '@TransactionConfirmationAmount'
             $('#ConfirmSavingModal').show();
-            $('#ConfirmSavinginfop1').html('You are adding ' + TransactionAmount + ' directly into @Model.SavingName how would you like us to handle this?');
-            $('#ConfirmSavinginfop2').html('Currently the savings goal is @ViewBag.SavingsGoal, would you like to increase the goal by the same amount as the Transaction or leave it as is?');
-            $('#btnSavingsAdd').html('Maintain Goal');
+            $('#ConfirmSavinginfop1').html('You are adding ' + TransactionAmount + ' into your Saving, @Model.SavingName how would you like us to handle this?');
+            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to increase the Saving Goal by the same amount as the Balance? Or do you want to keep the gaol the same and recalculate how you will achieve it?');
+            $('#btnSavingsAdd').html('Keep The Same');
             $('#btnSavingsSubtract').html('Increase Goal Amount');
         }
 
@@ -108,9 +108,9 @@
             var TransactionAmount = '@TransactionConfirmationAmount'
             $('#ConfirmSavingModal').show();
             $('#ConfirmSavinginfop1').html('You are spending ' + TransactionAmount + ' from @Model.SavingName how would you like us to handle this?');
-            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to decrease the Saving Goal by the same amount as the Balance?');
-            $('#btnSavingsAdd').html('Maintain Goal');
-            $('#btnSavingsSubtract').html('Increase Goal Amount');
+            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to decrease the Saving Goal by the same amount as the Balance? Or do you want to keep the gaol the same and recalculate how you will achieve it?');
+            $('#btnSavingsAdd').html('Keep The Same');
+            $('#btnSavingsSubtract').html('Decrease Goal');
         }
     }
 

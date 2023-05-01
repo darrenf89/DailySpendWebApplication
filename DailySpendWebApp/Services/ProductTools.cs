@@ -569,10 +569,134 @@ namespace DailySpendWebApp.Services
 
         public string TransactSavingsTransaction(ref Transactions T, int? BudgetID)
         {
+            Budgets? Budget = _db.Budgets?
+               .Include(x => x.Savings)
+               .Where(x => x.BudgetID == BudgetID)
+               .FirstOrDefault();
+
+            int TransactionsSavingsID = T.SavingID ?? 0;
+
+            Savings S = Budget.Savings.Where(s => s.SavingID == TransactionsSavingsID).First();
+
+            _db.Attach(Budget);
+
+            if (BudgetID == 0)
+            {
+                return "Couldnt find budget";
+            }
+            else
+            {
+                if (T.SavingsSpendType == "UpdateValues")
+                {
+                    if (T.isIncome)
+                    {
+                        Budget.BankBalance += T.TransactionAmount;
+                        Budget.MoneyAvailableBalance += T.TransactionAmount;
+                        S.CurrentBalance += T.TransactionAmount;
+                        S.LastUpdatedValue = T.TransactionAmount;
+                        S.LastUpdatedDate = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        Budget.BankBalance -= T.TransactionAmount;
+                        Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                        S.CurrentBalance -= T.TransactionAmount;
+                        S.LastUpdatedValue = T.TransactionAmount;
+                        S.LastUpdatedDate = DateTime.UtcNow;
+                    }
+
+                    _db.SaveChanges();
+
+                    //Update Regular Saving Value
+                    RecalculateRegularSavingFromTransaction(ref S);
+                    
+                }
+                else if (T.SavingsSpendType == "MaintainValues")
+                {
+                    if (T.isIncome)
+                    {
+                        Budget.BankBalance += T.TransactionAmount;
+                        Budget.MoneyAvailableBalance += T.TransactionAmount;
+                        S.CurrentBalance += T.TransactionAmount;
+                        S.SavingsGoal += T.TransactionAmount;
+                        S.LastUpdatedValue = T.TransactionAmount;
+                        S.LastUpdatedDate = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        Budget.BankBalance -= T.TransactionAmount;
+                        Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                        S.CurrentBalance -= T.TransactionAmount;
+                        S.SavingsGoal -= T.TransactionAmount;
+                        S.LastUpdatedValue = T.TransactionAmount;
+                        S.LastUpdatedDate = DateTime.UtcNow;
+                    }
+                }
+                else if (T.SavingsSpendType == "BuildingSaving" | T.SavingsSpendType == "EnvelopeSaving")
+                {
+                    if (T.isIncome)
+                    {
+                        Budget.BankBalance += T.TransactionAmount;
+                        Budget.MoneyAvailableBalance += T.TransactionAmount;
+                        S.CurrentBalance += T.TransactionAmount;
+                        S.LastUpdatedValue = T.TransactionAmount;
+                        S.LastUpdatedDate = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        Budget.BankBalance -= T.TransactionAmount;
+                        Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                        S.CurrentBalance -= T.TransactionAmount;
+                        S.LastUpdatedValue = T.TransactionAmount;
+                        S.LastUpdatedDate = DateTime.UtcNow;
+                    }
+                }
+
+                T.isTransacted = true;
+                _db.SaveChanges();
+
+                return "OK";
+            }
+
+        }
+
+        public string RecalculateRegularSavingFromTransaction(ref Savings S)
+        {
+            if(S.isRegularSaving)
+            {
+                if (S.SavingsType == "TargetAmount")
+                {
+                    CalculateSavingsTargetAmount(ref S);
+                }
+                else if (S.SavingsType == "TargetDate")
+                {
+                    CalculateSavingsTargetDate(ref S);
+                }
+            }
+
             return "OK";
         }
 
+        public string CalculateSavingsTargetAmount(ref Savings S)
+        {
+            decimal? BalanceLeft = S.SavingsGoal - (S.CurrentBalance ?? 0);
+            int NumberOfDays = (int)Math.Ceiling(BalanceLeft / S.RegularSavingValue ?? 0);
 
+            DateTime Today = DateTime.UtcNow;
+            S.GoalDate = Today.AddDays(NumberOfDays);
+
+            return "OK";
+        }
+
+        public string CalculateSavingsTargetDate(ref Savings S)
+        {
+            int DaysToSavingDate = (S.GoalDate.GetValueOrDefault().Date - DateTime.Today.Date).Days;
+            decimal? AmountOutstanding = S.SavingsGoal - S.CurrentBalance;
+
+            S.RegularSavingValue = AmountOutstanding / DaysToSavingDate;
+
+            return "OK";
+        }
 
     }
 

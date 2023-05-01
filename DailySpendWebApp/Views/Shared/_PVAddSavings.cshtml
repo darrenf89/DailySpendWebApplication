@@ -195,7 +195,8 @@
         document.getElementById('txtRegularSavingValue').disabled = false;
         document.getElementById('GoalDate').readOnly = false;
         document.getElementById('GoalDate').style.color = "#333";
-        document.getElementById('ddlSavingsPeriod').disabled = false;
+        document.getElementById('ddlSavingsPeriod').value = 'PerDay'
+        document.getElementById('ddlSavingsPeriod').disabled = true;
         document.getElementById('divCategoryExp').innerHTML = '<p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">For saving goals without any time or target constraints</p><p style="font-size: 10px" class="pb-1 ps-2 pe-2 m-0">Save the same amount each period, as much as you can afford!</p>'
 
     }

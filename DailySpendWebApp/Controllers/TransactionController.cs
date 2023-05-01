@@ -62,11 +62,26 @@ namespace DailySpendWebApp.Controllers
             _db.Attach(Budget);
 
             Transactions T = Budget.Transactions.Where(t => t.TransactionID == obj.TransactionID).First();
-            T.SavingsSpendType = obj.SavingsSpendType;
 
+            T.SavingsSpendType = "UpdateValues";
+
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+            DateOnly TransactionDate = DateOnly.FromDateTime(T.TransactionDate ?? DateTime.Now);
+
+            if (TransactionDate <= currentDate)
+            {
+                string status = _pt.TransactSavingsTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                if (status != "OK")
+                {
+                    ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
+                    return View("AddTransaction", obj);
+                }
+            }
+            else
+            {
+                T.isTransacted = false;
+            }
             _db.SaveChanges();
-
-            string status = _pt.TransactSavingsTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
             return RedirectToAction("Index", "Home");
         }
 
@@ -74,9 +89,39 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateTransactionSavingsSubtract(Transactions obj)
         {
-            
+            Budgets? Budget = _db.Budgets?
+                .Include(x => x.Transactions)
+                .Include(x => x.Savings)
+                .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+                .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            Transactions T = Budget.Transactions.Where(t => t.TransactionID == obj.TransactionID).First();
+
+            T.SavingsSpendType = "MaintainValues";
+
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
+            DateOnly TransactionDate = DateOnly.FromDateTime(T.TransactionDate ?? DateTime.Now);
+
+            if (TransactionDate <= currentDate)
+            {
+                string status = _pt.TransactSavingsTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                if (status != "OK")
+                {
+                    ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
+                    return View("AddTransaction", obj);
+                }
+            }
+            else
+            {
+                T.isTransacted = false;
+            }
+            _db.SaveChanges();
+
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateTransaction(Transactions obj)
@@ -119,23 +164,30 @@ namespace DailySpendWebApp.Controllers
                 Savings S = Budget.Savings.Where(s => s.SavingID == T.SavingID).First();
                 ViewBag.SavingsGoal = String.Format("{0:c}", S.SavingsGoal);
                 ViewBag.CurrentBalance = String.Format("{0:c}", S.CurrentBalance);
-                if (T.isIncome)
+                if(S.isRegularSaving)
                 {
-                    if(S.SavingsGoal != null | S.SavingsGoal != 0)
+                    if (S.SavingsType == "TargetAmount" | S.SavingsType == "TargetDate")
                     {
-                        ViewBag.Stage = "ConfirmSavingSpendIncome";
+                        if (T.isIncome)
+                        {
+                            ViewBag.Stage = "ConfirmSavingSpendIncome";
+                            return View("AddTransaction", obj);
+                        }
+                        else
+                        {
+                            ViewBag.Stage = "ConfirmSavingSpendOutcome";
+                            return View("AddTransaction", obj);
+                        }
                     }
-                    
+                    else
+                    {
+                        T.SavingsSpendType = "BuildingSaving";
+                    }
                 }
                 else
                 {
-                    if (S.SavingsGoal != null | S.SavingsGoal != 0)
-                    {
-                        ViewBag.Stage = "ConfirmSavingSpendOutcome";
-                    }
+                    T.SavingsSpendType = "EnvelopeSaving";
                 }
-                
-                return View("AddTransaction", obj);
             }
             else
             {
@@ -148,12 +200,22 @@ namespace DailySpendWebApp.Controllers
 
             if (TransactionDate <= currentDate)
             {
-                string status = _pt.TransactTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                string status = "OK";
+                if (T.isSpendFromSavings)                
+                {
+                    status = _pt.TransactSavingsTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                }
+                else
+                {
+                    status = _pt.TransactTransaction(ref T, HttpContext.Session.GetInt32("_DefaultBudgetID"));
+                }
+
                 if (status != "OK")
                 {
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
                     return View("AddTransaction", obj);
                 }
+
             }
             else
             {
@@ -162,7 +224,7 @@ namespace DailySpendWebApp.Controllers
 
             _db.SaveChanges();
 
-            TempData["PageHeading"] = "Add a Transaction!";
+            TempData["PageHeading"] = "Transaction Added!";
             return RedirectToAction("Index", "Home");
 
         }
