@@ -143,6 +143,22 @@ public class HomeController : Controller
                     TempData["SavingsName"] = CreatedSaving.SavingsName;
                     TempData["PeriodSavingValue"] = CreatedSaving.PeriodSavingValue;
                 }
+                else if (ReMess == "TransactionCreated")
+                {
+                    var Transaction = _db.Transactions.Where(x => x.TransactionID == id);
+
+                    Transactions? CreatedTransaction = new();
+                    CreatedTransaction = Transaction.FirstOrDefault();
+
+                    string? Amount = String.Format("{0:c}", CreatedTransaction.TransactionAmount);
+                     
+                    if(!CreatedTransaction.isIncome)
+                    {
+                        Amount = "-" + Amount;
+                    }
+
+                    TempData["TransactionAmount"] = Amount;
+                }
 
                     return View(obj);
             }
@@ -185,6 +201,15 @@ public class HomeController : Controller
             SavingsList.Add(saving);
         }
         return PartialView("SavingsTableBudget", SavingsList);
+    }
+
+    public IActionResult AddBudgetStatus()
+    {
+        Budgets obj = _db.Budgets
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        return PartialView("_PVLeftToSpendStatus", obj);
     }
 
 }

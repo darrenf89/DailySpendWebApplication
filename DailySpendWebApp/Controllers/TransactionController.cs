@@ -82,7 +82,7 @@ namespace DailySpendWebApp.Controllers
                 T.isTransacted = false;
             }
             _db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { ReMess = "TransactionCreated", id = T.TransactionID });
         }
 
         [HttpPost]
@@ -119,7 +119,7 @@ namespace DailySpendWebApp.Controllers
             }
             _db.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { ReMess = "TransactionCreated", id = T.TransactionID });
         }
 
         [HttpPost]
@@ -149,9 +149,9 @@ namespace DailySpendWebApp.Controllers
             _db.Attach(Budget);
 
             Transactions T = new Transactions();
-            Budget.Transactions.Add(T);
-
             T = obj;
+            Budget.Transactions.Add(T);
+            _db.SaveChanges();            
 
             if (T.isIncome)
             {
@@ -225,7 +225,7 @@ namespace DailySpendWebApp.Controllers
             _db.SaveChanges();
 
             TempData["PageHeading"] = "Transaction Added!";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { ReMess = "TransactionCreated", id = T.TransactionID});
 
         }
 
@@ -273,7 +273,7 @@ namespace DailySpendWebApp.Controllers
          string SearchString = "%" + obj.Payee + "%" ?? "";
 
             var Budget = await _db.Budgets
-                .Include(x => x.Transactions.Where(t => EF.Functions.Like(t.Payee, SearchString)))
+                .Include(b => b.Transactions.Where(t => EF.Functions.Like(t.Payee ?? "", SearchString)))
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefaultAsync();
 

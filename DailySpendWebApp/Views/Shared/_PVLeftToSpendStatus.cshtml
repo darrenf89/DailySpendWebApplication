@@ -1,0 +1,86 @@
+﻿@model Budgets;
+
+@{
+    ViewData["Title"] = "Home page";
+
+    string StatusColor = "success";
+    if (Model.LeftToSpendDailyAmount <= 0)
+    {
+        StatusColor = "danger";
+    }
+
+    string ArrowDirection = "down";
+    string ArrowColor = "";
+    if (StatusColor == "danger")
+    {
+        ArrowColor = "white";
+    }
+    else
+    {
+        ArrowColor = "danger";
+    }
+
+    if (Model.StartDayDailyAmount > Model.StartPayPeriodDailyAmount)
+    {
+        ArrowDirection = "up";
+        if (StatusColor == "danger")
+        {
+            ArrowColor = "success";
+        }
+        else
+        {
+            ArrowColor = "white";
+        }
+    }
+
+    decimal Width = 100 - Math.Ceiling((((Model.PayPeriodStartSpendTotal - Model.LeftToSpendBalance) / Model.PayPeriodStartSpendTotal) * 100) ?? 100); 
+    decimal DeltaWidth = Math.Ceiling((((Model.PayPeriodStartSpendTotal - Model.LeftToSpendBalance) / Model.PayPeriodStartSpendTotal) * 100) ?? 100);
+    decimal TextWidth = decimal.Subtract(Width, (decimal)15);
+    string LeftToSpendDaily = string.Format("{0:c}", Model.LeftToSpendDailyAmount);
+    string LeftToSpendBalance = string.Format("{0:c}", Model.LeftToSpendBalance);
+    string PayPeriodStartSpendTotal = string.Format("{0:c}", Model.PayPeriodStartSpendTotal);
+    string ZeroAmount = string.Format("{0:c}", 0);
+}
+
+<div>
+    <div class="card text-white bg-@StatusColor my-2 border-dark shadow" style="max-width: 55%; margin-right:auto; margin-left: auto;">
+        <div class="card-body p-2">
+            <div class="d-flex mx-3 justify-content-around align-items-center">
+                <div class="d-flex flex-column col-9 text-left">
+                    <p class="mb-0" style="line-height: 100%">You have</p>
+                    <h1 class="mb-0" style="line-height: 100%">@LeftToSpendDaily</h1>
+                    <p class="pb-0 mb-0" style="line-height: 100%; font-size: 9pt">Left To Spend Today</p>
+                </div>
+                <div class="col-2 justify-content-center">
+                    <i class="bi bi-caret-@ArrowDirection-fill text-@ArrowColor" style="font-size: 2.5rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-4">
+        <h4>This Period's Spend Budget!</h4>
+        <p>Days to Pay: 1</p>
+        <div class="progress mt-2" style="width: 90vw; margin-right:auto; margin-left: 2.5vw;">
+            <div class="progress-bar  bg-success" role="progressbar" style="width: @(Width)vw;" aria-valuenow="@Model.LeftToSpendBalance" aria-valuemin="0" aria-valuemax="@Model.PayPeriodStartSpendTotal"></div>
+            <div class="progress-bar bg-primary" role="progressbar" style="width: @(DeltaWidth)vw;" aria-valuenow="@Model.PayPeriodStartSpendTotal" aria-valuemin="0" aria-valuemax="@Model.PayPeriodStartSpendTotal"></div>
+        </div>
+        <div class="" style="width: 100vw; margin-right:auto; margin-left: auto;">
+            @{
+                if (TextWidth <= 65)
+                {
+                    @:<p class="text-center text-dark p-0 my-0" style="width: 20vw; margin-right:auto; margin-left: 80vw; font-size: 10pt; position: absolute;">@(PayPeriodStartSpendTotal)</p>
+                }
+            }
+            <p class="text-center text-primary p-0 my-0" style="width: 20vw; margin-right:auto; margin-left: @(TextWidth)vw; font-size: 10pt; position: absolute;">@(LeftToSpendBalance)</p>
+            @{
+                if (TextWidth >= 25)
+                {
+                    @:<p class="text-center text-dark p-0 my-0" style="width: 10vw; margin-right:auto; margin-left: 0vw; font-size: 10pt; position: absolute;">@(ZeroAmount)</p>
+                }
+            }
+        </div>
+    </div>
+
+</div>
+
+

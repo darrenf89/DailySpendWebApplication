@@ -8,6 +8,8 @@
 }
 
 <div class="">
+    <div id="BudgetStatus">
+    </div>
     <div id="BudgetInfo">
         <div class="card text-white bg-white mb-3 shadow">
             <div class="card-header p-2 d-flex justify-content-between border-bottom border-primary" style="background-color: #FFCC98;">
@@ -25,10 +27,6 @@
             </div>
         </div>
     </div>
-    <div id="BugetInfo"></div>
-    <div id="TransactionHistory"></div>
-    <div id="BillsInfo"></div>
-    <div id="SavingsInfo"></div>
 </div>
 <div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
     <div class="d-flex">
@@ -76,6 +74,9 @@
         else if (Message == 'EnvolopeSavingCreated') {
             x.innerHTML = "<div><strong>Congrats</strong> you set up <strong>" + '@TempData["SavingsName"]' + "</strong> as an Envolope Saving for <strong>£" + '@TempData["PeriodSavingValue"]' + ".</strong> We will allocate this amount at the start of every pay day to spend during the month.</div>";
         }
+        else if (Message == 'TransactionCreated') {
+            x.innerHTML = "<div><strong>Congrats</strong> you created a transaction for <strong>" + '@TempData["TransactionAmount"]' + "</strong>";
+        }
 
         var y = document.getElementById("snackbar");
         y.className = y.className.replace("alert-success", "");
@@ -97,6 +98,6 @@
 
 @section Scripts{
     <script>
-        //$('#SavingsInfo').load("/Home/AddSavingsTable")
+        $('#BudgetStatus').load("/Home/AddBudgetStatus")
     </script>
 }

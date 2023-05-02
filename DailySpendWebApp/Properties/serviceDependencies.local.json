@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "mssql2": {
-      "secretStore": "LocalSecretsFile",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/darrenfillis-sql-server/databases/DailySpendBudgetWebApp",
-      "type": "mssql.azure",
-      "connectionId": "connectionstrings:DefaultConnectionString",
-      "dynamicId": null
-    },
     "mssql3": {
       "secretStore": "LocalSecretsFile",
       "resourceId": null,

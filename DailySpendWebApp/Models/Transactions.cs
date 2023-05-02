@@ -21,7 +21,7 @@ namespace DailySpendBudgetWebApp.Models
         [ForeignKey("Categories")]
         public int? CategoryID { get; set; }
         public bool isTransacted { get; set; } = false;
-        public string SavingsSpendType { get; set; }
+        public string? SavingsSpendType { get; set; }
         [NotMapped]
         public List<string> PayeeList { get; set; } = new List<string>();
     }

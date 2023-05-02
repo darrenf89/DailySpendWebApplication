@@ -1,10 +1,5 @@
 {
   "dependencies": {
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "connectionstrings:DefaultConnectionString",
-      "dynamicId": null
-    },
     "mssql3": {
       "type": "mssql",
       "connectionId": "MyLocalSQL"

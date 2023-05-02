@@ -18,7 +18,7 @@
 }
 
 <form method="post">
-    <input type="hidden" asp-for="TransactionID" />
+    <input type="hidden" asp-for="TransactionID" value="@Model.TransactionID"/>
     <input type="hidden" id="hdnServerDate" value='@ViewBag.CurrentDate' />
     <div class="modal" id="ConfirmSavingModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -33,8 +33,8 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-primary p-1 border-top border-primary border-3">
-                    <button asp-action="CreateTransactionSavingsAdd" asp-controller="Transaction" type="submit" id="btnSavingsAdd" class="btn btn-danger"></button>
-                    <button asp-action="CreateTransactionSavingsSubtract" asp-controller="Transaction" type="submit" id="btnSavingsSubtract" class="btn btn-success"></button>
+                    <button asp-action="CreateTransactionSavingsAdd" asp-controller="Transaction" type="submit" id="btnSavingsAdd" class="btn btn-warning"></button>
+                    <button asp-action="CreateTransactionSavingsSubtract" asp-controller="Transaction" type="submit" id="btnSavingsSubtract" class="btn btn-info"></button>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
             var TransactionAmount = '@TransactionConfirmationAmount'
             $('#ConfirmSavingModal').show();
             $('#ConfirmSavinginfop1').html('You are adding ' + TransactionAmount + ' into your Saving, @Model.SavingName how would you like us to handle this?');
-            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to increase the Saving Goal by the same amount as the Balance? Or do you want to keep the gaol the same and recalculate how you will achieve it?');
+            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to increase the Saving Goal by the same amount as the Balance? Or do you want to keep the goal the same and recalculate how you will achieve it?');
             $('#btnSavingsAdd').html('Keep The Same');
             $('#btnSavingsSubtract').html('Increase Goal Amount');
         }
@@ -108,7 +108,7 @@
             var TransactionAmount = '@TransactionConfirmationAmount'
             $('#ConfirmSavingModal').show();
             $('#ConfirmSavinginfop1').html('You are spending ' + TransactionAmount + ' from @Model.SavingName how would you like us to handle this?');
-            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to decrease the Saving Goal by the same amount as the Balance? Or do you want to keep the gaol the same and recalculate how you will achieve it?');
+            $('#ConfirmSavinginfop2').html('Currently the savings has a balance of @Html.Raw(CurrentBalanceConfirmation) and a goal is @Html.Raw(SavingsGoalConfirmation). Do you want to decrease the Saving Goal by the same amount as the Balance? Or do you want to keep the goal the same and recalculate how you will achieve it?');
             $('#btnSavingsAdd').html('Keep The Same');
             $('#btnSavingsSubtract').html('Decrease Goal');
         }
