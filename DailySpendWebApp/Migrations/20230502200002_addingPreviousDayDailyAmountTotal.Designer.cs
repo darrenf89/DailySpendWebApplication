@@ -182,7 +182,7 @@ namespace DailySpendWebApp.Migrations
                     b.Property<decimal?>("StartDayDailyAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("StartPayPeriodDailyAmount")
+                    b.Property<decimal?>("StartLtSDailyAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("UserAccountsUserID")

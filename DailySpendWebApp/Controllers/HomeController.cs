@@ -206,6 +206,7 @@ public class HomeController : Controller
     public IActionResult AddBudgetStatus()
     {
         Budgets obj = _db.Budgets
+            .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 

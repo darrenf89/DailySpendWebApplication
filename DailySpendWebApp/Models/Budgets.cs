@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DailySpendWebApp.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DailySpendBudgetWebApp.Models
@@ -25,6 +26,7 @@ namespace DailySpendBudgetWebApp.Models
         public List<Transactions> Transactions { get; set; } = new List<Transactions>();
         public List<Categories> Categories { get; set; } = new List<Categories>();
         public List<Bills> Bills { get; set; } = new List<Bills>();
+        public List<PayPeriodStats> PayPeriodStats { get; set; } = new List<PayPeriodStats>();
         public List<BudgetHstoryLastPeriod> BudgetHistory { get; set; } = new List<BudgetHstoryLastPeriod>();
         public string? CurrencyType { get; set; }
         [DataType(DataType.Currency)]
@@ -33,8 +35,6 @@ namespace DailySpendBudgetWebApp.Models
         public decimal DailySavingOutgoing { get; set; }
         public decimal DailyBillOutgoing { get; set; }
         public decimal LeftToSpendDailyAmount { get; set; }
-        public decimal? StartPayPeriodDailyAmount { get; set; }
         public decimal? StartDayDailyAmount { get; set; }
-        public decimal? PayPeriodStartSpendTotal { get; set; }
     }
 }

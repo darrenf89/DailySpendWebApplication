@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Globalization;
+using DailySpendWebApp.Models;
 
 namespace DailySpendWebApp.Services
 {
@@ -223,10 +224,13 @@ namespace DailySpendWebApp.Services
                         }
 
                     }
+
+                    PeriodTotalSavingOutgoing += Saving.CurrentBalance ?? 0;
                 }
 
                 Budget.DailySavingOutgoing = DailySavingOutgoing;
                 Budget.LeftToSpendBalance = Budget.LeftToSpendBalance - PeriodTotalSavingOutgoing;
+                
 
                 _db.SaveChanges();
 
@@ -265,6 +269,8 @@ namespace DailySpendWebApp.Services
                     {
                         PeriodTotalBillOutgoing += (Bill.RegularBillValue ?? 0) * DaysToPayDay;
                     }
+
+                    PeriodTotalBillOutgoing += Bill.BillCurrentBalance;
 
                 }
 
@@ -530,6 +536,7 @@ namespace DailySpendWebApp.Services
         public string TransactTransaction(ref Transactions T, int? BudgetID)
         {
             Budgets? Budget = _db.Budgets?
+                .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
                 .Where(x => x.BudgetID == BudgetID)
                 .FirstOrDefault();
 
@@ -550,6 +557,7 @@ namespace DailySpendWebApp.Services
                     //Recalculate how much you have left to spen
                     int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
                     Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
+                    Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;                    
                 }
                 else
                 {
@@ -557,6 +565,7 @@ namespace DailySpendWebApp.Services
                     Budget.MoneyAvailableBalance -= T.TransactionAmount;
                     Budget.LeftToSpendBalance -= T.TransactionAmount;
                     Budget.LeftToSpendDailyAmount -= T.TransactionAmount ?? 0;
+                    Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
                 }
 
                 T.isTransacted = true;
@@ -570,6 +579,7 @@ namespace DailySpendWebApp.Services
         public string TransactSavingsTransaction(ref Transactions T, int? BudgetID)
         {
             Budgets? Budget = _db.Budgets?
+               .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
                .Include(x => x.Savings)
                .Where(x => x.BudgetID == BudgetID)
                .FirstOrDefault();
@@ -592,6 +602,8 @@ namespace DailySpendWebApp.Services
                     {
                         Budget.BankBalance += T.TransactionAmount;
                         Budget.MoneyAvailableBalance += T.TransactionAmount;
+                        Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;
+                        Budget.PayPeriodStats[0].SavingsToDate += T.TransactionAmount ?? 0;
                         S.CurrentBalance += T.TransactionAmount;
                         S.LastUpdatedValue = T.TransactionAmount;
                         S.LastUpdatedDate = DateTime.UtcNow;
@@ -603,6 +615,7 @@ namespace DailySpendWebApp.Services
                         S.CurrentBalance -= T.TransactionAmount;
                         S.LastUpdatedValue = T.TransactionAmount;
                         S.LastUpdatedDate = DateTime.UtcNow;
+                        Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
                     }
 
                     _db.SaveChanges();
@@ -621,6 +634,8 @@ namespace DailySpendWebApp.Services
                         S.SavingsGoal += T.TransactionAmount;
                         S.LastUpdatedValue = T.TransactionAmount;
                         S.LastUpdatedDate = DateTime.UtcNow;
+                        Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;
+                        Budget.PayPeriodStats[0].SavingsToDate += T.TransactionAmount ?? 0;
                     }
                     else
                     {
@@ -630,6 +645,7 @@ namespace DailySpendWebApp.Services
                         S.SavingsGoal -= T.TransactionAmount;
                         S.LastUpdatedValue = T.TransactionAmount;
                         S.LastUpdatedDate = DateTime.UtcNow;
+                        Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
                     }
                 }
                 else if (T.SavingsSpendType == "BuildingSaving" | T.SavingsSpendType == "EnvelopeSaving")
@@ -641,6 +657,8 @@ namespace DailySpendWebApp.Services
                         S.CurrentBalance += T.TransactionAmount;
                         S.LastUpdatedValue = T.TransactionAmount;
                         S.LastUpdatedDate = DateTime.UtcNow;
+                        Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;
+                        Budget.PayPeriodStats[0].SavingsToDate += T.TransactionAmount ?? 0;
                     }
                     else
                     {
@@ -649,6 +667,7 @@ namespace DailySpendWebApp.Services
                         S.CurrentBalance -= T.TransactionAmount;
                         S.LastUpdatedValue = T.TransactionAmount;
                         S.LastUpdatedDate = DateTime.UtcNow;
+                        Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
                     }
                 }
 
@@ -694,6 +713,41 @@ namespace DailySpendWebApp.Services
             decimal? AmountOutstanding = S.SavingsGoal - S.CurrentBalance;
 
             S.RegularSavingValue = AmountOutstanding / DaysToSavingDate;
+
+            return "OK";
+        }
+
+        public string CreateNewPayPeriodStats(int? BudgetID)
+        {
+            Budgets? Budget = _db.Budgets?
+               .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
+               .Where(x => x.BudgetID == BudgetID)
+               .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            Budget.PayPeriodStats[0].isCurrentPeriod = false;
+
+            PayPeriodStats stats = new PayPeriodStats();
+
+            stats.isCurrentPeriod = true;
+
+            stats.StartDate = DateTime.UtcNow;
+            stats.EndDate = Budget.NextIncomePayday ?? DateTime.UtcNow;
+            stats.DurationOfPeriod = Budget.AproxDaysBetweenPay ?? 0;
+
+            stats.SavingsToDate = 0;
+            stats.BillsToDate = 0;
+            stats.IncomeToDate = 0;
+            stats.SpendToDate = 0;
+
+            stats.StartLtSDailyAmount = Budget.LeftToSpendDailyAmount;
+            stats.StartLtSPeiordAmount = Budget.LeftToSpendBalance;
+            stats.StartBBPeiordAmount = Budget.BankBalance;
+            stats.StartMaBPeiordAmount = Budget.MoneyAvailableBalance;
+
+            Budget.PayPeriodStats.Add(stats);
+            _db.SaveChanges();
 
             return "OK";
         }

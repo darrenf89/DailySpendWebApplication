@@ -15,7 +15,7 @@ namespace DailySpendWebApp.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<decimal>(
-                name: "StartPayPeriodDailyAmount",
+                name: "StartLtSDailyAmount",
                 table: "Budgets",
                 type: "decimal(18,2)",
                 nullable: true);
@@ -28,7 +28,7 @@ namespace DailySpendWebApp.Migrations
                 table: "Budgets");
 
             migrationBuilder.DropColumn(
-                name: "StartPayPeriodDailyAmount",
+                name: "StartLtSDailyAmount",
                 table: "Budgets");
         }
     }

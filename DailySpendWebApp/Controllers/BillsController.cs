@@ -140,11 +140,19 @@ namespace DailySpendWebApp.Controllers
         {
 
             Budgets? BudgetSavingsList = _db.Budgets?
+                .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
                 .Include(x => x.Bills.Where(x => x.BillName == obj.BillName))
                 .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
                 .FirstOrDefault();
 
             Bills? CreatedBill = BudgetSavingsList.Bills.First();
+
+            BudgetSavingsList.LeftToSpendBalance = BudgetSavingsList.LeftToSpendBalance - CreatedBill.BillCurrentBalance;
+            BudgetSavingsList.MoneyAvailableBalance = BudgetSavingsList.MoneyAvailableBalance - CreatedBill.BillCurrentBalance;
+
+            BudgetSavingsList.PayPeriodStats[0].BillsToDate += CreatedBill.BillCurrentBalance;
+
+            _db.SaveChanges();
 
             TempData["SnackbarMess"] = "Bill Created";
             return RedirectToAction("Index", "Home", new { ReMess = "BillCreated", id = CreatedBill.BillID });

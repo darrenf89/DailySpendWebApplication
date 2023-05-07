@@ -210,11 +210,17 @@ public class SavingsController : Controller
     {
 
         Budgets? BudgetSavingsList = _db.Budgets?
+            .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
             .Include(x => x.Savings.Where(x => x.SavingsName == obj.SavingsName))
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
-            .FirstOrDefault();
+            .FirstOrDefault();        
 
         Savings? CreatedSaving = BudgetSavingsList.Savings.First();
+
+        BudgetSavingsList.LeftToSpendBalance = BudgetSavingsList.LeftToSpendBalance - CreatedSaving.CurrentBalance;
+        BudgetSavingsList.PayPeriodStats[0].SavingsToDate += CreatedSaving.CurrentBalance ?? 0;
+
+        _db.SaveChanges();
 
         ViewBag.CurrentDate = (DateTime.Today).AddDays(1);
         TempData["SnackbarMess"] = "SavingCreated";

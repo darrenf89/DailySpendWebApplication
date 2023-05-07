@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230502190109_addingPreviousDayDailyAmount")]
-    partial class addingPreviousDayDailyAmount
+    [Migration("20230507114850_payperiodstats")]
+    partial class payperiodstats
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -163,6 +163,9 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<DateTime?>("NextIncomePayday")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("PayPeriodStartSpendTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("PaydayAmount")
                         .HasColumnType("decimal(18,2)");
@@ -671,6 +674,48 @@ namespace DailySpendWebApp.Migrations
                     b.ToTable("UserAccounts");
                 });
 
+            modelBuilder.Entity("DailySpendWebApp.Models.PayPeriodStats", b =>
+                {
+                    b.Property<int>("PayPeriodID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PayPeriodID"), 1L, 1);
+
+                    b.Property<decimal>("BillsToDate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("BudgetsBudgetID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DurationOfPeriod")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("IncomeToDate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SavingsToDate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SpendToDate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isCurrentPeriod")
+                        .HasColumnType("bit");
+
+                    b.HasKey("PayPeriodID");
+
+                    b.HasIndex("BudgetsBudgetID");
+
+                    b.ToTable("PayPeriodStats");
+                });
+
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Bills", b =>
                 {
                     b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
@@ -738,6 +783,13 @@ namespace DailySpendWebApp.Migrations
                     b.Navigation("Budget");
                 });
 
+            modelBuilder.Entity("DailySpendWebApp.Models.PayPeriodStats", b =>
+                {
+                    b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
+                        .WithMany("PayPeriodStats")
+                        .HasForeignKey("BudgetsBudgetID");
+                });
+
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
                 {
                     b.Navigation("Bills");
@@ -747,6 +799,8 @@ namespace DailySpendWebApp.Migrations
                     b.Navigation("Categories");
 
                     b.Navigation("IncomeEvents");
+
+                    b.Navigation("PayPeriodStats");
 
                     b.Navigation("Savings");
 
