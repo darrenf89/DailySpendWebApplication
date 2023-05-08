@@ -35,20 +35,67 @@
 
     decimal LtSWidth = 100 - Math.Ceiling((((Model.PayPeriodStats[0].StartLtSPeiordAmount - Model.LeftToSpendBalance) / Model.PayPeriodStats[0].StartLtSPeiordAmount) * 100) ?? 100);
     decimal LtSDeltaWidth = Math.Ceiling((((Model.PayPeriodStats[0].StartLtSPeiordAmount - Model.LeftToSpendBalance) / Model.PayPeriodStats[0].StartLtSPeiordAmount) * 100) ?? 100);
-    decimal LtSTextWidth = decimal.Subtract(LtSWidth, (decimal)15);
     string LeftToSpendDaily = string.Format("{0:c}", Model.LeftToSpendDailyAmount);
     string LeftToSpendBalance = string.Format("{0:c}", Model.LeftToSpendBalance);
+
+    decimal LtSTextWidth = 0;
+    string LtSTextColor = "";
+    string LtSTextPosition = "";
+
+    if (LtSWidth < 25)
+    {
+        LtSTextWidth = decimal.Subtract(LtSWidth, (decimal)0);
+        LtSTextColor = "white";
+        LtSTextPosition = "start";
+    }
+    else
+    {
+        LtSTextWidth = decimal.Subtract(LtSWidth, (decimal)25);
+        LtSTextColor = "primary";
+        LtSTextPosition = "end";
+    }
 
     decimal SavingPayPeriod = (Model.DailySavingOutgoing * Model.AproxDaysBetweenPay) ?? 0;
     string SavingPayPeriodText = string.Format("{0:c}", SavingPayPeriod);
     decimal SavingWidth = 100 - Math.Ceiling((((SavingPayPeriod - Model.PayPeriodStats[0].SavingsToDate) / SavingPayPeriod) * 100));
-    decimal SavingTextWidth = decimal.Subtract(SavingWidth, (decimal)15);
+    decimal SavingTextWidth = 0;
+    string SavingTextColor = "";
+    string SavingTextPosition = "";
+
+    if (SavingWidth > 75)
+    {
+        SavingTextWidth = decimal.Subtract(SavingWidth, (decimal)25);
+        SavingTextColor = "white";
+        SavingTextPosition = "end";
+    }
+    else
+    {
+        SavingTextWidth = decimal.Subtract(SavingWidth, (decimal)0);
+        SavingTextColor = "success";
+        SavingTextPosition = "start";
+    }
     string SavingToDate = string.Format("{0:c}", Model.PayPeriodStats[0].SavingsToDate);
 
     decimal BillPayPeriod = (Model.DailyBillOutgoing * Model.AproxDaysBetweenPay) ?? 0;
     string BillPayPeriodText = string.Format("{0:c}", BillPayPeriod);
     decimal BillWidth = 100 - Math.Ceiling((((BillPayPeriod - Model.PayPeriodStats[0].BillsToDate) / BillPayPeriod) * 100));
-    decimal BillTextWidth = decimal.Subtract(BillWidth, (decimal)15);
+    decimal BillTextWidth = 0;
+    string BillTextColor = "";
+    string BillTextPosition = "";
+
+    if (BillWidth > 75)
+    {
+        BillTextWidth = decimal.Subtract(BillWidth, (decimal)25);
+        BillTextColor = "white";
+        BillTextPosition = "end";
+    }
+    else
+    {
+        BillTextWidth = decimal.Subtract(BillWidth, (decimal)0);
+        BillTextColor = "success";
+        BillTextPosition = "start";
+    }
+
     string BillToDate = string.Format("{0:c}", Model.PayPeriodStats[0].BillsToDate);
 
     string MoneyAvailableBalance = string.Format("{0:c}", Model.MoneyAvailableBalance);
@@ -60,11 +107,11 @@
 <div class="d-flex flex-column">
     <div class="d-flex justify-content-around align-items-center mb-1">
         <div class="col-3 d-flex flex-column align-items-center">
-            <div class="p-1 border border-dark bg-info text-white rounded-5 text-center w-100 shadow">@BankBalance</div>
+            <div class="p-1 border border-dark bg-primary text-white rounded-5 text-center w-100 shadow">@BankBalance</div>
             <div class="text-dark mt-1" style="line-height: 100%">BB</div>
         </div>
         <div class="col-3 d-flex flex-column align-items-center">
-            <div class="p-1 border border-dark bg-warning text-white rounded-5 text-center w-100 shadow">@MoneyAvailableBalance</div>
+            <div class="p-1 border border-dark bg-primary text-white rounded-5 text-center w-100 shadow">@MoneyAvailableBalance</div>
             <div class="text-dark mt-1" style="line-height: 100%">MaB</div>
         </div>
         <div class="col-3 d-flex flex-column align-items-center">
@@ -72,66 +119,66 @@
             <div class="text-dark mt-1" style="line-height: 100%">LtS</div>
         </div>
     </div>
-    <div class="card text-white bg-@StatusColor my-1 border-dark shadow" style="max-width: 55%; margin-right:auto; margin-left: auto;">
+    <div class="card text-white bg-@StatusColor my-1 border-dark shadow" style="width: 55%; margin-right:auto; margin-left: auto;">
         <div class="card-body p-1">
             <div class="d-flex mx-1 justify-content-around align-items-center">
                 <div class="d-flex flex-column col-9 text-left">
                     <p class="mb-0" style="line-height: 100%">You have</p>
-                    <h1 class="mb-0" style="line-height: 100%">@LeftToSpendDaily</h1>
+                    <h2 class="mb-0" style="line-height: 100%">@LeftToSpendDaily</h2>
                     <p class="pb-0 mb-0" style="line-height: 100%; font-size: 9pt">Left To Spend Today</p>
                 </div>
-                <div class="col-2 justify-content-center">
+                <div class="col-3 justify-content-center">
                     <i class="bi bi-caret-@ArrowDirection-fill text-@ArrowColor" style="font-size: 2.5rem;"></i>
                 </div>
             </div>
         </div>
     </div>
-    <div class="mt-3 mb-1 d-flex">
-        <div style="width: 15%; line-height: 100%; font-size: 9pt" class="text-end pe-3 text-primary">LtS</div>
-        <div style="width: 65%">
-            <div class="progress w-100">
+    <div class="mt-3 my-1 d-flex">
+        <div style="width: 50px; line-height: 100%; font-size: 9pt" class="text-end pe-2 pt-1  text-dark">LtS</div>
+        <div class="CalculatedWidth">
+            <div class="progress w-100" style="height: 19px">
                 <div class="progress-bar bg-light" role="progressbar" style="width: @(LtSWidth)%;" aria-valuenow="@(Model.LeftToSpendBalance)" aria-valuemin="0" aria-valuemax="@(Model.PayPeriodStats[0].StartLtSPeiordAmount)"></div>
                 <div class="progress-bar bg-primary" role="progressbar" style="width: @(LtSDeltaWidth)%;" aria-valuenow="@(Model.PayPeriodStats[0].StartLtSPeiordAmount)" aria-valuemin="0" aria-valuemax="@(Model.PayPeriodStats[0].StartLtSPeiordAmount)"></div>
             </div>
-            <div class="w-100">
-                <div class="d-flex flex-column text-center p-0 my-0" style="width: 30%; margin-right:auto; margin-left: @(LtSTextWidth)%;">
-                    <div style="line-height: 100%"><i class="bi bi-caret-up-fill text-dark"></i></div>
-                    <p class="m-0 text-primary" style="line-height: 100%; font-size: 9pt">@(LeftToSpendBalance)</p>
+            <div class="w-100 p-0" style="position: relative; top: -15px; height: 0">
+                <div class="text-center p-0 my-0" style="width: 25%; margin-right:auto; margin-left: @(LtSTextWidth)%;">
+                    <p class="m-0 px-1 text-@(LtSTextColor) text-@(LtSTextPosition)" style="line-height: 100%; font-size: 9pt">@(LeftToSpendBalance)</p>
                 </div>
             </div>
         </div>
-        <div style="width: 20%; line-height: 100%; font-size: 9pt" class="text-start ps-2 text-primary">@PayPeriodStartSpendTotal</div>
     </div>
-    <div class="d-flex mb-1">
-        <div style="width: 15%; line-height: 100%; font-size: 9pt" class="text-end pe-3 text-right text-primary">Savings</div>
-        <div style="width: 65%">
-            <div class="progress w-100">
+    <div class="d-flex my-1">
+        <div style="width: 50px; line-height: 100%; font-size: 9pt" class="text-end pe-2 pt-1 text-right text-dark">Savings</div>
+        <div class="CalculatedWidth">
+            <div class="progress w-100" style="height: 19px">
                 <div class="progress-bar bg-success" role="progressbar" style="width: @(SavingWidth)%;" aria-valuenow="@(Model.PayPeriodStats[0].SavingsToDate)" aria-valuemin="0" aria-valuemax="@(SavingPayPeriod)"></div>
             </div>
-            <div class="w-100">
-                <div class="d-flex flex-column text-center p-0 my-0" style="width: 30%; margin-right:auto; margin-left: @(SavingTextWidth)%;">
-                    <div style="line-height: 100%"><i class="bi bi-caret-up-fill text-dark"></i></div>
-                    <p class="m-0 text-primary" style="line-height: 100%; font-size: 9pt">@(SavingToDate)</p>
+            <div class="w-100 p-0" style="position: relative; top: -15px; height: 0">
+                <div class="text-center p-0 my-0" style="width: 25%; margin-right:auto; margin-left: @(SavingTextWidth)%;">
+                    <p class="m-0 px-1 text-@(SavingTextColor) text-@(SavingTextPosition)" style="line-height: 100%; font-size: 9pt">@(SavingToDate)</p>
                 </div>
             </div>
         </div>
-        <div style="width: 20%; line-height: 100%; font-size: 9pt" class="text-start ps-2 text-primary">@SavingPayPeriodText</div>
     </div>
-    <div class="d-flex">
-        <div style="width: 15%; line-height: 100%; font-size: 9pt" class="text-end pe-3 text-right text-primary">Bills</div>
-        <div style="width: 65%">
-            <div class="progress w-100">
+    <div class="d-flex my-1">
+        <div style="width: 50px; line-height: 100%; font-size: 9pt" class="text-end pe-2 pt-1 text-right text-dark">Bills</div>
+        <div class="CalculatedWidth">
+            <div class="progress w-100" style="height: 19px">
                 <div class="progress-bar  bg-success" role="progressbar" style="width: @(BillWidth)%;" aria-valuenow="@(Model.PayPeriodStats[0].BillsToDate)" aria-valuemin="0" aria-valuemax="@(BillPayPeriod)"></div>
             </div>
-            <div class="w-100">
-                <div class="d-flex flex-column text-center p-0 my-0" style="width: 30%; margin-right:auto; margin-left: @(BillTextWidth)%;">
-                    <div style="line-height: 100%"><i class="bi bi-caret-up-fill text-dark"></i></div>
-                    <p class="m-0 text-primary" style="line-height: 100%; font-size: 9pt">@(BillToDate)</p>
+            <div class="w-100 p-0" style="position: relative; top: -15px; height: 0">
+                <div class="text-center p-0 my-0" style="width: 25%; margin-right:auto; margin-left: @(BillTextWidth)%;">
+                    <p class="m-0 px-1 text-@(BillTextColor) text-@(BillTextPosition)" style="line-height: 100%; font-size: 9pt">@(BillToDate)</p>
                 </div>
             </div>
         </div>
-        <div style="width: 20%; line-height: 100%; font-size: 9pt" class="text-start ps-2 text-primary">@BillPayPeriodText</div>
     </div>
 </div>
+
+<style>
+    .CalculatedWidth {
+    width:         calc(100% - 50px);
+}​
+</style>
 
 

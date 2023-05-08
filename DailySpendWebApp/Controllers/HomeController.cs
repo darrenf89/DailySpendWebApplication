@@ -213,4 +213,44 @@ public class HomeController : Controller
         return PartialView("_PVLeftToSpendStatus", obj);
     }
 
+    public IActionResult RecentActivityTransactions()
+    {
+        Budgets obj = _db.Budgets
+            .Include(x => x.Transactions.OrderByDescending(t => t.TransactionID).Take(10))
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        return PartialView("_PVRecentActivityTransactions", obj);
+    }
+
+    public IActionResult RecentActivitySavings()
+    {
+        Budgets obj = _db.Budgets
+            .Include(x => x.Savings.OrderByDescending(s => s.SavingID).Take(10))
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        return PartialView("_PVRecentActivitySavings", obj);
+    }
+
+    public IActionResult RecentActivityBills()
+    {
+        Budgets obj = _db.Budgets
+            .Include(x => x.Bills.OrderByDescending(b => b.BillID).Take(10))
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        return PartialView("_PVRecentActivityBills", obj);
+    }
+
+    public IActionResult RecentActivityIncomes()
+    {
+        Budgets obj = _db.Budgets
+            .Include(x => x.IncomeEvents.OrderByDescending(i => i.IncomeEventID).Take(10))
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        return PartialView("_PVRecentActivityIncomes", obj);
+    }
+
 }

@@ -8,8 +8,24 @@
 }
 
 <div class="">
-    <div class="m-4 p-3 border border-dark border-1 bg-white rounded-4 shadow">
+    <div class="mt-1 mb-4 mx-4 p-3 border border-dark border-1 bg-white rounded-4 shadow">
         <div id="BudgetStatus" >
+        </div>
+    </div>
+    <div>
+        <div class="bg-dark rounded-3 shadow mb-3" style="width: 50%">
+            <h1 class="text-primary display-6 p-1 ps-2">Recent Activity</h1>
+        </div>        
+        <div class="border border-1 border-primary shadow">
+            <div id="RecentActivityTabs" class="d-flex border-bottom border-dark border-3 w-100">
+                <button class="col-3 bg-dark p-2 text-primary" id="RecentActivityBills" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Bills')">Bills</button>
+                <button class="col-3 bg-primary p-2 text-white" id="RecentActivityTransactions" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Transactions')">Transactions</button>
+                <button class="col-3 bg-dark p-2 text-primary" id="RecentActivitySavings" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Savings')">Savings</button>
+                <button class="col-3 bg-dark p-2 text-primary" id="RecentActivityIncomes" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Incomes')"> Income</button>
+            </div>
+            <div id="RecentActivity">
+
+            </div>
         </div>
     </div>
     <div id="BudgetInfo" class="my-5">
@@ -38,6 +54,36 @@
 </div>
 
 <script>
+
+    function UpdateRecentActivity(Type)
+    {        
+        $('#RecentActivityTransactions').removeClass().addClass('col-3 bg-dark p-2 text-primary')
+        $('#RecentActivityBills').removeClass().addClass('col-3 bg-dark p-2 text-primary')
+        $('#RecentActivitySavings').removeClass().addClass('col-3 bg-dark p-2 text-primary')
+        $('#RecentActivityIncomes').removeClass().addClass('col-3 bg-dark p-2 text-primary')
+
+        var ActiveRecent = '#RecentActivity' + Type
+        $(ActiveRecent).removeClass().addClass('col-3 bg-primary p-2 text-white')
+
+        $('#RecentActivity').html('')
+
+        if (Type == 'Transactions')
+        {
+            $('#RecentActivity').load("/Home/RecentActivityTransactions")
+        }
+        else if (Type == 'Savings')
+        {
+            $('#RecentActivity').load("/Home/RecentActivitySavings")
+        }
+        else if (Type == 'Bills') 
+        {
+            $('#RecentActivity').load("/Home/RecentActivityBills")
+        }
+        else if (Type == 'Incomes') 
+        {
+            $('#RecentActivity').load("/Home/RecentActivityIncomes")
+        }
+    }
 
     function OpenModal(){
         document.getElementById('DatePickerContainter').style.display = 'block';
