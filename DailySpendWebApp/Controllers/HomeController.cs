@@ -220,6 +220,8 @@ public class HomeController : Controller
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 
+        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+
         return PartialView("_PVRecentActivityTransactions", obj);
     }
 

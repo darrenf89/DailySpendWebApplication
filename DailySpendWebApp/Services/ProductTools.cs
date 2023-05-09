@@ -752,6 +752,27 @@ namespace DailySpendWebApp.Services
             return "OK";
         }
 
+        public string GetBudgetDatePatter(int BudgetID)
+        {
+            if(BudgetID == 0)
+            {
+
+                return "dd MM yyyy";
+            }
+            else
+            {
+                BudgetSettings? BS = _db.BudgetSettings.Where(x => x.BudgetID == BudgetID).FirstOrDefault();
+
+                lut_ShortDatePattern? DatePattern = _db.lut_ShortDatePatterns.Where(x => x.id == BS.ShortDatePattern).FirstOrDefault();
+                lut_DateSeperator? dateSeperator = _db.lut_DateSeperators.Where(x => x.id == BS.DateSeperator).FirstOrDefault();
+
+                lut_DateFormat? DateFormat = _db.lut_DateFormats.Where(d => d.DateSeperatorID == dateSeperator.id & d.ShortDatePatternID == DatePattern.id).FirstOrDefault(); 
+
+                return DateFormat.DateFormat ?? "dd MM yyyy";
+            }
+
+        }
+
     }
 
 }
