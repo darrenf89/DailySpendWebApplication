@@ -1,0 +1,112 @@
+﻿@model Budgets;
+
+@{
+    if (@Model.Transactions == null)
+    {
+        <div>No recent transaction activity</div>
+    }
+    else
+    {
+        int i = 1; 
+        List<Transactions> SortedTransaction = Model.Transactions.OrderByDescending(t => t.TransactionDate).ToList();
+        foreach(Transactions T in SortedTransaction)
+        {
+            string ButtonID = "btnEditTransaction" + i;
+            string Payee = "";
+            if(T.Payee == "" | T.Payee == null)
+            {
+                Payee = "No Payee";
+            }
+            else
+            {
+                Payee = T.Payee;
+            }
+
+            string SpendCategory = "";
+            if(T.SavingName == "" | T.SavingName == null)
+            {
+                SpendCategory = "No Category";
+            }
+            else
+            {
+                SpendCategory = T.SavingName;
+            }
+            
+            string Category = "";
+            if(T.Category == "" | T.Category == null)
+            {
+                Category = "No Category";
+            }
+            else
+            {
+                Category = T.Category;
+            }
+
+            string Amount = string.Format("{0:c}", T.TransactionAmount);
+            if(!T.isIncome)
+            {
+                Amount = "-" + Amount;
+            }
+
+            string Date = T.TransactionDate.GetValueOrDefault().ToString(ViewBag.DateString);
+
+            string IconColor = "";
+            if(T.isIncome)
+            {
+                IconColor = "success";
+            }
+            else
+            {
+                IconColor = "danger";
+            }
+
+            string IconString = "";
+            if(T.isSpendFromSavings)
+            {
+                IconString = "fs-4 bi bi-piggy-bank text-" + IconColor;
+            }
+            else
+            {
+                IconString = "fs-4 bi bi-cash text-" + IconColor;
+            }
+
+            string BackgroundColor = "";
+            string Opactiy = "1";
+            if(!T.isTransacted)
+            {
+                BackgroundColor = "#333";
+                Opactiy = "0.5";
+            }
+            else
+            {
+                if(i%2 == 0)
+                {
+                    BackgroundColor = "#ec6538";
+                }
+                else
+                {
+                    BackgroundColor = "#f39b7e";
+                }
+            }
+            
+
+            <button id="@ButtonID" asp-action="EditTransaction" asp-controller="Transaction" asp-route-TransactionID="@T.TransactionID" style="background-color: transparent; border: none; width: 100%">
+                <div class="d-flex container align-items-center" style="background-color: @BackgroundColor; Opacity: @Opactiy;">
+                    <div class="col-2 border border-2 border-@IconColor rounded-circle p-2"><i class="@IconString"></i></div>
+                    <div class="d-flex flex-column align-items-start justify-content-center col-6">
+                        <div><p class="text-start text-white h2">@Payee</p></div>
+                        <div><p class="text-start text-white h4">@if(T.isSpendFromSavings){@SpendCategory}else{@Category}</p></div>
+                    </div>
+                    <div class="d-flex flex-column align-items-start justify-content-center col-4">
+                        <div><p class="text-end text-white h5">@Amount</p></div>
+                        <div><p class="text-end text-white h5">@Date</p></div>
+                    </div>
+                </div>
+            </button>
+
+            i++;
+        }
+    }
+}
+
+

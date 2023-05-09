@@ -25,5 +25,6 @@ namespace DailySpendWebApp.Services
         public string CalculateSavingsTargetAmount(ref Savings S);
         public string CalculateSavingsTargetDate(ref Savings S);
         public string CreateNewPayPeriodStats(int? BudgetID);
+        public string GetBudgetDatePatter(int BudgetID);  
     }
 }
