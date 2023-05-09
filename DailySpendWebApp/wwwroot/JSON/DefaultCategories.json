@@ -53,11 +53,14 @@
       },
       {
         "SubCatName": "Leisure"
+      },
+      {
+        "SubCatName": "Gifts"
       }
     ]
   },
   {
-    "CatName": "Wellbeing",
+    "CatName": "Life Goals",
     "SubCategories": [
       {
         "SubCatName": "Technology"
@@ -70,9 +73,6 @@
       },
       {
         "SubCatName": "Education / CPD"
-      },
-      {
-        "SubCatName": "Gifts"
       },
       {
         "SubCatName": "Misc"

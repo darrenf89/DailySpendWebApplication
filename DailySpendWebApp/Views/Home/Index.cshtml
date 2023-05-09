@@ -12,20 +12,25 @@
         <div id="BudgetStatus" >
         </div>
     </div>
-    <div>
-        <div class="bg-dark rounded-3 shadow mb-3" style="width: 50%">
-            <h1 class="text-primary display-6 p-1 ps-2">Recent Activity</h1>
+    <div class="mb-4">
+        <div class="bg-primary rounded-3 shadow mb-3" style="width: 50%">
+            <h1 class="text-white display-6 p-1 ps-2">Recent Activity</h1>
         </div>        
         <div class="border border-1 border-primary shadow">
-            <div id="RecentActivityTabs" class="d-flex border-bottom border-dark border-3 w-100">
-                <button class="col-3 bg-dark p-2 text-primary" id="RecentActivityBills" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Bills')">Bills</button>
-                <button class="col-3 bg-primary p-2 text-white" id="RecentActivityTransactions" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Transactions')">Transactions</button>
-                <button class="col-3 bg-dark p-2 text-primary" id="RecentActivitySavings" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Savings')">Savings</button>
-                <button class="col-3 bg-dark p-2 text-primary" id="RecentActivityIncomes" style="background-color: transparent; border: none;" onclick="UpdateRecentActivity('Incomes')"> Income</button>
+            <div id="RecentActivityTabs" class="d-flex border-bottom border-primary border-3 w-100">
+                <button class="col-3 p-2 text-white" id="RecentActivityBills" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Bills')">Bills</button>
+                <button class="col-3 p-2 bg-primary text-white" id="RecentActivityTransactions" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Transactions')">Transactions</button>
+                <button class="col-3 p-2 text-white" id="RecentActivitySavings" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Savings')">Savings</button>
+                <button class="col-3 p-2 text-white" id="RecentActivityIncomes" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Incomes')"> Income</button>
             </div>
-            <div id="RecentActivity">
+            <div id="RecentActivity" style="max-height: 300px; overflow: scroll">
 
             </div>
+        </div>
+    </div>
+    <div>
+        <div class="bg-primary rounded-3 shadow mb-3" style="width: 50%">
+            <h1 class="text-white display-6 p-1 ps-2">Next Pay Info</h1>
         </div>
     </div>
     <div id="BudgetInfo" class="my-5">
@@ -57,10 +62,10 @@
 
     function UpdateRecentActivity(Type)
     {        
-        $('#RecentActivityTransactions').removeClass().addClass('col-3 bg-dark p-2 text-primary')
-        $('#RecentActivityBills').removeClass().addClass('col-3 bg-dark p-2 text-primary')
-        $('#RecentActivitySavings').removeClass().addClass('col-3 bg-dark p-2 text-primary')
-        $('#RecentActivityIncomes').removeClass().addClass('col-3 bg-dark p-2 text-primary')
+        $('#RecentActivityTransactions').removeClass().addClass('col-3 bg-orange p-2 text-white')
+        $('#RecentActivityBills').removeClass().addClass('col-3 bg-orange p-2 text-white')
+        $('#RecentActivitySavings').removeClass().addClass('col-3 bg-orange p-2 text-white')
+        $('#RecentActivityIncomes').removeClass().addClass('col-3 bg-orange p-2 text-white')
 
         var ActiveRecent = '#RecentActivity' + Type
         $(ActiveRecent).removeClass().addClass('col-3 bg-primary p-2 text-white')
@@ -147,5 +152,6 @@
 @section Scripts{
     <script>
         $('#BudgetStatus').load("/Home/AddBudgetStatus")
+        $('#RecentActivity').load("/Home/RecentActivityTransactions")
     </script>
 }

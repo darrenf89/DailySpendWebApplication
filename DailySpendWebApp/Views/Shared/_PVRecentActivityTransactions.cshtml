@@ -31,7 +31,7 @@
             {
                 SpendCategory = T.SavingName;
             }
-            
+
             string Category = "";
             if(T.Category == "" | T.Category == null)
             {
@@ -45,29 +45,33 @@
             string Amount = string.Format("{0:c}", T.TransactionAmount);
             if(!T.isIncome)
             {
-                Amount = "-" + Amount;
+                Amount = Amount;
             }
 
             string Date = T.TransactionDate.GetValueOrDefault().ToString(ViewBag.DateString);
 
             string IconColor = "";
+            string IconArrowString = "";
             if(T.isIncome)
             {
-                IconColor = "success";
+                IconColor = "white";
+                IconArrowString = "p-1 fs-2 bi bi-plus-lg text-" + IconColor;
             }
             else
             {
-                IconColor = "danger";
+                IconColor = "white";
+                IconArrowString = "p-1 fs-2 bi bi-dash-lg text-" + IconColor;
             }
 
             string IconString = "";
+            
             if(T.isSpendFromSavings)
             {
-                IconString = "fs-4 bi bi-piggy-bank text-" + IconColor;
+                IconString = "p-1 bi bi-piggy-bank text-white";
             }
             else
             {
-                IconString = "fs-4 bi bi-cash text-" + IconColor;
+                IconString = "p-1 bi bi-cash text-white";
             }
 
             string BackgroundColor = "";
@@ -90,16 +94,21 @@
             }
             
 
-            <button id="@ButtonID" asp-action="EditTransaction" asp-controller="Transaction" asp-route-TransactionID="@T.TransactionID" style="background-color: transparent; border: none; width: 100%">
-                <div class="d-flex container align-items-center" style="background-color: @BackgroundColor; Opacity: @Opactiy;">
-                    <div class="col-2 border border-2 border-@IconColor rounded-circle p-2"><i class="@IconString"></i></div>
-                    <div class="d-flex flex-column align-items-start justify-content-center col-6">
-                        <div><p class="text-start text-white h2">@Payee</p></div>
-                        <div><p class="text-start text-white h4">@if(T.isSpendFromSavings){@SpendCategory}else{@Category}</p></div>
+            <button type="submit" id="@ButtonID" asp-action="EditTransaction" asp-controller="Transaction" asp-route-TransactionID="@T.TransactionID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
+                <div class="d-flex container align-items-center p-0" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
+                    <div class="col-1">                        
+                        <i class="@IconString" style="opacity: 1 !important;"></i>
                     </div>
-                    <div class="d-flex flex-column align-items-start justify-content-center col-4">
-                        <div><p class="text-end text-white h5">@Amount</p></div>
-                        <div><p class="text-end text-white h5">@Date</p></div>
+                    <div class="d-flex flex-column align-items-start justify-content-center col-7 ps-2 pb-1">
+                        <div><p class="text-start text-white h2 m-0">@Payee</p></div>
+                        <div><p class="text-start text-white h6 m-0">@if(T.isSpendFromSavings){@SpendCategory}else{@Category}</p></div>
+                    </div>
+                    <div class="col-1">
+                        <i class="@IconArrowString" style="opacity: 1 !important;"></i>
+                    </div>
+                    <div class="d-flex flex-column align-items-end justify-content-center col-3 pe-2">
+                        <div><p class="text-end text-white h6 m-0">@Date</p></div>
+                        <div><p class="text-end text-white h6 m-0">@Amount</p></div>                        
                     </div>
                 </div>
             </button>
