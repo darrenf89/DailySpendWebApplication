@@ -1,0 +1,132 @@
+﻿@model Budgets;
+
+@{
+    if (@Model.Transactions == null)
+    {
+        <div>No recent Saving activity</div>
+    }
+    else
+    {
+        int i = 1; 
+        foreach(Savings S in Model.Savings)
+        {
+            string ButtonID = "btnEditSaving" + i;
+
+            string BackgroundColor = "";
+            string Opactiy = "1";
+            if(!S.isSavingsClosed)
+            {
+                BackgroundColor = "#333";
+                Opactiy = "0.5";
+            }
+            else
+            {
+                if(i%2 == 0)
+                {
+                    BackgroundColor = "#ec6538";
+                }
+                else
+                {
+                    BackgroundColor = "#f39b7e";
+                }
+            }
+
+            string IconString = "";
+            if(S.isRegularSaving)
+            {
+                IconString = "p-1 fs-2 bi bi-arrow-repeat text-white";
+            }
+            else
+            {
+                IconString = "p-1 fs-2 bi bi-envelope-check text-white";
+            }
+
+            string SavingType = "";
+            string GoalValue = "";
+            string value1 = "";
+            string value2 = "";
+            string value3 = "";
+            if(!S.isRegularSaving)
+            {
+                SavingType = "Envelope";
+                value1 = string.Format("{0:c}", S.CurrentBalance);
+                value2 = "";
+                value3 = string.Format("{0:c}", S.PeriodSavingValue);  
+            }
+            else
+            {
+                if(S.SavingsType == "TargetAmount")
+                {
+                    SavingType = "Target Amount";
+                    value1 = string.Format("{0:c}", S.CurrentBalance);
+                    value2 = string.Format("{0:c}", S.RegularSavingValue);
+                    value3 = S.GoalDate.GetValueOrDefault().ToString(ViewBag.DateString);  
+                    GoalValue = string.Format("{0:c}", S.SavingsGoal);
+                }
+                else if (S.SavingsType == "SavingsBuilder")
+                {
+                    SavingType = "Savings Builder";
+                    value1 = string.Format("{0:c}", S.CurrentBalance);
+                    if(S.ddlSavingsPeriod == "Payday")
+                    {
+                        value2 = string.Format("{0:c}", S.PeriodSavingValue);
+                        value3 = "Every Pay";  
+                    }
+                    else
+                    {
+                        value2 = string.Format("{0:c}", S.RegularSavingValue);
+                        value3 = "Every Day";  
+                    }
+
+                }
+                else if (S.SavingsType == "TargetDate")
+                {
+                    SavingType = "Target Date";
+                    value1 = string.Format("{0:c}", S.CurrentBalance);
+                    value2 = string.Format("{0:c}", S.RegularSavingValue);
+                    value3 = string.Format("{0:c}", S.SavingsGoal); 
+                    GoalValue = S.GoalDate.GetValueOrDefault().ToString(ViewBag.DateString);  
+                }
+            }
+
+            string AutoComplete = "";
+            string ExceedGoal = "";
+            
+            if(S.isAutoComplete)
+            {
+                AutoComplete = "Saving will auto complete on goal";
+            }
+            
+            if(S.canExceedGoal)
+            {
+                ExceedGoal = "Saving will continue past goal";
+            }
+
+
+
+            <button type="submit" id="@ButtonID" asp-action="EditSaving" asp-controller="Savings" asp-route-TransactionID="@S.SavingID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
+                <div class="d-flex container align-items-center p-0" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
+                    <div class="col-3">                        
+                        <i class="@IconString" style="opacity: 1 !important;"></i>
+                        @if(GoalValue == ""){}else{<div><p class="text-end text-white h6 m-0">@GoalValue</p></div>}                          
+                    </div>
+                    <div class="d-flex flex-column align-items-start justify-content-between col-6 ps-2 pb-1">
+                        <div><p class="text-start text-white h2 m-0">@S.SavingsName</p></div>
+                        <div><p class="text-start text-white h6 m-0">@SavingType</p></div>
+                        @if(AutoComplete == ""){}else{<div><p class="text-end fs-6 text-white m-0">@AutoComplete</p></div>}
+                        @if(ExceedGoal == ""){}else{<div><p class="text-end fs-6 text-white m-0">@ExceedGoal</p></div>}
+                    </div>
+                    <div class="d-flex flex-column align-items-end justify-content-center col-3 pe-2">
+                        <div><p class="text-end text-white h6 m-0">@value1</p></div>
+                        @if(value2 == ""){}else{<div><p class="text-end text-white h6 m-0">@value2</p></div>}
+                        <div><p class="text-end text-white h6 m-0">@value3</p></div>                          
+                    </div>
+                </div>
+            </button>
+
+            i++;
+        }
+    }
+}
+
+
