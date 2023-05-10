@@ -240,9 +240,11 @@ public class HomeController : Controller
     public IActionResult RecentActivityBills()
     {
         Budgets obj = _db.Budgets
-            .Include(x => x.Bills.OrderByDescending(b => b.BillID).Take(10))
+            .Include(x => x.Bills.OrderByDescending(b => b.BillID).Take(5))
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
+
+        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivityBills", obj);
     }
