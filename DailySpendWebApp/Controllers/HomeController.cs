@@ -228,9 +228,11 @@ public class HomeController : Controller
     public IActionResult RecentActivitySavings()
     {
         Budgets obj = _db.Budgets
-            .Include(x => x.Savings.OrderByDescending(s => s.SavingID).Take(10))
+            .Include(x => x.Savings.OrderByDescending(s => s.SavingID).Take(5))
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
+
+        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivitySavings", obj);
     }
