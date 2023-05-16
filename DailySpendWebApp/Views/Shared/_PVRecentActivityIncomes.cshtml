@@ -1,0 +1,81 @@
+﻿@model Budgets;
+
+@{
+    if (@Model.Transactions == null)
+    {
+        <div>No recent Saving activity</div>
+    }
+    else
+    {
+        int i = 1; 
+        List<IncomeEvents> SortedIncomeEvents = Model.IncomeEvents.OrderByDescending(t => t.isClosed).ToList();
+        foreach (IncomeEvents I in SortedIncomeEvents)
+        {
+            string ButtonID = "btnEditSaving" + i;
+
+            string BackgroundColor = "";
+            string Opactiy = "1";
+            if (I.isClosed)
+            {
+                BackgroundColor = "#333";
+                Opactiy = "1";
+            }
+            else
+            {
+                if(i%2 == 0)
+                {
+                    BackgroundColor = "#ec6538";
+                }
+                else
+                {
+                    BackgroundColor = "#f39b7e";
+                }
+            }
+
+            string IconString = "";
+            if(I.isRecurringIncome)
+            {
+                IconString = "p-1 fs-4 bi bi-arrow-repeat text-white";
+            }
+            else
+            {
+                IconString = "p-1 fs-4 bi bi-1-circle text-white";
+            }
+
+            string InstantActive = "";
+            if(I.isInstantActive ?? false)
+            {
+                InstantActive = "Income Active Instant";
+            }
+            else
+            {
+                InstantActive = "Income Active on Date";
+            }
+
+
+            string value1 = string.Format("{0:c}", I.IncomeAmount);
+            string value2 = I.DateOfIncomeEvent.ToString(ViewBag.DateString); 
+
+
+            <button type="submit" id="@ButtonID" asp-action="EditIncome" asp-controller="Incomes" asp-route-IncomeID="@I.IncomeEventID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
+                <div class="d-flex container align-items-center p-0 py-1" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
+                    <div class="col-2">                        
+                        <i class="@IconString" style="opacity: 1 !important;"></i>                       
+                    </div>
+                    <div class="d-flex flex-column align-items-start justify-content-between col-7 ps-2 pb-1">
+                        <div><p class="text-start text-white h2 m-0">@I.IncomeName</p></div>
+                        <div><p class="text-start text-white h6 m-0">@InstantActive</p></div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end justify-content-center col-3 pe-2">
+                        <div><p class="text-end text-white h6 m-0">@value1</p></div>
+                        <div><p class="text-end text-white h6 m-0">@value2</p></div>                     
+                    </div>
+                </div>
+            </button>
+
+            i++;
+        }
+    }
+}
+
+

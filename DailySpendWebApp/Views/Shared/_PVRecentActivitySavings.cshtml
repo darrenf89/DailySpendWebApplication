@@ -8,13 +8,15 @@
     else
     {
         int i = 1; 
-        foreach(Savings S in Model.Savings)
+        List<Savings> SortedSavings = Model.Savings.OrderByDescending(t => t.isSavingsClosed).ToList();
+
+        foreach (Savings S in SortedSavings)
         {
             string ButtonID = "btnEditSaving" + i;
 
             string BackgroundColor = "";
             string Opactiy = "1";
-            if(!S.isSavingsClosed)
+            if(S.isSavingsClosed)
             {
                 BackgroundColor = "#333";
                 Opactiy = "0.5";
@@ -34,11 +36,11 @@
             string IconString = "";
             if(S.isRegularSaving)
             {
-                IconString = "p-1 fs-2 bi bi-arrow-repeat text-white";
+                IconString = "p-1 fs-4 bi bi-arrow-repeat text-white";
             }
             else
             {
-                IconString = "p-1 fs-2 bi bi-envelope-check text-white";
+                IconString = "p-1 fs-4 bi bi-envelope-check text-white";
             }
 
             string SavingType = "";
@@ -104,11 +106,11 @@
 
 
 
-            <button type="submit" id="@ButtonID" asp-action="EditSaving" asp-controller="Savings" asp-route-TransactionID="@S.SavingID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
-                <div class="d-flex container align-items-center p-0" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
+            <button type="submit" id="@ButtonID" asp-action="EditSaving" asp-controller="Savings" asp-route-SavingID="@S.SavingID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
+                <div class="d-flex container align-items-center p-0 py-1" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
                     <div class="col-3">                        
                         <i class="@IconString" style="opacity: 1 !important;"></i>
-                        @if(GoalValue == ""){}else{<div><p class="text-end text-white h6 m-0">@GoalValue</p></div>}                          
+                        @if(GoalValue == ""){}else{<div><p class="text-center text-white fs-6 m-0">@GoalValue</p></div>}                          
                     </div>
                     <div class="d-flex flex-column align-items-start justify-content-between col-6 ps-2 pb-1">
                         <div><p class="text-start text-white h2 m-0">@S.SavingsName</p></div>

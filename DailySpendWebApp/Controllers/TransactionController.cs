@@ -31,21 +31,24 @@ namespace DailySpendWebApp.Controllers
 
         private readonly IProductTools _pt;
 
-        public TransactionController(ILogger<TransactionController> logger, ApplicationDBContext db, IProductTools pt)
+        private readonly IHttpContextAccessor _ca;
+
+        public TransactionController(ILogger<TransactionController> logger, ApplicationDBContext db, IProductTools pt, IHttpContextAccessor ca)
         {
             _logger = logger;
             _db = db;
             _pt = pt;
+            _ca = ca;
 
-            CultureInfo nfi = new CultureInfo("en-GB");
+            string? Email = _ca.HttpContext.User.Identity.Name;
+            var Users = _db.UserAccounts
+                .Where(x => x.Email == Email);
+            UserAccounts? UserAccount = Users.FirstOrDefault();
 
-            nfi.NumberFormat.CurrencySymbol = "£";
-            nfi.NumberFormat.CurrencyDecimalSeparator = ".";
-            nfi.NumberFormat.CurrencyGroupSeparator = ",";
-            nfi.NumberFormat.CurrencyDecimalDigits = 2;
-            nfi.NumberFormat.CurrencyPositivePattern = 0;
-
-            Thread.CurrentThread.CurrentCulture = nfi;
+            if (UserAccount.DefaultBudgetID != null)
+            {
+                Thread.CurrentThread.CurrentCulture = _pt.LoadCurrencySetting((int)UserAccount.DefaultBudgetID);
+            }
         }
 
         [HttpPost]
@@ -551,6 +554,16 @@ namespace DailySpendWebApp.Controllers
             TempData["PageHeading"] = "Select a Saving Category!";
 
             return View("SelectSaving", obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Transaction/EditTransaction/{TransactionID?}")]
+        public IActionResult EditTransaction(Transactions obj, int? TransactionID)
+        {
+            obj = _db.Transactions.Where(t => t.TransactionID == TransactionID).FirstOrDefault();
+
+            return View("EditTransaction", obj);
         }
         
 

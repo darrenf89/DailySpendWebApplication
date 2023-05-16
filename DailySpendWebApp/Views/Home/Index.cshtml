@@ -6,57 +6,61 @@
     var id = ViewContext.RouteData.Values["id"];
     var ReMess = ViewContext.RouteData.Values["ReMess"];
 }
-
-<div class="">
-    <div class="mt-1 mb-4 mx-4 p-3 border border-dark border-1 bg-white rounded-4 shadow">
-        <div id="BudgetStatus" >
-        </div>
-    </div>
-    <div class="mb-4">
-        <div class="bg-primary rounded-3 shadow mb-3" style="width: 50%">
-            <h1 class="text-white display-6 p-1 ps-2">Recent Activity</h1>
-        </div>        
-        <div class="border border-1 border-primary shadow">
-            <div id="RecentActivityTabs" class="d-flex border-bottom border-primary border-3 w-100">
-                <button class="col-3 p-2 text-white" id="RecentActivityBills" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Bills')">Bills</button>
-                <button class="col-3 p-2 bg-primary text-white" id="RecentActivityTransactions" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Transactions')">Transactions</button>
-                <button class="col-3 p-2 text-white" id="RecentActivitySavings" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Savings')">Savings</button>
-                <button class="col-3 p-2 text-white" id="RecentActivityIncomes" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Incomes')"> Income</button>
-            </div>
-            <div id="RecentActivity" style="max-height: 300px; overflow: scroll">
-
+<form method="post">
+    <div class="">
+        <div class="mt-1 mb-4 mx-4 p-3 border border-dark border-1 bg-white rounded-4 shadow">
+            <div id="BudgetStatus" >
             </div>
         </div>
-    </div>
-    <div>
-        <div class="bg-primary rounded-3 shadow mb-3" style="width: 50%">
-            <h1 class="text-white display-6 p-1 ps-2">Next Pay Info</h1>
-        </div>
-    </div>
-    <div id="BudgetInfo" class="my-5">
-        <div class="card text-white bg-white mb-3 shadow">
-            <div class="card-header p-2 d-flex justify-content-between border-bottom border-primary" style="background-color: #FFCC98;">
-                <h8 class="col-6 text-dark">Budget Info</h8>
-                <div class="d-flex justify-content-end col-4 align-items-center">
-                    <a style="text-decoration: none" asp-controller="Budgets" asp-action="EnterBudgetDetails"><p class="text-dark d-flex align-items-center m-0" style="font-size: 12px;"> NEW</p></a>
+        <div class="mb-4">
+            <div class="bg-primary rounded-3 shadow mb-3" style="width: 50%">
+                <h1 class="text-white display-6 p-1 ps-2">Recent Activity</h1>
+            </div>        
+            <div class="border border-1 border-primary shadow">
+                <div id="RecentActivityTabs" class="d-flex border-bottom border-primary border-3 w-100">
+                    <button type="button" class="col-3 p-2 text-white" id="RecentActivityBills" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Bills')">Bills</button>
+                    <button type="button" class="col-3 p-2 bg-primary text-white" id="RecentActivityTransactions" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Transactions')">Transactions</button>
+                    <button type="button" class="col-3 p-2 text-white" id="RecentActivitySavings" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Savings')">Savings</button>
+                    <button type="button" class="col-3 p-2 text-white" id="RecentActivityIncomes" style="background-color: #f39b7e; border: none;" onclick="UpdateRecentActivity('Incomes')"> Income</button>
+                </div>
+                <div id="RecentActivity" style="height: 300px; overflow: scroll; background-color: #f39b7e">
+
                 </div>
             </div>
-            <div class="card-body">
-                <div id="MoneyInfo"></div>
-                <div id="nextIncomeEventInfo"></div>
+        </div>
+        <div>
+            <div class="bg-primary rounded-3 shadow mb-3" style="width: 50%">
+                <h1 class="text-white display-6 p-1 ps-2">Next Pay Info</h1>
             </div>
-            <div class="bg-light text-dark d-flex align-items-center justify-content-start border-top border-grey">
-                <p class="m-0 pt-1 ps-2" style="font-size: 12px"><a asp-action="EnterBudgetDetails" asp-controller="Budgets">Edit Budget Settings</a></p>
+            <div id="NextPayInfo">
+
+            </div>
+        </div>
+        <div id="BudgetInfo" class="my-5">
+            <div class="card text-white bg-white mb-3 shadow">
+                <div class="card-header p-2 d-flex justify-content-between border-bottom border-primary" style="background-color: #FFCC98;">
+                    <h8 class="col-6 text-dark">Budget Info</h8>
+                    <div class="d-flex justify-content-end col-4 align-items-center">
+                        <a style="text-decoration: none" asp-controller="Budgets" asp-action="EnterBudgetDetails"><p class="text-dark d-flex align-items-center m-0" style="font-size: 12px;"> NEW</p></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="MoneyInfo"></div>
+                    <div id="nextIncomeEventInfo"></div>
+                </div>
+                <div class="bg-light text-dark d-flex align-items-center justify-content-start border-top border-grey">
+                    <p class="m-0 pt-1 ps-2" style="font-size: 12px"><a asp-action="EnterBudgetDetails" asp-controller="Budgets">Edit Budget Settings</a></p>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
-    <div class="d-flex">
-        <div id="SnackBarMessage" class="col-11 pe-1"></div>
-        <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>       
+    <div class="alert alert-dismissible p-2 alert-danger" id="snackbar">
+        <div class="d-flex">
+            <div id="SnackBarMessage" class="col-11 pe-1"></div>
+            <button type="button" class="btn-close p-3" data-bs-dismiss="alert"></button>       
+        </div>
     </div>
-</div>
+</form>
 
 <script>
 
@@ -153,5 +157,6 @@
     <script>
         $('#BudgetStatus').load("/Home/AddBudgetStatus")
         $('#RecentActivity').load("/Home/RecentActivityTransactions")
+        $('#NextPayInfo').load("/Home/NextPayInfo")
     </script>
 }

@@ -8,16 +8,18 @@
     else
     {
         int i = 1; 
-        foreach(Bills B in Model.Bills)
+        List<Bills> SortedBills = Model.Bills.OrderByDescending(t => t.isClosed).ToList();
+
+        foreach (Bills B in SortedBills)
         {
             string ButtonID = "btnEditBill" + i;
 
             string BackgroundColor = "";
             string Opactiy = "1";
-            if(!B.isClosed)
+            if(B.isClosed)
             {
                 BackgroundColor = "#333";
-                Opactiy = "0.5";
+                Opactiy = "1";
             }
             else
             {
@@ -34,11 +36,11 @@
             string IconString = "";
             if(B.isRecuring)
             {
-                IconString = "p-1 fs-2 bi bi-arrow-repeat text-white";
+                IconString = "p-1 fs-4 bi bi-arrow-repeat text-white";
             }
             else
             {
-                IconString = "p-1 fs-2 bi bi-1-circle text-white";
+                IconString = "p-1 fs-4 bi bi-1-circle text-white";
             }
 
             string GoalValue = "";
@@ -62,12 +64,12 @@
 
 
 
-            <button type="submit" id="@ButtonID" asp-action="EditBill" asp-controller="Bills" asp-route-TransactionID="@B.BillID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
-                <div class="d-flex container align-items-center p-0" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
-                    <div class="col-3">                        
+            <button type="submit" id="@ButtonID" asp-action="EditBill" asp-controller="Bills" asp-route-BillID="@B.BillID" class="p-0 border-1 border-bottom border-light" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
+                <div class="d-flex container align-items-center p-0 py-1" style="background-color: @(BackgroundColor); Opacity: @(Opactiy);">
+                    <div class="col-2">                        
                         <i class="@IconString" style="opacity: 1 !important;"></i>                       
                     </div>
-                    <div class="d-flex flex-column align-items-start justify-content-between col-6 ps-2 pb-1">
+                    <div class="d-flex flex-column align-items-start col-7 ps-2 pb-1">
                         <div><p class="text-start text-white h2 m-0">@B.BillName</p></div>
                         <div><p class="text-start text-white h6 m-0">@GoalValue</p></div>
                     </div>

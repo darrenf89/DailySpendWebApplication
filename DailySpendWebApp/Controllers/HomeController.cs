@@ -213,6 +213,15 @@ public class HomeController : Controller
         return PartialView("_PVLeftToSpendStatus", obj);
     }
 
+    public IActionResult NextPayInfo()
+    {
+        Budgets obj = _db.Budgets
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        return PartialView("_PVBudgetNextPayInfo", obj);
+    }
+
     public IActionResult RecentActivityTransactions()
     {
         Budgets obj = _db.Budgets
@@ -252,9 +261,11 @@ public class HomeController : Controller
     public IActionResult RecentActivityIncomes()
     {
         Budgets obj = _db.Budgets
-            .Include(x => x.IncomeEvents.OrderByDescending(i => i.IncomeEventID).Take(10))
+            .Include(x => x.IncomeEvents.OrderByDescending(i => i.IncomeEventID).Take(5))
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
+
+        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivityIncomes", obj);
     }
