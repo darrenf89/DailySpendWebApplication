@@ -216,6 +216,25 @@ function formatNumber(n) {
 function formatCurrency(input, blur) {
     // appends $ to value, validates decimal side
     // and puts cursor back in right position.
+    if (typeof CurrencySymbol !== 'undefined') {
+        var CurrencySymbol = "£"
+    }
+
+    if (typeof CurrencyPlacement !== 'undefined') {
+        var CurrencyPlacement = "Before"
+    }
+
+    if (typeof SymbolSpace !== 'undefined') {
+        var SymbolSpace = "No"
+    }
+
+    if (typeof DecimalSeperator !== 'undefined') {
+        var DecimalSeperator = "."        
+    }
+
+    if (typeof CurrencySpacer !== 'undefined') {
+        var DecimalSeperator = ","        
+    }
 
     // get input value
     var input_val = input.val();
@@ -256,18 +275,84 @@ function formatCurrency(input, blur) {
         right_side = right_side.substring(0, 2);
 
         // join number by .
-        input_val = "£" + left_side + "." + right_side;
+        if(CurrencyPlacement == "Before")
+        {
+            if(SymbolSpace == "No")
+            {
+                input_val = CurrencySymbol + left_side + DecimalSeperator + right_side;
+            }
+            else if (SymbolSpace == "Yes")
+            {
+                input_val = CurrencySymbol + " " + left_side + DecimalSeperator + right_side;
+            }
+        }
+        else if (CurrencyPlacement == "After")
+        {
+            if(SymbolSpace == "No")
+            {
+                input_val =  left_side + DecimalSeperator + right_side + CurrencySymbol;
+            }
+            else if (SymbolSpace == "Yes")
+            {
+                input_val =  left_side + DecimalSeperator + right_side + " " + CurrencySymbol;
+            }        
+        }
 
     } else {
         // no decimal entered
         // add commas to number
         // remove all non-digits
         input_val = formatNumber(input_val);
-        input_val = "£" + input_val;
+
+        if(CurrencyPlacement == "Before")
+        {
+            if(SymbolSpace == "No")
+            {
+                input_val = CurrencySymbol + input_val + DecimalSeperator;
+            }
+            else if (SymbolSpace == "Yes")
+            {
+                input_val = CurrencySymbol + " " + input_val + DecimalSeperator;
+            }
+        }
+        else if (CurrencyPlacement == "After")
+        {
+            if(SymbolSpace == "No")
+            {
+                input_val =  input_val + DecimalSeperator + CurrencySymbol;
+            }
+            else if (SymbolSpace == "Yes")
+            {
+                input_val =  input_val + DecimalSeperator + " " + CurrencySymbol;
+            }        
+        }
 
         // final formatting
         if (blur === "blur") {
-            input_val += ".00";
+            left_side = formatNumber(input_val);
+            right_side = ".00"
+            if(CurrencyPlacement == "Before")
+            {
+                if(SymbolSpace == "No")
+                {
+                    input_val = CurrencySymbol + left_side + DecimalSeperator + right_side;
+                }
+                else if (SymbolSpace == "Yes")
+                {
+                    input_val = CurrencySymbol + " " + left_side + DecimalSeperator + right_side;
+                }
+            }
+            else if (CurrencyPlacement == "After")
+            {
+                if(SymbolSpace == "No")
+                {
+                    input_val =  left_side + DecimalSeperator + right_side + CurrencySymbol;
+                }
+                else if (SymbolSpace == "Yes")
+                {
+                    input_val =  left_side + DecimalSeperator + right_side + " " + CurrencySymbol;
+                }        
+            }
         }
     }
 

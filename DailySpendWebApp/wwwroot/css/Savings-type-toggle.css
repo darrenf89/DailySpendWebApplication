@@ -136,6 +136,11 @@ input[name="currency-field"]::placeholder {
     outline: none;
 }
 
+#txtPayAmount {
+    border: none;
+    outline: none;
+}
+
 #Notes {
     border: none;
     outline: none;
