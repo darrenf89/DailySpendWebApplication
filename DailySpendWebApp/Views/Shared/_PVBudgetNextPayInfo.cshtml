@@ -16,10 +16,12 @@
         <div class="d-flex flex-column text-left">
             <p class="mb-0">You have @NumberOfDays to PAYDAY!</p>
         <div id="divPayAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-            <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center" onchange="UpdateHdnTransactionAmount()" onblue=""/>
-            <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="">
-                <i class="bi bi-pencil"></i>
-            </button>
+            <div class="border-bottom border-2 border-white border-2">
+                <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center disabled" onchange="UpdateHdnTransactionAmount()" onblue=""/>
+                <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="EditPayAmount()">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
             <input type="hidden" id="PayAmount" name="PayAmount" />
         </div>
             <p class="pb-0 mb-0" style="line-height: 100%; font-size: 9pt">Left To Spend Today</p>
@@ -28,12 +30,37 @@
 </div>
 
 <script>
-    const
+    var CurrencySymbol = '@Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol'
+    var CurrencySpacer = '@Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator'
+    var DecimalSeperator = '@Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator'
+    @{
+        if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 0)
+        {
+            @:var CurrencyPlacement =  'Before'
+            @:var SymbolSpace =  'No'
+        }
+        else if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 1)
+        {
+            @:var CurrencyPlacement =  'After'
+            @:var SymbolSpace =  'No'
+        }
+        else if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 2)
+        {
+            @:var CurrencyPlacement =  'Before'
+            @:var SymbolSpace =  'Yes'
+        }
+        else if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 3)
+        {
+            @:var CurrencyPlacement =  'After'
+            @:var SymbolSpace =  'Yes'
+        }
+    }
+    
 
     function UpdateHdnTransactionAmount() 
     {
         var txtBillAmount = document.getElementById('txtPayAmount').value;
-        var numBillAmount = txtBillAmount.replace('£', '').replace(',', '').replace('-', '');
+        var numBillAmount = txtBillAmount.replace(CurrencySymbol, '').replace(DecimalSeperator, '').replace(CurrencySpacer, '').replace(' ','');
         document.getElementById('PayAmount').value = numBillAmount;
     }
 
