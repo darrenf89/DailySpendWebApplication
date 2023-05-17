@@ -47,9 +47,10 @@ namespace DailySpendWebApp.Controllers
 
             if (UserAccount.DefaultBudgetID != null)
             {
-                Thread.CurrentThread.CurrentCulture = _pt.LoadCurrencySetting((int)UserAccount.DefaultBudgetID);
+                CultureInfo.DefaultThreadCurrentCulture = _pt.LoadCurrencySetting((int)UserAccount.DefaultBudgetID);
             }
         }
+            
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -233,7 +234,31 @@ namespace DailySpendWebApp.Controllers
         }
 
         public IActionResult AddTransaction(Transactions obj)
-        {           
+        {
+            ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.CurrencySpacer = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyGroupSeparator;
+            ViewBag.DecimalSeperator = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalSeparator;
+
+            if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 0)
+            {
+                ViewBag.CurrencyPlacement = "Before";
+                ViewBag.SymbolSpace = "No";
+            }
+            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 1)
+            {
+                ViewBag.CurrencyPlacement = "After";
+                ViewBag.SymbolSpace = "No";
+            }
+            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 2)
+            {
+                ViewBag.CurrencyPlacement = "Before";
+                ViewBag.SymbolSpace = "Yes";
+            }
+            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 3)
+            {
+                ViewBag.CurrencyPlacement = "After";
+                ViewBag.SymbolSpace = "Yes";
+            }
 
             TempData["PageHeading"] = "Add a Transaction!";
             return View(obj);

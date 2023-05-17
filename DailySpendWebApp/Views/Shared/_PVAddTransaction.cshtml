@@ -192,7 +192,12 @@
             </div>
         </div>
     </div>
-    <div class="text-cneter p-4"><strong><span class="text-danger" asp-validation-for="TransactionID"></span></strong></div>    
+    <div class="text-cneter p-4"><strong><span class="text-danger" asp-validation-for="TransactionID"></span></strong></div>
+    <input type="hidden" id="CurrencySymbol" value="@Html.Raw(ViewBag.CurrencySymbol)" />
+    <input type="hidden" id="CurrencySpacer" value="@Html.Raw(ViewBag.CurrencySpacer)" />
+    <input type="hidden" id="DecimalSeperator" value="@Html.Raw(ViewBag.DecimalSeperator)" />
+    <input type="hidden" id="CurrencyPlacement" value="@Html.Raw(ViewBag.CurrencyPlacement)" />
+    <input type="hidden" id="SymbolSpace" value="@Html.Raw(ViewBag.SymbolSpace)" />
 </div>
 
 <style>
@@ -338,8 +343,6 @@
         var txtBillAmount = document.getElementById('txtTransactionAmount').value;
         var numBillAmount = txtBillAmount.replace('£', '').replace(',', '').replace('-', '');
         document.getElementById('TransactionAmount').value = numBillAmount;
-    }
-
-
+    }    
 
 </script>
