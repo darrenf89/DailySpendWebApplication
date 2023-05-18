@@ -4,6 +4,11 @@
     string NumberOfDays = "";
     string txtPayAmount = String.Format("{0:c}", Model.PaydayAmount);
     string AmountPlaceholder = String.Format("{0:c}", 0.00);
+    string txtDateInformation = "Select Date";
+    if(Model.NextIncomePayday != null)
+    {
+        txtDateInformation = @Model.NextIncomePayday.GetValueOrDefault().ToString("dd MMMM yyyy");
+    }
 }
 
 <div class="card text-white bg-success my-1 border-dark shadow">
@@ -15,42 +20,56 @@
         </div>
         <div class="d-flex flex-column text-left">
             <p class="mb-0">You have @NumberOfDays to PAYDAY!</p>
-        <div id="divPayAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-            <div id="ToggleBorder" class="">
-                <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center" disabled onchange="UpdateHdnTransactionAmount()" onblue="FinishEditPay"/>
-                <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="EditPayAmount()">
-                    <i class="bi bi-pencil"></i>
-                </button>
+            <div id="divPayAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
+                <div id="ToggleBorder" class="">
+                    <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center" disabled onchange="UpdateHdnTransactionAmount()" onblue="FinishEditPay()"/>
+                    <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="EditPayAmount()">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </div>
+                <input type="hidden" id="PayAmount" name="PayAmount" />
             </div>
-            <input type="hidden" id="PayAmount" name="PayAmount" />
-        </div>
             <p class="pb-0 mb-0" style="line-height: 100%; font-size: 9pt">Left To Spend Today</p>
+            <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 100%">
+                <div class="d-flex justify-content-between">
+                    <div class="text-right">
+                        <p class="text-White mt-3 mb-3 pe-2 h5" id="txtDateInformation">@txtDateInformation</p>
+                    </div>
+                    <input type="hidden" id="PayDate" name="PayDate" value="" />
+                </div>
+            </button>
         </div>
     </div>
 </div>
 
 
 <script>
-
-    function FinishEditPay()
+    $('#txtDateInformation').change(function()
     {
-        UpdateHdnTransactionAmount()
+        UpdatePayDate();
+    });
 
-        var SendDate = { PayAmount : $('#PayAmount').val() }
-
+    function UpdatePayDate()
+    {
         $.ajax({
-            url: '/Home/UpdatePayValue',
+            url: '/Home/UpdatePayDate/',
             type: 'POST',
-            data:  SendData,
-
-            success: function (result) {
-                
-                $("#myPartialViewDiv").html(result);
+            data:  
+            {
+                PayDate: $('#PayDate').val()
             },
 
-            error: function (xhr, exception) {
+            success: function (result) 
+            {
+                $("#NextPayInfo").html('');
+                $("#NextPayInfo").html(result);
+            },
 
-                return false;
+            error: function (xhr, exception) 
+            {
+                console.log(exception);
+                $("#NextPayInfo").html('');
+                $('#NextPayInfo').load("/Home/NextPayInfo")
             }
         });
     }
@@ -68,6 +87,5 @@
         var numBillAmount = txtBillAmount.replace(CurrencySymbol, '').replace(DecimalSeperator, '').replace(CurrencySpacer, '').replace(' ','');
         document.getElementById('PayAmount').value = numBillAmount;
     }
-
 
 </script>

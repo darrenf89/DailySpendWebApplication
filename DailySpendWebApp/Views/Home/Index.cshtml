@@ -66,8 +66,63 @@
     <input type="hidden" id="CurrencyPlacement" value="@Html.Raw(ViewBag.CurrencyPlacement)" />
     <input type="hidden" id="SymbolSpace" value="@Html.Raw(ViewBag.SymbolSpace)" />
 </form>
+<div id="myPartialViewDiv">
+</div>
 
 <script>
+
+
+    function OpenModal() {
+        document.getElementById('DatePickerContainter').style.display = 'block';
+    }
+
+    $(document).ready(function () {
+        $.get({
+            url: '/Home/LoadDatePicker/',
+            data: {
+                textElement: 'txtDateInformation',
+                InputElement: 'PayDate',
+                DatePattern: 'ddmmmmyyyy',
+                IncludeDay: 'None',
+                Seperator: 'Space'
+            },
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    })
+
+    function FinishEditPay()
+    {
+        UpdateHdnTransactionAmount()
+
+        $.ajax({
+            url: '/Home/UpdatePayValue/',
+            type: 'POST',
+            data:  
+            {
+                PayAmount: $('#PayAmount').val()
+            },
+
+            success: function (result) 
+            {
+                $("#NextPayInfo").html('');
+                $("#NextPayInfo").html(result);
+            },
+
+            error: function (xhr, exception) 
+            {
+                console.log(exception);
+                $("#NextPayInfo").html('');
+                $('#NextPayInfo').load("/Home/NextPayInfo")
+            }
+        });
+    }
 
     function UpdateRecentActivity(Type)
     {        

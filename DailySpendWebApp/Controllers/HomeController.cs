@@ -271,7 +271,26 @@ public class HomeController : Controller
         return PartialView("_PVRecentActivityIncomes", obj);
     }
 
-    
+    [HttpPost]
+    [Route("Home/UpdatePayValue/{PayAmount?}")]
+
+    public IActionResult UpdatePayValue(int? PayAmount)
+    {
+        Budgets obj = _db.Budgets
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        _db.Attach(obj);
+
+        if (PayAmount != 0 & PayAmount != null)
+        {
+            obj.PaydayAmount = PayAmount;
+        }
+
+        _db.SaveChanges();
+
+        return PartialView("_PVBudgetNextPayInfo", obj);
+    }
 
     public void AddUserCurrencyPreferences()
     {
