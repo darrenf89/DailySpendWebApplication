@@ -83,7 +83,7 @@
                 textElement: 'txtDateInformation',
                 InputElement: 'PayDate',
                 DatePattern: 'ddmmmmyyyy',
-                IncludeDay: 'None',
+                IncludeDay: 'Short',
                 Seperator: 'Space'
             },
 
@@ -101,12 +101,14 @@
     {
         UpdateHdnTransactionAmount()
 
+        var PayAmountTxt = $('#PayAmount').val()
+
         $.ajax({
             url: '/Home/UpdatePayValue/',
             type: 'POST',
-            data:  
+            data:
             {
-                PayAmount: $('#PayAmount').val()
+                PayAmount: PayAmountTxt
             },
 
             success: function (result) 

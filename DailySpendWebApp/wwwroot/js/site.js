@@ -181,7 +181,7 @@ function ShowHideInfo(DivName, Icon) {
 }
 
 $("input[data-type='NegativeCurrency']").on({
-    keyup: function () {
+    keypress: function () {
         NegativeformatCurrency($(this));
     },
     blur: function () {
@@ -190,7 +190,7 @@ $("input[data-type='NegativeCurrency']").on({
 });
 
 $("input[data-type='PositiveCurrency']").on({
-    keyup: function () {
+    keypress: function () {
         formatCurrency($(this));
     },
     blur: function () {
@@ -199,7 +199,7 @@ $("input[data-type='PositiveCurrency']").on({
 });
 
 $("input[data-type='currency']").on({
-    keyup: function () {
+    keypress: function () {
         formatCurrency($(this));
     },
     blur: function () {
@@ -210,7 +210,7 @@ $("input[data-type='currency']").on({
 function formatNumber(n) {
     // format number 1000000 to 1,234,567
 
-    if (document.getElementById('CurrencySpacer') === undefined) {
+    if (document.getElementById('CurrencySpacer') == undefined) {
         var CurrencySpacer = ","
     }
     else {
@@ -231,7 +231,7 @@ function formatNumber(n) {
 function formatCurrency(input, blur) {
     // appends $ to value, validates decimal side
     // and puts cursor back in right position.
-    if (document.getElementById('CurrencySymbol') === undefined) {
+    if (document.getElementById('CurrencySymbol') == undefined) {
         var CurrencySymbol = "£"
     }
     else {
@@ -245,7 +245,7 @@ function formatCurrency(input, blur) {
         }
     }
 
-    if (document.getElementById('CurrencyPlacement') === undefined)  {
+    if (document.getElementById('CurrencyPlacement') == undefined)  {
         var CurrencyPlacement = "Before"
     }
     else {
@@ -259,7 +259,7 @@ function formatCurrency(input, blur) {
         }
     }
 
-    if (document.getElementById('SymbolSpace') === undefined)  {
+    if (document.getElementById('SymbolSpace') == undefined)  {
         var SymbolSpace = "No"
     }
     else {
@@ -273,7 +273,7 @@ function formatCurrency(input, blur) {
         }
     }
 
-    if (document.getElementById('DecimalSeperator') === undefined) {
+    if (document.getElementById('DecimalSeperator') == undefined) {
         var DecimalSeperator = "."
     }
     else {
@@ -286,7 +286,6 @@ function formatCurrency(input, blur) {
             var DecimalSeperator = $('#DecimalSeperator').val()
         }
     }
-
 
 
     // get input value
@@ -302,12 +301,12 @@ function formatCurrency(input, blur) {
     var caret_pos = input.prop("selectionStart");
 
     // check for decimal
-    if (input_val.indexOf(".") >= 0) {
+    if (input_val.indexOf(DecimalSeperator) >= 0) {
 
         // get position of first decimal
         // this prevents multiple decimals from
         // being entered
-        var decimal_pos = input_val.indexOf(".");
+        var decimal_pos = input_val.indexOf(DecimalSeperator);
 
         // split number by decimal point
         var left_side = input_val.substring(0, decimal_pos);
@@ -353,18 +352,18 @@ function formatCurrency(input, blur) {
 
         if (CurrencyPlacement == "Before") {
             if (SymbolSpace == "No") {
-                input_val = CurrencySymbol + input_val + DecimalSeperator;
+                input_val = CurrencySymbol + input_val;
             }
             else if (SymbolSpace == "Yes") {
-                input_val = CurrencySymbol + " " + input_val + DecimalSeperator;
+                input_val = CurrencySymbol + " " + input_val;
             }
         }
         else if (CurrencyPlacement == "After") {
             if (SymbolSpace == "No") {
-                input_val = input_val + DecimalSeperator + CurrencySymbol;
+                input_val = input_val + CurrencySymbol;
             }
             else if (SymbolSpace == "Yes") {
-                input_val = input_val + DecimalSeperator + " " + CurrencySymbol;
+                input_val = input_val + " " + CurrencySymbol;
             }
         }
 
@@ -374,18 +373,18 @@ function formatCurrency(input, blur) {
             right_side = DecimalSeperator + "00"
             if (CurrencyPlacement == "Before") {
                 if (SymbolSpace == "No") {
-                    input_val = CurrencySymbol + left_side + DecimalSeperator + right_side;
+                    input_val = CurrencySymbol + left_side  + right_side;
                 }
                 else if (SymbolSpace == "Yes") {
-                    input_val = CurrencySymbol + " " + left_side + DecimalSeperator + right_side;
+                    input_val = CurrencySymbol + " " + left_side + right_side;
                 }
             }
             else if (CurrencyPlacement == "After") {
                 if (SymbolSpace == "No") {
-                    input_val = left_side + DecimalSeperator + right_side + CurrencySymbol;
+                    input_val = left_side + right_side + CurrencySymbol;
                 }
                 else if (SymbolSpace == "Yes") {
-                    input_val = left_side + DecimalSeperator + right_side + " " + CurrencySymbol;
+                    input_val = left_side  + right_side + " " + CurrencySymbol;
                 }
             }
         }
@@ -402,7 +401,7 @@ function formatCurrency(input, blur) {
 
 function NegativeformatCurrency(input, blur) {
 
-    if (document.getElementById('CurrencySymbol') === undefined) {
+    if (document.getElementById('CurrencySymbol') == undefined) {
         var CurrencySymbol = "£"
     }
     else {
@@ -416,7 +415,7 @@ function NegativeformatCurrency(input, blur) {
         }
     }
 
-    if (document.getElementById('CurrencyPlacement') === undefined)  {
+    if (document.getElementById('CurrencyPlacement') == undefined)  {
         var CurrencyPlacement = "Before"
     }
     else {
@@ -430,7 +429,7 @@ function NegativeformatCurrency(input, blur) {
         }
     }
 
-    if (document.getElementById('SymbolSpace') === undefined)  {
+    if (document.getElementById('SymbolSpace') == undefined)  {
         var SymbolSpace = "No"
     }
     else {
@@ -444,7 +443,7 @@ function NegativeformatCurrency(input, blur) {
         }
     }
 
-    if (document.getElementById('DecimalSeperator') === undefined) {
+    if (document.getElementById('DecimalSeperator') == undefined) {
         var DecimalSeperator = "."
     }
     else {
@@ -522,18 +521,18 @@ function NegativeformatCurrency(input, blur) {
 
         if (CurrencyPlacement == "Before") {
             if (SymbolSpace == "No") {
-                input_val = "-" + CurrencySymbol + input_val + DecimalSeperator;
+                input_val = "-" + CurrencySymbol + input_val;
             }
             else if (SymbolSpace == "Yes") {
-                input_val = "-" + CurrencySymbol + " " + input_val + DecimalSeperator;
+                input_val = "-" + CurrencySymbol + " " + input_val;
             }
         }
         else if (CurrencyPlacement == "After") {
             if (SymbolSpace == "No") {
-                input_val = input_val + DecimalSeperator + CurrencySymbol + "-";
+                input_val = input_val + CurrencySymbol + "-";
             }
             else if (SymbolSpace == "Yes") {
-                input_val = input_val + DecimalSeperator + " " + CurrencySymbol + "-";
+                input_val = input_val + " " + CurrencySymbol + "-";
             }
         }
 
@@ -543,18 +542,18 @@ function NegativeformatCurrency(input, blur) {
             right_side = DecimalSeperator + "00"
             if (CurrencyPlacement == "Before") {
                 if (SymbolSpace == "No") {
-                    input_val = "-" + CurrencySymbol + left_side + DecimalSeperator + right_side;
+                    input_val = "-" + CurrencySymbol + left_side + right_side;
                 }
                 else if (SymbolSpace == "Yes") {
-                    input_val = "-" + CurrencySymbol + " " + left_side + DecimalSeperator + right_side;
+                    input_val = "-" + CurrencySymbol + " " + left_side + right_side;
                 }
             }
             else if (CurrencyPlacement == "After") {
                 if (SymbolSpace == "No") {
-                    input_val = left_side + DecimalSeperator + right_side + CurrencySymbol + "-";
+                    input_val = left_side + right_side + CurrencySymbol + "-";
                 }
                 else if (SymbolSpace == "Yes") {
-                    input_val = left_side + DecimalSeperator + right_side + " " + CurrencySymbol + "-";
+                    input_val = left_side + right_side + " " + CurrencySymbol + "-";
                 }
             }
         }

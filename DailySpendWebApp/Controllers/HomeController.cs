@@ -35,7 +35,7 @@ public class HomeController : Controller
 
         if (UserAccount.DefaultBudgetID != null)
         {
-            Thread.CurrentThread.CurrentCulture = _pt.LoadCurrencySetting((int)UserAccount.DefaultBudgetID);
+            CultureInfo.DefaultThreadCurrentCulture = _pt.LoadCurrencySetting((int)UserAccount.DefaultBudgetID);
         }
 
     }
@@ -272,9 +272,9 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    [Route("Home/UpdatePayValue/{PayAmount?}")]
+    [Route("Home/UpdatePayValue/")]
 
-    public IActionResult UpdatePayValue(int? PayAmount)
+    public IActionResult UpdatePayValue(decimal? PayAmount)
     {
         Budgets obj = _db.Budgets
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))

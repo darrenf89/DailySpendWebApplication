@@ -7,37 +7,37 @@
     string txtDateInformation = "Select Date";
     if(Model.NextIncomePayday != null)
     {
-        txtDateInformation = @Model.NextIncomePayday.GetValueOrDefault().ToString("dd MMMM yyyy");
+        txtDateInformation = @Model.NextIncomePayday.GetValueOrDefault().ToString("ddd dd MMMM yyyy");
     }
 }
 
-<div class="card text-white bg-success my-1 border-dark shadow">
+<div class="card text-white bg-success my-1 shadow">
     <div class="card-body p-2">
-        <div class="text-white me-3" style="position: relative; top: 0; right: 0">
-            <button type="submit" asp-action="EditPayIngo" asp-controller="Budgets" style="background-color: transparent; border: none; width: 100%; z-index: 99;">
-                <p>Edit Pay Info <i class="bi bi-pencil-square"></i></p>
+        <div class="text-white" style="position: absolute; top: 0px; right: 0px">
+            <button type="submit" asp-action="EditPayInfo" asp-controller="Budgets" style="background-color: transparent; border: none; z-index: 99;">
+                <p class="text-white fs-1"><i class="bi bi-pencil-square"></i></p>
             </button>
         </div>
-        <div class="d-flex flex-column text-left">
-            <p class="mb-0">You have @NumberOfDays to PAYDAY!</p>
-            <div id="divPayAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-                <div id="ToggleBorder" class="">
-                    <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center" disabled onchange="UpdateHdnTransactionAmount()" onblue="FinishEditPay()"/>
+        <div class="d-flex flex-column text-left mt-2">
+            <p class="mb-0 ps-1 fs-5">You have @NumberOfDays to PAYDAY!</p>
+            <div id="divPayAmount" class="m-0 p-0 mt-3">
+                <div id="ToggleBorder" class="d-flex justify-content-start align-items-center" style="width: 60%">
+                    <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; max-width: 80%; background-color: transparent; font-size: 35px; line-height: 100%" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 text-start" disabled onchange="UpdateHdnTransactionAmount()" onblur="FinishEditPay()" />
                     <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="EditPayAmount()">
-                        <i class="bi bi-pencil"></i>
+                        <i class="bi bi-pencil fs-2 text-white"></i>
                     </button>
                 </div>
                 <input type="hidden" id="PayAmount" name="PayAmount" />
             </div>
-            <p class="pb-0 mb-0" style="line-height: 100%; font-size: 9pt">Left To Spend Today</p>
-            <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 100%">
+            <p class="pb-0 mb-0 fs-6 ps-1" style="line-height: 100%;">For Next Pay Day</p>
+            <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 60%">
                 <div class="d-flex justify-content-between">
                     <div class="text-right">
-                        <p class="text-White mt-3 mb-3 pe-2 h5" id="txtDateInformation">@txtDateInformation</p>
-                    </div>
-                    <input type="hidden" id="PayDate" name="PayDate" value="" />
+                        <p class="text-White mt-3 mb-0 pe-2 fs-2 text-white" id="txtDateInformation">@txtDateInformation</p>
+                    </div>                    
                 </div>
             </button>
+            <input type="hidden" id="PayDate" name="PayDate" value="" />
         </div>
     </div>
 </div>
@@ -76,15 +76,75 @@
 
     function EditPayAmount()
     {
-        $('#ToggleBorder').toggleClass('border-bottom border-2 border-white border-2')
+        $('#ToggleBorder').toggleClass('border-bottom border-2 border-white border-3 mb-2')
         $('#txtPayAmount').prop('disabled', (i, v) => !v);
         $('#txtPayAmount').focus()
     }
 
     function UpdateHdnTransactionAmount() 
     {
+        if (document.getElementById('CurrencySymbol') == undefined) {
+            var CurrencySymbol = "£"
+        }
+        else {
+            if (document.getElementById('CurrencySymbol').value == '') {
+                var CurrencySymbol = "£"
+            }
+            else {
+                var CurrencySymbol = $('#CurrencySymbol').val()
+            }
+        }
+
+        if (document.getElementById('CurrencyPlacement') == undefined) {
+            var CurrencyPlacement = "Before"
+        }
+        else {
+            if (document.getElementById('CurrencyPlacement').value == '') {
+                var CurrencyPlacement = "Before"
+            }
+            else {
+                var CurrencyPlacement = $('#CurrencyPlacement').val()
+            }
+        }
+
+        if (document.getElementById('SymbolSpace') == undefined) {
+            var SymbolSpace = "No"
+        }
+        else {
+            if (document.getElementById('SymbolSpace').value == '') {
+                var SymbolSpace = "No"
+            }
+            else {
+                var SymbolSpace = $('#SymbolSpace').val()
+            }
+        }
+
+        if (document.getElementById('DecimalSeperator') == undefined) {
+            var DecimalSeperator = "."
+        }
+        else {
+            if (document.getElementById('DecimalSeperator').value == '') {
+                var DecimalSeperator = "."
+            }
+            else {
+                var DecimalSeperator = $('#DecimalSeperator').val()
+            }
+        }
+
+        if (document.getElementById('CurrencySpacer') == undefined) {
+            var CurrencySpacer = ","
+        }
+        else {
+            if (document.getElementById('CurrencySpacer').value == '') {
+                var CurrencySpacer = ","
+            }
+            else {
+                var CurrencySpacer = $('#CurrencySpacer').val()
+            }
+        }
+
         var txtBillAmount = document.getElementById('txtPayAmount').value;
-        var numBillAmount = txtBillAmount.replace(CurrencySymbol, '').replace(DecimalSeperator, '').replace(CurrencySpacer, '').replace(' ','');
+        var numBillAmount = txtBillAmount.replace(CurrencySymbol, '').replace(CurrencySpacer, '').replace(' ', '').replace('-', '');
         document.getElementById('PayAmount').value = numBillAmount;
     }
 
