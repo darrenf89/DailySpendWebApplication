@@ -61,6 +61,11 @@
         <a asp-action="Index" asp-controller="Home"><i style="font-size: 40px;" class="ps-2 bi bi-x text-white"></i></a>
     </div>
 </div>
+<input type="hidden" id="CurrencySymbol" value="@Html.Raw(ViewBag.CurrencySymbol)" />
+<input type="hidden" id="CurrencySpacer" value="@Html.Raw(ViewBag.CurrencySpacer)" />
+<input type="hidden" id="DecimalSeperator" value="@Html.Raw(ViewBag.DecimalSeperator)" />
+<input type="hidden" id="CurrencyPlacement" value="@Html.Raw(ViewBag.CurrencyPlacement)" />
+<input type="hidden" id="SymbolSpace" value="@Html.Raw(ViewBag.SymbolSpace)" />
 
 <script>
     

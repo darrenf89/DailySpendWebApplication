@@ -160,7 +160,8 @@ public class HomeController : Controller
                     TempData["TransactionAmount"] = Amount;
                 }
 
-                    return View(obj);
+                AddUserCurrencyPreferences();
+                return View(obj);
             }
             else
             {
@@ -268,6 +269,36 @@ public class HomeController : Controller
         ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivityIncomes", obj);
+    }
+
+    
+
+    public void AddUserCurrencyPreferences()
+    {
+        ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
+        ViewBag.CurrencySpacer = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyGroupSeparator;
+        ViewBag.DecimalSeperator = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalSeparator;
+
+        if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 0)
+        {
+            ViewBag.CurrencyPlacement = "Before";
+            ViewBag.SymbolSpace = "No";
+        }
+        else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 1)
+        {
+            ViewBag.CurrencyPlacement = "After";
+            ViewBag.SymbolSpace = "No";
+        }
+        else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 2)
+        {
+            ViewBag.CurrencyPlacement = "Before";
+            ViewBag.SymbolSpace = "Yes";
+        }
+        else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 3)
+        {
+            ViewBag.CurrencyPlacement = "After";
+            ViewBag.SymbolSpace = "Yes";
+        }
     }
 
 }

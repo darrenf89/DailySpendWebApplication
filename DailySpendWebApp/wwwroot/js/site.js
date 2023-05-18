@@ -209,8 +209,19 @@ $("input[data-type='currency']").on({
 
 function formatNumber(n) {
     // format number 1000000 to 1,234,567
-    if (typeof CurrencySpacer == 'undefined') {
+
+    if (document.getElementById('CurrencySpacer') === undefined) {
         var CurrencySpacer = ","
+    }
+    else {
+        if(document.getElementById('CurrencySpacer').value == '')
+        {
+            var CurrencySpacer = ","
+        }
+        else
+        {
+            var CurrencySpacer = $('#CurrencySpacer').val()
+        }
     }
 
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, CurrencySpacer)
@@ -220,20 +231,60 @@ function formatNumber(n) {
 function formatCurrency(input, blur) {
     // appends $ to value, validates decimal side
     // and puts cursor back in right position.
-    if (typeof CurrencySymbol == 'undefined') {
+    if (document.getElementById('CurrencySymbol') === undefined) {
         var CurrencySymbol = "£"
     }
+    else {
+        if(document.getElementById('CurrencySymbol').value == '')
+        {
+            var CurrencySymbol = "£"
+        }
+        else
+        {
+            var CurrencySymbol = $('#CurrencySymbol').val()
+        }
+    }
 
-    if (typeof CurrencyPlacement == 'undefined') {
+    if (document.getElementById('CurrencyPlacement') === undefined)  {
         var CurrencyPlacement = "Before"
     }
-
-    if (typeof SymbolSpace == 'undefined') {
-        var SymbolSpace = "No"
+    else {
+        if(document.getElementById('CurrencyPlacement').value == '')
+        {
+            var CurrencyPlacement = "Before"
+        }
+        else
+        {
+            var CurrencyPlacement = $('#CurrencyPlacement').val()
+        }
     }
 
-    if (typeof DecimalSeperator == 'undefined') {
+    if (document.getElementById('SymbolSpace') === undefined)  {
+        var SymbolSpace = "No"
+    }
+    else {
+        if(document.getElementById('SymbolSpace').value == '')
+        {
+            var SymbolSpace = "No"
+        }
+        else
+        {
+            var SymbolSpace = $('#SymbolSpace').val()
+        }
+    }
+
+    if (document.getElementById('DecimalSeperator') === undefined) {
         var DecimalSeperator = "."
+    }
+    else {
+        if(document.getElementById('DecimalSeperator').value == '')
+        {
+            var DecimalSeperator = "."
+        }
+        else
+        {
+            var DecimalSeperator = $('#DecimalSeperator').val()
+        }
     }
 
 
@@ -350,23 +401,61 @@ function formatCurrency(input, blur) {
 }
 
 function NegativeformatCurrency(input, blur) {
-    if (document.getElementById('CurrencySymbol').value == '') {
+
+    if (document.getElementById('CurrencySymbol') === undefined) {
         var CurrencySymbol = "£"
     }
     else {
-        var CurrencySymbol = document.getElementById('CurrencySymbol').value
+        if(document.getElementById('CurrencySymbol').value == '')
+        {
+            var CurrencySymbol = "£"
+        }
+        else
+        {
+            var CurrencySymbol = $('#CurrencySymbol').val()
+        }
     }
 
-    if (typeof CurrencyPlacement == 'undefined') {
+    if (document.getElementById('CurrencyPlacement') === undefined)  {
         var CurrencyPlacement = "Before"
     }
-
-    if (typeof SymbolSpace == 'undefined') {
-        var SymbolSpace = "No"
+    else {
+        if(document.getElementById('CurrencyPlacement').value == '')
+        {
+            var CurrencyPlacement = "Before"
+        }
+        else
+        {
+            var CurrencyPlacement = $('#CurrencyPlacement').val()
+        }
     }
 
-    if (typeof DecimalSeperator == 'undefined') {
+    if (document.getElementById('SymbolSpace') === undefined)  {
+        var SymbolSpace = "No"
+    }
+    else {
+        if(document.getElementById('SymbolSpace').value == '')
+        {
+            var SymbolSpace = "No"
+        }
+        else
+        {
+            var SymbolSpace = $('#SymbolSpace').val()
+        }
+    }
+
+    if (document.getElementById('DecimalSeperator') === undefined) {
         var DecimalSeperator = "."
+    }
+    else {
+        if(document.getElementById('DecimalSeperator').value == '')
+        {
+            var DecimalSeperator = "."
+        }
+        else
+        {
+            var DecimalSeperator = $('#DecimalSeperator').val()
+        }
     }
 
     // get input value

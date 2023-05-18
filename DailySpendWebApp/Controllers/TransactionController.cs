@@ -78,6 +78,7 @@ namespace DailySpendWebApp.Controllers
                 if (status != "OK")
                 {
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
+                    AddUserCurrencyPreferences();
                     return View("AddTransaction", obj);
                 }
             }
@@ -114,6 +115,7 @@ namespace DailySpendWebApp.Controllers
                 if (status != "OK")
                 {
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
+                    AddUserCurrencyPreferences();
                     return View("AddTransaction", obj);
                 }
             }
@@ -141,6 +143,7 @@ namespace DailySpendWebApp.Controllers
 
             if (!ModelState.IsValid)
             {
+                AddUserCurrencyPreferences();
                 return View("AddTransaction", obj);
             }
 
@@ -175,11 +178,13 @@ namespace DailySpendWebApp.Controllers
                         if (T.isIncome)
                         {
                             ViewBag.Stage = "ConfirmSavingSpendIncome";
+                            AddUserCurrencyPreferences();
                             return View("AddTransaction", obj);
                         }
                         else
                         {
                             ViewBag.Stage = "ConfirmSavingSpendOutcome";
+                            AddUserCurrencyPreferences();
                             return View("AddTransaction", obj);
                         }
                     }
@@ -216,6 +221,7 @@ namespace DailySpendWebApp.Controllers
 
                 if (status != "OK")
                 {
+                    AddUserCurrencyPreferences();
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
                     return View("AddTransaction", obj);
                 }
@@ -235,30 +241,7 @@ namespace DailySpendWebApp.Controllers
 
         public IActionResult AddTransaction(Transactions obj)
         {
-            ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
-            ViewBag.CurrencySpacer = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyGroupSeparator;
-            ViewBag.DecimalSeperator = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalSeparator;
-
-            if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 0)
-            {
-                ViewBag.CurrencyPlacement = "Before";
-                ViewBag.SymbolSpace = "No";
-            }
-            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 1)
-            {
-                ViewBag.CurrencyPlacement = "After";
-                ViewBag.SymbolSpace = "No";
-            }
-            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 2)
-            {
-                ViewBag.CurrencyPlacement = "Before";
-                ViewBag.SymbolSpace = "Yes";
-            }
-            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 3)
-            {
-                ViewBag.CurrencyPlacement = "After";
-                ViewBag.SymbolSpace = "Yes";
-            }
+            AddUserCurrencyPreferences();
 
             TempData["PageHeading"] = "Add a Transaction!";
             return View(obj);
@@ -339,7 +322,7 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreatePayee(Transactions obj)
         {
-
+            AddUserCurrencyPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -364,6 +347,7 @@ namespace DailySpendWebApp.Controllers
                 obj.CategoryID = T.CategoryID;
             }
 
+            AddUserCurrencyPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -414,6 +398,7 @@ namespace DailySpendWebApp.Controllers
         public IActionResult PayeeBackToTransaction(Transactions obj)
         {
             obj.Payee = "";
+            AddUserCurrencyPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -421,7 +406,7 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CategoryBackToTransaction(Transactions obj)
         {
-            
+            AddUserCurrencyPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -460,6 +445,8 @@ namespace DailySpendWebApp.Controllers
 
             obj.Category = Category.CategoryName;
             obj.CategoryID = Category.CategoryID;        
+
+            AddUserCurrencyPreferences();
 
             return View("AddTransaction", obj);
         }
@@ -502,6 +489,8 @@ namespace DailySpendWebApp.Controllers
 
             obj.SavingName = Saving.SavingsName;
             obj.SavingID = Saving.SavingID;
+
+            AddUserCurrencyPreferences();
 
             return View("AddTransaction", obj);
         }
@@ -591,6 +580,32 @@ namespace DailySpendWebApp.Controllers
             return View("EditTransaction", obj);
         }
         
+        public void AddUserCurrencyPreferences()
+        {
+            ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.CurrencySpacer = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyGroupSeparator;
+            ViewBag.DecimalSeperator = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalSeparator;
 
+            if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 0)
+            {
+                ViewBag.CurrencyPlacement = "Before";
+                ViewBag.SymbolSpace = "No";
+            }
+            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 1)
+            {
+                ViewBag.CurrencyPlacement = "After";
+                ViewBag.SymbolSpace = "No";
+            }
+            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 2)
+            {
+                ViewBag.CurrencyPlacement = "Before";
+                ViewBag.SymbolSpace = "Yes";
+            }
+            else if (CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyPositivePattern == 3)
+            {
+                ViewBag.CurrencyPlacement = "After";
+                ViewBag.SymbolSpace = "Yes";
+            }
+        }
     }
 }

@@ -16,8 +16,8 @@
         <div class="d-flex flex-column text-left">
             <p class="mb-0">You have @NumberOfDays to PAYDAY!</p>
         <div id="divPayAmount" class="row justify-content-center align-items-center ms-2 me-2 mt-1">
-            <div class="border-bottom border-2 border-white border-2">
-                <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center disabled" onchange="UpdateHdnTransactionAmount()" onblue=""/>
+            <div id="ToggleBorder" class="">
+                <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; width: 75%; font-size: 35pt;" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 pt-2 pb-2 text-center" disabled onchange="UpdateHdnTransactionAmount()" onblue="FinishEditPay"/>
                 <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="EditPayAmount()">
                     <i class="bi bi-pencil"></i>
                 </button>
@@ -29,33 +29,38 @@
     </div>
 </div>
 
+
 <script>
-    var CurrencySymbol = '@Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator'
-    var CurrencySpacer = '@Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator'
-    var DecimalSeperator = '@Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator'
-    @{
-        if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 0)
-        {
-            @:var CurrencyPlacement =  'Before'
-            @:var SymbolSpace =  'No'
-        }
-        else if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 1)
-        {
-            @:var CurrencyPlacement =  'After'
-            @:var SymbolSpace =  'No'
-        }
-        else if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 2)
-        {
-            @:var CurrencyPlacement =  'Before'
-            @:var SymbolSpace =  'Yes'
-        }
-        else if(Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyPositivePattern == 3)
-        {
-            @:var CurrencyPlacement =  'After'
-            @:var SymbolSpace =  'Yes'
-        }
+
+    function FinishEditPay()
+    {
+        UpdateHdnTransactionAmount()
+
+        var SendDate = { PayAmount : $('#PayAmount').val() }
+
+        $.ajax({
+            url: '/Home/UpdatePayValue',
+            type: 'POST',
+            data:  SendData,
+
+            success: function (result) {
+                
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+
+                return false;
+            }
+        });
     }
-    
+
+    function EditPayAmount()
+    {
+        $('#ToggleBorder').toggleClass('border-bottom border-2 border-white border-2')
+        $('#txtPayAmount').prop('disabled', (i, v) => !v);
+        $('#txtPayAmount').focus()
+    }
 
     function UpdateHdnTransactionAmount() 
     {
