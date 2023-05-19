@@ -322,6 +322,25 @@ public class HomeController : Controller
         return PartialView("_PVBudgetNextPayInfo", obj);
     }
 
+    [HttpPost]
+    public IActionResult UpdatePayDate(DateTime? PayDate)
+    {
+                Budgets obj = _db.Budgets
+            .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
+            .First();
+
+        _db.Attach(obj);
+
+        if (PayDate != DateTime.MinValue & PayDate != null)
+        {
+            obj.NextIncomePayday = PayDate;
+        }
+
+        _db.SaveChanges();
+
+        return PartialView("_PVBudgetNextPayInfo", obj);
+    }
+
     public void AddUserCurrencyPreferences()
     {
         ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
