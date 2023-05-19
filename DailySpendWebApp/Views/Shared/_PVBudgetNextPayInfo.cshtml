@@ -7,8 +7,12 @@
     string txtDateInformation = "Select Date";
     if(Model.NextIncomePayday != null)
     {
-        txtDateInformation = @Model.NextIncomePayday.GetValueOrDefault().ToString("ddd dd MMMM yyyy");
+        txtDateInformation = Model.NextIncomePayday.GetValueOrDefault().ToString("ddd dd MMMM yyyy");
     }
+    string DatePickerDefaultDate = Model.NextIncomePayday.GetValueOrDefault().ToString("dd/MM/yyyy");
+    string DatePickerStartDate = Model.NextIncomePayday.GetValueOrDefault().AddDays(-3).ToString("dd/MM/yyyy");
+    string DatePickerEndDate = Model.NextIncomePayday.GetValueOrDefault().AddDays(3).ToString("dd/MM/yyyy");
+
 }
 
 <div class="card text-white bg-success my-1 shadow">
@@ -48,6 +52,30 @@
     {
         UpdatePayDate();
     });
+
+    $(document).ready(function () {
+        $.get({
+            url: '/Home/LoadDatePicker/',
+            data: {
+                textElement: 'txtDateInformation',
+                InputElement: 'PayDate',
+                DatePattern: 'ddmmmmyyyy',
+                IncludeDay: 'Short',
+                Seperator: 'Space',
+                StartDate: '@DatePickerStartDate',
+                EndDate: '@DatePickerEndDate',
+                DefaultDate: '@DatePickerDefaultDate'
+            },
+
+            success: function (result) {
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    })
 
     function UpdatePayDate()
     {

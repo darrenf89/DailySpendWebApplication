@@ -76,26 +76,7 @@
         document.getElementById('DatePickerContainter').style.display = 'block';
     }
 
-    $(document).ready(function () {
-        $.get({
-            url: '/Home/LoadDatePicker/',
-            data: {
-                textElement: 'txtDateInformation',
-                InputElement: 'PayDate',
-                DatePattern: 'ddmmmmyyyy',
-                IncludeDay: 'Short',
-                Seperator: 'Space'
-            },
 
-            success: function (result) {
-                $("#myPartialViewDiv").html(result);
-            },
-
-            error: function (xhr, exception) {
-                return false;
-            }
-        });
-    })
 
     function FinishEditPay()
     {

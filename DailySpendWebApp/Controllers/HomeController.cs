@@ -40,13 +40,39 @@ public class HomeController : Controller
 
     }
 
-    [Route("Home/LoadDatePicker/{textElement?}/{InputElement?}/{DatePattern?}/{IncludeDay?}/{Seperator?}")]
-    public IActionResult LoadDatePicker(string? textElement, string? InputElement, string? DatePattern, string? IncludeDay, string? Seperator)
+    [Route("Home/LoadDatePicker/{textElement}/{InputElement}/{DatePattern}/{IncludeDay}/{Seperator}/{StartDate?}/{EndDate?}/{DefaultDate?}")]
+    public IActionResult LoadDatePicker(string textElement, string InputElement, string DatePattern, string IncludeDay, string Seperator, DateTime? StartDate, DateTime? EndDate, DateTime? DefaultDate)
     {
-        DateTime Today = DateTime.Now;
-        string Day = Today.Day.ToString();
-        string Month = Today.Month.ToString();
-        string Year = Today.Year.ToString();
+        DateTime SelectedDate = new DateTime();
+
+        if (DefaultDate == null)
+        {
+            SelectedDate = DateTime.Now;
+        }
+        else
+        {
+            SelectedDate = DefaultDate ?? DateTime.Today;
+            if(DefaultDate < StartDate | DefaultDate > EndDate)
+            {
+                StartDate = new DateTime();
+                EndDate = DateTime.MaxValue;
+            }
+        }
+
+        if(StartDate == null)
+        {
+            StartDate = new DateTime();   
+        }
+
+        if(EndDate == null)
+        {
+            EndDate = DateTime.MaxValue;
+        }
+
+        string Day = SelectedDate.Day.ToString();
+        string Month = SelectedDate.Month.ToString();
+        string Year = SelectedDate.Year.ToString();
+
 
         ViewBag.Day = Day;
         ViewBag.Month = Month;
@@ -54,6 +80,10 @@ public class HomeController : Controller
 
         ViewBag.textElement = textElement;
         ViewBag.InputElement = InputElement;
+
+        ViewBag.StartDate = StartDate.GetValueOrDefault().ToString("dd/MM/yyyy");
+        ViewBag.EndDate = EndDate.GetValueOrDefault().ToString("dd/MM/yyyy");
+        ViewBag.SelectedDate = SelectedDate.ToString("dd/MM/yyyy");
 
         if (Seperator == "Space")
         {

@@ -358,13 +358,22 @@
         {
             var LoopDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), i);
 
+            var SelectedDateTxt = '@ViewBag.SelectedDate'
+            var SelectedDate = Date.Parse(SelectedDateTxt)
+
+            var StartDateTxt = '@ViewBag.StartDate'
+            var StartDate = Date.Parse(StartDateTxt)
+
+            var EndDateTxt = '@ViewBag.EndDate'
+            var EndDate = Date.Parse(EndDateTxt)
+
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
 
             var nWeekOfTheMonth = Math.ceil(j/7)
             var nWeekOfTheMonthTxt = DayString + "" + nWeekOfTheMonth
             
-            if(LoopDate.getDate() == CurrentDate.getDate())
+            if(LoopDate.getDate() == SelectedDate.getDate())
             {
                 $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-primary rounded-5 bg-dark shadow');
                 $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-white text-center m-0 py-2');
@@ -374,6 +383,14 @@
 
                 $('#hdnCurrentSelectedDate').val(LoopDate);
                 $('#hdnCurrentSelectedDiv').val(nWeekOfTheMonthTxt);
+            }
+            else if (LoopDate.getDate() < StartDate.getDate() | LoopDate.getDate() > EndDate.getDate())
+            {
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-secondary rounded-5 bg-light');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-secondary text-center m-0 py-2');
+                $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+                $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+                $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
             }
             else
             {
@@ -497,6 +514,15 @@
         for (var i = 1; i <= lastDay.getDate(); i++)
         {
             var LoopDate = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth(), i);
+            
+            var SelectedDateTxt = '@ViewBag.SelectedDate'
+            var SelectedDate = Date.Parse(SelectedDateTxt)
+
+            var StartDateTxt = '@ViewBag.StartDate'
+            var StartDate = Date.Parse(StartDateTxt)
+
+            var EndDateTxt = '@ViewBag.EndDate'
+            var EndDate = Date.Parse(EndDateTxt)
 
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
@@ -514,6 +540,14 @@
 
                 $('#hdnCurrentSelectedDate').val(LoopDate);
                 $('#hdnCurrentSelectedDiv').val(nWeekOfTheMonthTxt);
+            }
+            else if (LoopDate.getDate() < StartDate.getDate() | LoopDate.getDate() > EndDate.getDate())
+            {
+                $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-secondary rounded-5 bg-light');
+                $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-secondary text-center m-0 py-2');
+                $('#txt' + nWeekOfTheMonthTxt).html(LoopDate.getDate());
+                $('#hdn' + nWeekOfTheMonthTxt).val(LoopDate);             
+                $('#btn' + nWeekOfTheMonthTxt).prop('disabled', true);
             }
             else
             {
