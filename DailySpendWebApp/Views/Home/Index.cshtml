@@ -5,6 +5,9 @@
     ViewData["Title"] = "User Dashboard";  
     var id = ViewContext.RouteData.Values["id"];
     var ReMess = ViewContext.RouteData.Values["ReMess"];
+    string DatePickerDefaultDate = Model.NextIncomePayday.GetValueOrDefault().ToString("dd/MM/yyyy");
+    string DatePickerStartDate = Model.NextIncomePayday.GetValueOrDefault().AddDays(-2).ToString("dd/MM/yyyy");
+    string DatePickerEndDate = Model.NextIncomePayday.GetValueOrDefault().AddDays(2).ToString("dd/MM/yyyy");
 }
 <form method="post">
     <div class="">
@@ -76,7 +79,30 @@
         document.getElementById('DatePickerContainter').style.display = 'block';
     }
 
+    $(document).ready(function () {
+        $.get({
+            url: '/Home/LoadDatePicker/',
+            data: {
+                textElement: 'txtDateInformation',
+                InputElement: 'PayDate',
+                DatePattern: 'ddmmmmyyyy',
+                IncludeDay: 'Short',
+                Seperator: 'Space',
+                StartDate: '@DatePickerStartDate',
+                EndDate: '@DatePickerEndDate',
+                DefaultDate: '@DatePickerDefaultDate'
+            },
 
+            success: function (result) {
+                $("#myPartialViewDiv").html('');
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    })
 
     function FinishEditPay()
     {

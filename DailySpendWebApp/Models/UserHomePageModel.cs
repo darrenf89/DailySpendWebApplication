@@ -9,5 +9,6 @@ namespace DailySpendBudgetWebApp.Models
         public int DefaultBudget { get; set; }
         public string? NickName { get; set; }
         public List<Savings>? Savings { get; set; }
+        public DateTime? NextIncomePayday { get; set; }
     }
 }

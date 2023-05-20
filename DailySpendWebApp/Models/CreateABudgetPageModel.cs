@@ -83,6 +83,11 @@ namespace DailySpendBudgetWebApp.Models
         public bool? isInstantActive { get; set; }
         public string? ddlSavingsPeriod { get; set; }
         public decimal? PeriodSavingValue { get; set; }
+        public decimal? BankBalance { get; set; }
+        public decimal? MoneyAvailableBalance { get; set; }
+        public decimal? LeftToSpendBalance { get; set; }
+        [DisplayName("When do you get paid?!")]
+        public DateTime? NextIncomePayday { get; set; }
 
     }
 }

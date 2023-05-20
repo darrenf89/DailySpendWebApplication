@@ -78,7 +78,7 @@ namespace DailySpendWebApp.Controllers
                 if (status != "OK")
                 {
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
-                    AddUserCurrencyPreferences();
+                    AddUserCurrencyTimeViewBagPreferences();
                     return View("AddTransaction", obj);
                 }
             }
@@ -115,7 +115,7 @@ namespace DailySpendWebApp.Controllers
                 if (status != "OK")
                 {
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
-                    AddUserCurrencyPreferences();
+                    AddUserCurrencyTimeViewBagPreferences();
                     return View("AddTransaction", obj);
                 }
             }
@@ -143,7 +143,7 @@ namespace DailySpendWebApp.Controllers
 
             if (!ModelState.IsValid)
             {
-                AddUserCurrencyPreferences();
+                AddUserCurrencyTimeViewBagPreferences();
                 return View("AddTransaction", obj);
             }
 
@@ -178,13 +178,13 @@ namespace DailySpendWebApp.Controllers
                         if (T.isIncome)
                         {
                             ViewBag.Stage = "ConfirmSavingSpendIncome";
-                            AddUserCurrencyPreferences();
+                            AddUserCurrencyTimeViewBagPreferences();
                             return View("AddTransaction", obj);
                         }
                         else
                         {
                             ViewBag.Stage = "ConfirmSavingSpendOutcome";
-                            AddUserCurrencyPreferences();
+                            AddUserCurrencyTimeViewBagPreferences();
                             return View("AddTransaction", obj);
                         }
                     }
@@ -221,7 +221,7 @@ namespace DailySpendWebApp.Controllers
 
                 if (status != "OK")
                 {
-                    AddUserCurrencyPreferences();
+                    AddUserCurrencyTimeViewBagPreferences();
                     ModelState.AddModelError("TransactionID", "* There was a problem transacting the ... Transaction. Please try again!");
                     return View("AddTransaction", obj);
                 }
@@ -241,7 +241,7 @@ namespace DailySpendWebApp.Controllers
 
         public IActionResult AddTransaction(Transactions obj)
         {
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
 
             TempData["PageHeading"] = "Add a Transaction!";
             return View(obj);
@@ -322,7 +322,7 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreatePayee(Transactions obj)
         {
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -347,7 +347,7 @@ namespace DailySpendWebApp.Controllers
                 obj.CategoryID = T.CategoryID;
             }
 
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -398,7 +398,7 @@ namespace DailySpendWebApp.Controllers
         public IActionResult PayeeBackToTransaction(Transactions obj)
         {
             obj.Payee = "";
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -406,7 +406,7 @@ namespace DailySpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CategoryBackToTransaction(Transactions obj)
         {
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
             return View("AddTransaction", obj);
         }
 
@@ -444,9 +444,9 @@ namespace DailySpendWebApp.Controllers
             Categories Category = Budget.Categories.Where(c => c.CategoryID == CategoryID).First();
 
             obj.Category = Category.CategoryName;
-            obj.CategoryID = Category.CategoryID;        
+            obj.CategoryID = Category.CategoryID;
 
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
 
             return View("AddTransaction", obj);
         }
@@ -490,7 +490,7 @@ namespace DailySpendWebApp.Controllers
             obj.SavingName = Saving.SavingsName;
             obj.SavingID = Saving.SavingID;
 
-            AddUserCurrencyPreferences();
+            AddUserCurrencyTimeViewBagPreferences();
 
             return View("AddTransaction", obj);
         }
@@ -580,7 +580,7 @@ namespace DailySpendWebApp.Controllers
             return View("EditTransaction", obj);
         }
         
-        public void AddUserCurrencyPreferences()
+        public void AddUserCurrencyTimeViewBagPreferences()
         {
             ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
             ViewBag.CurrencySpacer = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyGroupSeparator;
@@ -606,6 +606,10 @@ namespace DailySpendWebApp.Controllers
                 ViewBag.CurrencyPlacement = "After";
                 ViewBag.SymbolSpace = "Yes";
             }
+
+            ViewBag.DateString = _pt.GetBudgetDatePattern(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+            ViewBag.ShortDatePattern = CultureInfo.DefaultThreadCurrentCulture.DateTimeFormat.ShortDatePattern;
+            ViewBag.DateSeperator = CultureInfo.DefaultThreadCurrentCulture.DateTimeFormat.DateSeparator;
         }
     }
 }

@@ -40,33 +40,35 @@ public class HomeController : Controller
 
     }
 
-    [Route("Home/LoadDatePicker/{textElement}/{InputElement}/{DatePattern}/{IncludeDay}/{Seperator}/{StartDate?}/{EndDate?}/{DefaultDate?}")]
-    public IActionResult LoadDatePicker(string textElement, string InputElement, string DatePattern, string IncludeDay, string Seperator, DateTime? StartDate, DateTime? EndDate, DateTime? DefaultDate)
+    //[Route("Home/LoadDatePicker/{textElement?}/{InputElement?}/{DatePattern?}/{IncludeDay?}/{Seperator}/{StartDate?}/{EndDate?}/{DefaultDate?}")]
+    
+    public IActionResult LoadDatePicker(string? textElement, string? InputElement, string? DatePattern, string? IncludeDay, string? Seperator, string? StartDate, string? EndDate, string? DefaultDate)
     {
-        DateTime SelectedDate = new DateTime();
+        DateTime SelectedDate = DateTime.Now;
+        DateTime StartDateDP = new DateTime();
+        DateTime EndDateDP = DateTime.MaxValue;
 
-        if (DefaultDate == null)
+        if (DefaultDate != null & DefaultDate != "")
         {
-            SelectedDate = DateTime.Now;
-        }
-        else
-        {
-            SelectedDate = DefaultDate ?? DateTime.Today;
-            if(DefaultDate < StartDate | DefaultDate > EndDate)
-            {
-                StartDate = new DateTime();
-                EndDate = DateTime.MaxValue;
-            }
+            SelectedDate = DateTime.Parse(DefaultDate);
         }
 
-        if(StartDate == null)
+        if (StartDate != null & StartDate != "")
         {
-            StartDate = new DateTime();   
+            StartDateDP = DateTime.Parse(StartDate);
         }
 
-        if(EndDate == null)
+
+        if (EndDate != null & EndDate != "")
         {
-            EndDate = DateTime.MaxValue;
+            EndDateDP = DateTime.Parse(EndDate);
+        }
+
+
+        if (SelectedDate < StartDateDP | SelectedDate > EndDateDP)
+        {
+            StartDateDP = new DateTime();
+            EndDateDP = DateTime.MaxValue;
         }
 
         string Day = SelectedDate.Day.ToString();
@@ -81,9 +83,9 @@ public class HomeController : Controller
         ViewBag.textElement = textElement;
         ViewBag.InputElement = InputElement;
 
-        ViewBag.StartDate = StartDate.GetValueOrDefault().ToString("dd/MM/yyyy");
-        ViewBag.EndDate = EndDate.GetValueOrDefault().ToString("dd/MM/yyyy");
-        ViewBag.SelectedDate = SelectedDate.ToString("dd/MM/yyyy");
+        ViewBag.StartDate = StartDateDP.ToString("MM/dd/yyyy");
+        ViewBag.EndDate = EndDateDP.ToString("MM/dd/yyyy");
+        ViewBag.SelectedDate = SelectedDate.ToString("MM/dd/yyyy");
 
         if (Seperator == "Space")
         {
@@ -124,6 +126,7 @@ public class HomeController : Controller
 
             if (UserAccount.DefaultBudgetID.HasValue)
             {
+                
                 HttpContext.Session.SetInt32("_DefaultBudgetID", (int)UserAccount.DefaultBudgetID);
                 //Remove after enterbudgetdetailstested
                 HttpContext.Session.SetInt32("_NewBudgetID", (int)UserAccount.DefaultBudgetID);
@@ -135,8 +138,9 @@ public class HomeController : Controller
                     .Where(b => b.BudgetID == (int)UserAccount.DefaultBudgetID)
                     .FirstOrDefault();
 
+                obj.NextIncomePayday = Budget.NextIncomePayday ?? DateTime.MinValue;
                 //Load Default categories if none exist
-                if(Budget.Categories.Count == 0 | Budget.Categories.Count == null)
+                if (Budget.Categories.Count == 0 | Budget.Categories.Count == null)
                 {
                     _pt.CreateDefaultCategories((int)UserAccount.DefaultBudgetID);
                 }
@@ -190,7 +194,7 @@ public class HomeController : Controller
                     TempData["TransactionAmount"] = Amount;
                 }
 
-                AddUserCurrencyPreferences();
+                AddUserCurrencyTimeViewBagPreferences();
                 return View(obj);
             }
             else
@@ -260,7 +264,7 @@ public class HomeController : Controller
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 
-        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+        ViewBag.DateString = _pt.GetBudgetDatePattern(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivityTransactions", obj);
     }
@@ -272,7 +276,7 @@ public class HomeController : Controller
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 
-        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+        ViewBag.DateString = _pt.GetBudgetDatePattern(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivitySavings", obj);
     }
@@ -284,7 +288,7 @@ public class HomeController : Controller
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 
-        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+        ViewBag.DateString = _pt.GetBudgetDatePattern(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivityBills", obj);
     }
@@ -296,7 +300,7 @@ public class HomeController : Controller
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 
-        ViewBag.DateString = _pt.GetBudgetDatePatter(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+        ViewBag.DateString = _pt.GetBudgetDatePattern(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
 
         return PartialView("_PVRecentActivityIncomes", obj);
     }
@@ -325,7 +329,7 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult UpdatePayDate(DateTime? PayDate)
     {
-                Budgets obj = _db.Budgets
+        Budgets obj = _db.Budgets
             .Where(x => x.BudgetID == HttpContext.Session.GetInt32("_DefaultBudgetID"))
             .First();
 
@@ -341,7 +345,7 @@ public class HomeController : Controller
         return PartialView("_PVBudgetNextPayInfo", obj);
     }
 
-    public void AddUserCurrencyPreferences()
+    public void AddUserCurrencyTimeViewBagPreferences()
     {
         ViewBag.CurrencySymbol = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencySymbol;
         ViewBag.CurrencySpacer = CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyGroupSeparator;
@@ -367,6 +371,10 @@ public class HomeController : Controller
             ViewBag.CurrencyPlacement = "After";
             ViewBag.SymbolSpace = "Yes";
         }
-    }
 
+        ViewBag.DateString = _pt.GetBudgetDatePattern(HttpContext.Session.GetInt32("_DefaultBudgetID") ?? 0);
+        ViewBag.ShortDatePattern = CultureInfo.DefaultThreadCurrentCulture.DateTimeFormat.ShortDatePattern;
+        ViewBag.DateSeperator = CultureInfo.DefaultThreadCurrentCulture.DateTimeFormat.DateSeparator;
+
+    }
 }

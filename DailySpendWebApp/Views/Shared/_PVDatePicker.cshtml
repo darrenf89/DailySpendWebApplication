@@ -359,13 +359,13 @@
             var LoopDate = new Date(CurrentDate.getFullYear(), CurrentDate.getMonth(), i);
 
             var SelectedDateTxt = '@ViewBag.SelectedDate'
-            var SelectedDate = Date.Parse(SelectedDateTxt)
+            var SelectedDate = new Date(SelectedDateTxt)
 
             var StartDateTxt = '@ViewBag.StartDate'
-            var StartDate = Date.Parse(StartDateTxt)
+            var StartDate = new Date(StartDateTxt)
 
             var EndDateTxt = '@ViewBag.EndDate'
-            var EndDate = Date.Parse(EndDateTxt)
+            var EndDate = new Date(EndDateTxt)
 
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
@@ -384,7 +384,7 @@
                 $('#hdnCurrentSelectedDate').val(LoopDate);
                 $('#hdnCurrentSelectedDiv').val(nWeekOfTheMonthTxt);
             }
-            else if (LoopDate.getDate() < StartDate.getDate() | LoopDate.getDate() > EndDate.getDate())
+            else if ((LoopDate.getDate() < StartDate.getDate() & LoopDate.getMonth() == StartDate.getMonth()) | (LoopDate.getDate() > EndDate.getDate() & LoopDate.getMonth() == EndDate.getMonth())) 
             {
                 $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-secondary rounded-5 bg-light');
                 $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-secondary text-center m-0 py-2');
@@ -516,13 +516,13 @@
             var LoopDate = new Date(CurrentDateRequest.getFullYear(), CurrentDateRequest.getMonth(), i);
             
             var SelectedDateTxt = '@ViewBag.SelectedDate'
-            var SelectedDate = Date.Parse(SelectedDateTxt)
+            var SelectedDate = new Date(SelectedDateTxt)
 
             var StartDateTxt = '@ViewBag.StartDate'
-            var StartDate = Date.Parse(StartDateTxt)
+            var StartDate = new Date(StartDateTxt)
 
             var EndDateTxt = '@ViewBag.EndDate'
-            var EndDate = Date.Parse(EndDateTxt)
+            var EndDate = new Date(EndDateTxt)
 
             var Day = LoopDate.getDay()
             var DayString = weekday[Day]
@@ -541,7 +541,7 @@
                 $('#hdnCurrentSelectedDate').val(LoopDate);
                 $('#hdnCurrentSelectedDiv').val(nWeekOfTheMonthTxt);
             }
-            else if (LoopDate.getDate() < StartDate.getDate() | LoopDate.getDate() > EndDate.getDate())
+            else if (LoopDate < StartDate | LoopDate > EndDate)
             {
                 $('#btn' + nWeekOfTheMonthTxt).removeClass().addClass('border border-1 border-secondary rounded-5 bg-light');
                 $('#txt' + nWeekOfTheMonthTxt).removeClass().addClass('text-secondary text-center m-0 py-2');

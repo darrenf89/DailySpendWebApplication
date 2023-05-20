@@ -91,7 +91,7 @@ namespace DailySpendWebApp.Services
             else
             {
                 Budgets? Budget = _db.Budgets?
-                    .Include(i => i.IncomeEvents.Where(i => i.isClosed == false))
+                    .Include(i => i.IncomeEvents.Where(i => i.isClosed == false & i.isIncomeAddedToBalance == false))
                     .Where(x => x.BudgetID == BudgetID)
                     .FirstOrDefault();
 
@@ -521,6 +521,8 @@ namespace DailySpendWebApp.Services
             lut_CurrencyGroupSeparator? GroupSeparator = _db.lut_CurrencyGroupSeparators?.Where(g => g.id == BS.CurrencyGroupSeparator).FirstOrDefault();
             lut_CurrencyDecimalDigits? DecimalDigits = _db.lut_CurrencyDecimalDigits?.Where(d => d.id == BS.CurrencyDecimalDigits).FirstOrDefault();
             lut_CurrencyPlacement? CurrencyPositivePat = _db.lut_CurrencyPlacements?.Where(c => c.id == BS.CurrencyPattern).FirstOrDefault();
+            lut_DateSeperator? DateSeperator = _db.lut_DateSeperators?.Where(c => c.id == BS.DateSeperator).FirstOrDefault();
+            lut_DateFormat? DateFormat = _db.lut_DateFormats?.Where(c => c.DateSeperatorID == BS.DateSeperator & c.ShortDatePatternID == BS.ShortDatePattern).FirstOrDefault();
 
             CultureInfo nfi = new CultureInfo("en-GB");
 
@@ -529,6 +531,8 @@ namespace DailySpendWebApp.Services
             nfi.NumberFormat.CurrencyGroupSeparator = GroupSeparator.CurrencyGroupSeparator;
             nfi.NumberFormat.CurrencyDecimalDigits = Convert.ToInt32(DecimalDigits.CurrencyDecimalDigits);
             nfi.NumberFormat.CurrencyPositivePattern = CurrencyPositivePat.CurrencyPositivePatternRef;
+            nfi.DateTimeFormat.ShortDatePattern = DateFormat.DateFormat;
+            nfi.DateTimeFormat.DateSeparator = DateSeperator.DateSeperator;
 
             return nfi;
         }
@@ -752,7 +756,7 @@ namespace DailySpendWebApp.Services
             return "OK";
         }
 
-        public string GetBudgetDatePatter(int BudgetID)
+        public string GetBudgetDatePattern(int BudgetID)
         {
             if(BudgetID == 0)
             {
@@ -773,6 +777,42 @@ namespace DailySpendWebApp.Services
 
         }
 
+        public string GetBudgetShortDatePattern(int BudgetID)
+        {
+            if (BudgetID == 0)
+            {
+
+                return "ddMMyyyy";
+            }
+            else
+            {
+                BudgetSettings? BS = _db.BudgetSettings.Where(x => x.BudgetID == BudgetID).FirstOrDefault();
+
+                lut_ShortDatePattern? DatePattern = _db.lut_ShortDatePatterns.Where(x => x.id == BS.ShortDatePattern).FirstOrDefault();
+
+                return DatePattern.ShortDatePattern ?? "ddMMyyyy";
+            }
+
+        }
+        public string UpdatePayPeriodStats(int? BudgetID)
+        {
+            Budgets? Budget = _db.Budgets?
+               .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
+               .Where(x => x.BudgetID == BudgetID)
+               .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            PayPeriodStats stats = Budget.PayPeriodStats[0];
+            _db.Attach(stats);
+
+            stats.EndDate = Budget.NextIncomePayday ?? DateTime.UtcNow;
+            stats.DurationOfPeriod = (stats.EndDate - stats.StartDate).Days;
+
+            _db.SaveChanges();
+
+            return "OK";
+        }
     }
 
 }

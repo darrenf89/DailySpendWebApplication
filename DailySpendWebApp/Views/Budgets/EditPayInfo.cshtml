@@ -1,0 +1,373 @@
+﻿@model DailySpendBudgetWebApp.Models.CreateABudgetPageModel
+
+@{
+    ViewData["Title"] = "Enter Budget Details";
+    Layout = "~/Views/Shared/_LayoutNoFotter.cshtml";
+
+    string BankBalance = string.Format("{0:c}", Model.BankBalance);
+    string Placeholder = string.Format("{0:c}", 0.00);
+    string MoneyAvailableBalance = string.Format("{0:c}", Model.MoneyAvailableBalance);
+    string LeftToSpendBalance = string.Format("{0:c}", Model.LeftToSpendBalance);
+    string PaydayAmount = string.Format("{0:c}", Model.NextPayDayAmount);
+
+    string DateSeperator = "";
+    if (ViewBag.DateSeperator == " ")
+    {
+        DateSeperator = "Space";
+    }
+    else
+    {
+        DateSeperator = ViewBag.DateSeperator;
+    }
+
+    string NextIncomePayday = Model.NextIncomePayday.GetValueOrDefault().ToString("yyyy-MM-dd");
+    string txtNextIncomePayday = Model.NextIncomePayday.GetValueOrDefault().ToString(ViewBag.DateString);
+
+    string DatePickerDefaultDate = Model.NextIncomePayday.GetValueOrDefault().ToString("dd/MM/yyyy");
+}
+
+<input type="hidden" id="hdnServerDate" value="@ViewBag.CurrentDate" />
+<input type="hidden" id="hdnPaymentPeriod" value="@ViewBag.PaymentPeriod" />
+<form method="Post">
+    <div class="accordion my-3 shadow ms-1 me-1 " id="divBudgetSettings">
+        <div class="accordion-item">
+            <h2 class="accordion-header text-white" id="headingTwo">
+                <div class="d-flex align-items-center justify-content-center m-0 p-0">
+                    <button id="AccordionDetails" class="accordion-button text-white bg-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" onclick="UpdateDetailsAccordianStage()">
+                        Budget Period and Amount
+                    </button>
+                </div>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="">
+                <div id="DetailsAccordion" class="accordion-body p-1">
+                    <div class="ps-4 pe-4 mt-3">
+                        <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="BankBalance"></label>
+                        <div class="input-group w-75">
+                            <input id="txtBankBalance" type="text" class="form-control rounded-3 pe-2 pt-2 pb-2" style="cursor: pointer; color: #38b44a; width: 50%" value="@BankBalance" data-type="PositiveCurrency" disabled/>
+                        </div>
+                    </div>
+                    <div class="ps-4 pe-4 mt-3">
+                        <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="MoneyAvailableBalance"></label>
+                        <div class="input-group w-75">
+                            <input id="txtMoneyAvailableBalance" type="text" class="form-control rounded-3 pe-2 pt-2 pb-2" style="cursor: pointer; color: #38b44a; width: 50%" value="@MoneyAvailableBalance" data-type="PositiveCurrency" disabled />
+                        </div>
+                    </div>
+                    <div class="ps-4 pe-4 mt-3">
+                        <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="LeftToSpendBalance"></label>
+                        <div class="input-group w-75">
+                            <input id="txtLeftToSpendBalance" type="text" class="form-control rounded-3 pe-2 pt-2 pb-2" style="cursor: pointer; color: #38b44a; width: 50%" value="@LeftToSpendBalance" data-type="PositiveCurrency" disabled />
+                        </div>
+                    </div>
+                    <div class="ps-4 pe-4 mt-3">
+                        <label class="d-flex form-label ms-2 mb-2 text-primary" asp-for="NextPayDayAmount"></label>
+                        <div class="input-group w-75">
+                            <input id="txtNextPayDayAmount" type="text" class="form-control rounded-3 pe-2 pt-2 pb-2 text-primary" style="cursor: pointer; color: #38b44a; width: 50%" value="@PaydayAmount" data-type="PositiveCurrency" placeholder="@Placeholder" onfocus="this.placeholder = '';" onchange="UpdateHdnPayDayAmount();" onblur="this.placeholder = '@Placeholder';" />
+                            <input asp-for="NextPayDayAmount" type="hidden" />
+                        </div>
+                    </div>
+                    <div class="ps-4">
+                        <span asp-validation-for="NextPayDayAmount" style="font-size:8pt" class="text-danger text-center"></span>
+                    </div>
+                    <div id="payinfo" class="ps-4 pe-4 mt-3">
+                        <label asp-for="NextIncomePayday" class="d-flex form-label ms-2 mb-2 text-primary"></label>
+                        <div class="input-group w-75">
+                            <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 100%" class="p-0">
+                                <p class="form-control rounded-3 pe-2 pt-2 pb-2 text-primary text-start" id="txtNextIncomePayday">@txtNextIncomePayday</p>
+                            </button>
+                        </div>
+                        <input class="form-control text-secondary w-75" type="date" asp-for="NextIncomePayday" value="@NextIncomePayday" style="display: none" />
+                    </div>
+                    <div class="ps-4">
+                        <span asp-validation-for="NextIncomePayday" style="font-size:8pt" class="text-danger text-center"></span>
+                    </div>
+                    <div class="ms-4 mb-1 mt-4 ps-2 text-primary">
+                    </div>
+                    <div class="text-primary mb-3 ps-3">I want my budgeting Period to be ...</div>
+                    <fieldset class="form-group">
+                        <div style="font-size: 10pt;" class="ms-5 me-4 justify-content-between" id="PayRadioButtons">
+                            <div class="form-check col-10 p-0">
+                                <input type="hidden" asp-for="Everynth" value="@Model.Everynth" />
+                                <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="@Model.Everynth" />
+                                <label class="form-check-label align-self-center text-secondary" for="optionsRadios1" id="lblOptionsRadios1">
+                                    Every nth ...
+                                </label>
+                            </div>
+                            <div class="form-check col-10 p-0">
+                                <input type="hidden" asp-for="WorkingDays" value="@Model.WorkingDays" />
+                                <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios2" value="option2" checked="@Model.WorkingDays" />
+                                <label class="form-check-label align-self-center text-secondary" for="optionsRadios2" id="lblOptionsRadios2">
+                                    ... Working days before end of month
+                                </label>
+                            </div>
+                            <div class="form-check col-10 p-0">
+                                <input type="hidden" asp-for="OfEveryMonth" value="@Model.OfEveryMonth" />
+                                <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios3" value="option3" checked="@Model.OfEveryMonth" />
+                                <label class="form-check-label align-self-center text-secondary" for="optionsRadios3" id="lblOptionsRadios3">
+                                    on the ... of every month
+                                </label>
+                            </div>
+                            <div class="form-check col-10 p-0">
+                                <input type="hidden" asp-for="LastOfTheMonth" value="@Model.LastOfTheMonth" />
+                                <input class="form-check-input align-self-center" type="radio" name="optionsRadios" id="optionsRadios4" value="option3" checked="@Model.LastOfTheMonth" />
+                                <label class="form-check-label align-self-center text-secondary" for="optionsRadios4" id="lblOptionsRadios4">
+                                    on the last ... of the month
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="ps-4">
+                        <span asp-validation-for="LastGivenDayOfWeekPay" style="font-size:8pt" class="text-danger text-center"></span>
+                    </div>
+                    <div class="mt-4 mb-1 pb-3 pe-1 border-bottom border-secondary d-flex">
+                        <div id="divPeriodicPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1" style="display: flex">
+                                <span class="text-primary form-label mb-0">Every</span>
+                            </div>
+                            <div class="text-center me-1" style="display: flex">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="PeriodicPayPeriod" value="@Model.PeriodicPayPeriod" />
+                            </div>
+                            <div class="" style="display: flex">
+                                <div class="DropDown">
+                                    <select class="form-select text-primary text-center" id="PeriodicPayPeriodDDL" data-form-type="" asp-for="PeriodicPayPeriodDDL" value="@Model.PeriodicPayPeriodDDL">
+                                        <option>days</option>
+                                        <option>weeks</option>
+                                        <option>years</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divLastDayOfMonthPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="LastDayOfMonthPayPeriod" value="@Model.LastDayOfMonthPayPeriod" />
+                            </div>
+                            <div class="text-center">
+                                <span class="text-primary form-label mb-0">Working days before end of month</span>
+                            </div>
+                        </div>
+                        <div id="divGivenDayOfMonthPay" style="display: flex;" class="ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1">
+                                <span class="text-primary form-label mb-0">On the </span>
+                            </div>
+                            <div class="text-center me-1">
+                                <input style="max-width: 50px" class="form-control text-primary text-center" type="Number" min="1" max="28" asp-for="GivenDayOfMonthPayPeriod" value="@Model.GivenDayOfMonthPayPeriod" />
+                            </div>
+                            <div class="text-center">
+                                <span class="text-primary form-label mb-0"> of every month</span>
+                            </div>
+                        </div>
+                        <div id="divLastGivenDayOfWeekPay" style="display: none;" class="ps-2 col-12 justify-content-end align-items-center">
+                            <div class="text-center me-1">
+                                <span class="text-primary form-label mb-0">On the Last</span>
+                            </div>
+                            <div class="text-center me-1 dropdown">
+                                <select class="form-select text-primary" asp-for="LastGivenDayOfWeekPay" data-form-type="" value="@Model.LastGivenDayOfWeekPay">
+                                    <option>Monday</option>
+                                    <option>Tuesday</option>
+                                    <option>Wednesday</option>
+                                    <option>Thursday</option>
+                                    <option>Friday</option>
+                                    <option>Saturday</option>
+                                    <option>Sunday</option>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <span class="text-primary form-label mb-0"> of the month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row my-3 shadow ms-1 me-1">
+        <button type="submit" class="btn btn-secondary text-start ps-4 py-2" asp-controller="Budgets" asp-action="UpdateBudgetDetails">Update Details</button>
+    </div>
+    <div class="row my-3 shadow ms-1 me-1">
+        <button type="submit" class="btn btn-success text-start ps-4 py-2" asp-controller="Budgets" asp-action="RecalculateBudget" style="width: 100%">Update Details and Recalculate Budget</button>
+    </div>
+    <input type="hidden" id="CurrencySymbol" value="@Html.Raw(ViewBag.CurrencySymbol)" />
+    <input type="hidden" id="CurrencySpacer" value="@Html.Raw(ViewBag.CurrencySpacer)" />
+    <input type="hidden" id="DecimalSeperator" value="@Html.Raw(ViewBag.DecimalSeperator)" />
+    <input type="hidden" id="CurrencyPlacement" value="@Html.Raw(ViewBag.CurrencyPlacement)" />
+    <input type="hidden" id="SymbolSpace" value="@Html.Raw(ViewBag.SymbolSpace)" />
+</form>
+<div id="myPartialViewDiv">
+</div>
+
+<script>
+    function OpenModal() {
+        document.getElementById('DatePickerContainter').style.display = 'block';
+    }
+
+    $(document).ready(function () {
+        $.get({
+            url: '/Home/LoadDatePicker/',
+            data: {
+                textElement: 'txtNextIncomePayday',
+                InputElement: 'NextIncomePayday',
+                DatePattern: '@ViewBag.ShortDatePattern',
+                IncludeDay: 'None',
+                Seperator: '@DateSeperator',
+                StartDate: '',
+                EndDate: '',
+                DefaultDate: '@DatePickerDefaultDate'
+            },
+
+            success: function (result) {
+                $("#myPartialViewDiv").html('');
+                $("#myPartialViewDiv").html(result);
+            },
+
+            error: function (xhr, exception) {
+                return false;
+            }
+        });
+    })
+
+    function UpdateHdnPayDayAmount() {
+        if (document.getElementById('CurrencySymbol') == undefined) {
+            var CurrencySymbol = "£"
+        }
+        else {
+            if (document.getElementById('CurrencySymbol').value == '') {
+                var CurrencySymbol = "£"
+            }
+            else {
+                var CurrencySymbol = $('#CurrencySymbol').val()
+            }
+        }
+
+        if (document.getElementById('CurrencyPlacement') == undefined) {
+            var CurrencyPlacement = "Before"
+        }
+        else {
+            if (document.getElementById('CurrencyPlacement').value == '') {
+                var CurrencyPlacement = "Before"
+            }
+            else {
+                var CurrencyPlacement = $('#CurrencyPlacement').val()
+            }
+        }
+
+        if (document.getElementById('SymbolSpace') == undefined) {
+            var SymbolSpace = "No"
+        }
+        else {
+            if (document.getElementById('SymbolSpace').value == '') {
+                var SymbolSpace = "No"
+            }
+            else {
+                var SymbolSpace = $('#SymbolSpace').val()
+            }
+        }
+
+        if (document.getElementById('DecimalSeperator') == undefined) {
+            var DecimalSeperator = "."
+        }
+        else {
+            if (document.getElementById('DecimalSeperator').value == '') {
+                var DecimalSeperator = "."
+            }
+            else {
+                var DecimalSeperator = $('#DecimalSeperator').val()
+            }
+        }
+
+        if (document.getElementById('CurrencySpacer') == undefined) {
+            var CurrencySpacer = ","
+        }
+        else {
+            if (document.getElementById('CurrencySpacer').value == '') {
+                var CurrencySpacer = ","
+            }
+            else {
+                var CurrencySpacer = $('#CurrencySpacer').val()
+            }
+        }
+
+        var txtBillAmount = document.getElementById('txtNextPayDayAmount').value;
+        var numBillAmount = txtBillAmount.replace(CurrencySymbol, '').replace(CurrencySpacer, '').replace(' ', '').replace('-', '');
+        document.getElementById('NextPayDayAmount').value = numBillAmount;
+    }
+
+    const PeriodicPay = document.getElementById('divPeriodicPay');
+    const GivenPay = document.getElementById('divGivenDayOfMonthPay');
+    const LastPay = document.getElementById('divLastDayOfMonthPay');
+    const GivenDay = document.getElementById('divLastGivenDayOfWeekPay');
+
+
+    function handleIncomeRadioClick() {
+        if (document.getElementById('optionsRadios1').checked) {
+            PeriodicPay.style.display = 'flex';
+            LastPay.style.display = 'none';
+            GivenPay.style.display = 'none';
+            GivenDay.style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('Everynth').value = "True"
+            document.getElementById('WorkingDays').value = "False"
+            document.getElementById('OfEveryMonth').value = "False"
+            document.getElementById('LastOfTheMonth').value = "False"
+
+        }
+        else if (document.getElementById('optionsRadios2').checked) {
+            PeriodicPay.style.display = 'none';
+            LastPay.style.display = 'flex';
+            GivenPay.style.display = 'none';
+            GivenDay.style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('Everynth').value = "False"
+            document.getElementById('WorkingDays').value = "True"
+            document.getElementById('OfEveryMonth').value = "False"
+            document.getElementById('LastOfTheMonth').value = "False"
+        }
+        else if (document.getElementById('optionsRadios3').checked) {
+            PeriodicPay.style.display = 'none';
+            LastPay.style.display = 'none';
+            GivenPay.style.display = 'flex';
+            GivenDay.style.display = 'none';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-primary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('Everynth').value = "False"
+            document.getElementById('WorkingDays').value = "False"
+            document.getElementById('OfEveryMonth').value = "True"
+            document.getElementById('LastOfTheMonth').value = "False"
+        }
+        else if (document.getElementById('optionsRadios4').checked) {
+            PeriodicPay.style.display = 'none';
+            LastPay.style.display = 'none';
+            GivenPay.style.display = 'none';
+            GivenDay.style.display = 'flex';
+            document.getElementById('lblOptionsRadios1').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios2').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios3').className = "form-check-label align-self-center text-secondary"
+            document.getElementById('lblOptionsRadios4').className = "form-check-label align-self-center text-primary"
+            document.getElementById('Everynth').value = "False"
+            document.getElementById('WorkingDays').value = "False"
+            document.getElementById('OfEveryMonth').value = "False"
+            document.getElementById('LastOfTheMonth').value = "True"
+        }
+    }
+
+    const radioButtons = document.querySelectorAll('input[name="optionsRadios"]');
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('click', handleIncomeRadioClick);
+    });
+
+    function onSelectionChangeWLabel(Element) {
+        const ChangeElement = document.getElementById(Element);
+        const lblChangeElement = document.getElementById('lbl' + Element);
+        ChangeElement.className = "form-control w-75 ms-4 border-0 text-primary p-0 ps-4";
+        lblChangeElement.className = "d-flex form-label ms-4 mb-0 text-primary"
+    }
+
+    $(document).ready(handleIncomeRadioClick());
+</script>

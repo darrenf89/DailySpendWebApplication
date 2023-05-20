@@ -9,9 +9,18 @@
         txtDateInformation = Model.NextIncomePayday.GetValueOrDefault().ToString("ddd dd MMMM yyyy");
     }
     string DatePickerDefaultDate = Model.NextIncomePayday.GetValueOrDefault().ToString("dd/MM/yyyy");
-    string DatePickerStartDate = Model.NextIncomePayday.GetValueOrDefault().AddDays(-3).ToString("dd/MM/yyyy");
-    string DatePickerEndDate = Model.NextIncomePayday.GetValueOrDefault().AddDays(3).ToString("dd/MM/yyyy");
+    string DatePickerStartDate = Model.NextIncomePaydayCalculated.GetValueOrDefault().AddDays(-3).ToString("dd/MM/yyyy");
+    string DatePickerEndDate = Model.NextIncomePaydayCalculated.GetValueOrDefault().AddDays(3).ToString("dd/MM/yyyy");
     int NumberOfDays = (Model.NextIncomePayday - DateTime.Now).GetValueOrDefault().Days;
+    string NumberOfDaysText = NumberOfDays.ToString();
+    if (NumberOfDays == 1)
+    {
+        NumberOfDaysText = NumberOfDaysText + " day";
+    }
+    else
+    {
+        NumberOfDaysText = NumberOfDaysText + " days";
+    }
 }
 
 <div class="card text-white bg-success my-1 shadow">
@@ -22,9 +31,9 @@
             </button>
         </div>
         <div class="d-flex flex-column text-left mt-2">
-            <p class="mb-0 ps-1 fs-5">You have @NumberOfDays to PAYDAY!</p>
+            <p class="mb-0 ps-1 fs-5 border-bottom border-3" style="width:60%">You have @NumberOfDaysText to PAYDAY!</p>
             <div id="divPayAmount" class="m-0 p-0 mt-3">
-                <div id="ToggleBorder" class="d-flex justify-content-start align-items-center" style="width: 60%">
+                <div id="ToggleBorder" class="d-flex justify-content-between align-items-center" style="width: 60%">
                     <input id="txtPayAmount" type="text" value="@txtPayAmount" style="cursor: pointer; max-width: 80%; background-color: transparent; font-size: 35px; line-height: 100%" data-type="PositiveCurrency" placeholder="@AmountPlaceholder" class="text-white pe-2 text-start" disabled onchange="UpdateHdnTransactionAmount()" onblur="FinishEditPay()" />
                     <button type="button" style="background-color: transparent; border: none; z-index: 99;" onclick="EditPayAmount()">
                         <i class="bi bi-pencil fs-2 text-white"></i>
@@ -34,10 +43,11 @@
             </div>
             <p class="pb-0 mb-0 fs-6 ps-1" style="line-height: 100%;">For Next Pay Day</p>
             <button type="button" onclick="OpenModal()" style="background-color: transparent; border: none; width: 60%">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-end">
                     <div class="text-right">
                         <p class="text-White mt-3 mb-0 pe-2 fs-2 text-white" id="txtDateInformation">@txtDateInformation</p>
-                    </div>                    
+                    </div> 
+                    <i class="bi bi-calendar-heart fs-3 text-white"></i>
                 </div>
             </button>
             <input type="hidden" id="PayDate" name="PayDate" value="@Model.NextIncomePayday;" />
@@ -51,30 +61,6 @@
     {
         UpdatePayDate();
     });
-
-    $(document).ready(function () {
-        $.get({
-            url: '/Home/LoadDatePicker/',
-            data: {
-                textElement: 'txtDateInformation',
-                InputElement: 'PayDate',
-                DatePattern: 'ddmmmmyyyy',
-                IncludeDay: 'Short',
-                Seperator: 'Space',
-                StartDate: '@DatePickerStartDate',
-                EndDate: '@DatePickerEndDate',
-                DefaultDate: '@DatePickerDefaultDate'
-            },
-
-            success: function (result) {
-                $("#myPartialViewDiv").html(result);
-            },
-
-            error: function (xhr, exception) {
-                return false;
-            }
-        });
-    })
 
     function UpdatePayDate()
     {
