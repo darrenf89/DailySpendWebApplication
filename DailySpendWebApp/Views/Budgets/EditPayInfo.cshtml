@@ -175,9 +175,9 @@
                             </div>
                         </div>
                     </div>
-                    <div id="divSaveBudgetDetails" class="d-flex align-items-center justify-content-end">
-                        <button type="submit" class="btn btn-success col-4 text-start ps-4 py-2" asp-controller="Budgets" asp-action="UpdateBudgetDetails">Update Details</button>
-                        <button type="submit" class="btn btn-danger col-4 text-start ps-4 py-2" asp-controller="Budgets" asp-action="RecalculateBudget" style="width: 100%">Update Details and Recalculate Budget</button>
+                    <div id="divSaveBudgetDetails" class="d-flex align-items-center justify-content-between">
+                        <button type="submit" class="btn btn-success col-5 text-start py-2 mx-2 text-center" asp-controller="Budgets" asp-action="UpdateBudgetDetails">Update Details</button>
+                        <button type="submit" class="btn btn-danger col-5 text-start py-2 mx-2 text-center" asp-controller="Budgets" asp-action="RecalculateBudget">Recalculate Budget</button>
                     </div>
                 </div>
             </div>
@@ -367,5 +367,5 @@
         lblChangeElement.className = "d-flex form-label ms-4 mb-0 text-primary"
     }
 
-    $(document).ready(handleIncomeRadioClick());
+    $(document).ready(handleIncomeRadioClick(), UpdateHdnPayDayAmount());
 </script>

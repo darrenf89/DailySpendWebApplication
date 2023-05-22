@@ -1895,6 +1895,7 @@ namespace DailySpendBudgetWebApp.Controllers
                 int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
                 Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
 
+                _db.SaveChanges();
                 //TODO: Update PayPeriod Stats.
                 status = _pt.UpdatePayPeriodStats(Budget.BudgetID);
 

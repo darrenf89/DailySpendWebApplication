@@ -805,6 +805,11 @@ namespace DailySpendWebApp.Services
             stats.EndDate = Budget.NextIncomePayday ?? DateTime.UtcNow;
             stats.DurationOfPeriod = (stats.EndDate - stats.StartDate).Days;
 
+            stats.StartLtSDailyAmount = Budget.LeftToSpendDailyAmount;
+            stats.StartLtSPeiordAmount = Budget.LeftToSpendBalance;
+            stats.StartBBPeiordAmount = Budget.BankBalance;
+            stats.StartMaBPeiordAmount = Budget.MoneyAvailableBalance;
+
             _db.SaveChanges();
 
             return "OK";
