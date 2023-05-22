@@ -81,7 +81,6 @@ namespace DailySpendWebApp.Services
             }
             return "OK";
         }
-
         public string UpdateBudgetCreateIncome(int BudgetID)
         {
             if (BudgetID == 0)
@@ -91,7 +90,7 @@ namespace DailySpendWebApp.Services
             else
             {
                 Budgets? Budget = _db.Budgets?
-                    .Include(i => i.IncomeEvents.Where(i => i.isClosed == false & i.isIncomeAddedToBalance == false))
+                    .Include(i => i.IncomeEvents.Where(i => i.isClosed == false))
                     .Where(x => x.BudgetID == BudgetID)
                     .FirstOrDefault();
 
@@ -99,48 +98,61 @@ namespace DailySpendWebApp.Services
 
                 foreach (IncomeEvents Income in Budget.IncomeEvents)
                 {
-                    //Check if income active date has passed and process accordingly
-                    if (Income.IncomeActiveDate.Date <= Today.Date)
+                    DateTime NextPayDay = Budget.NextIncomePayday ?? default;
+                    if (Income.isInstantActive ?? false)
                     {
-                        //Check if its an instantactive Income
-                        if (Income.isInstantActive ?? false)
+                        DateTime PayDayAfterNext = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
+                        DateTime NextIncomeDate = CalculateNextDate(Income.DateOfIncomeEvent, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
+                        //Next Income Date happens in this Pay window so process
+                        if(Income.DateOfIncomeEvent.Date < NextPayDay.Date)
                         {
-                            // if  instantactive Income Update MoneyAvilable and Left to spend then check if its recurring
+                            Income.IncomeActiveDate = DateTime.UtcNow;
                             Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance + Income.IncomeAmount;
                             Budget.LeftToSpendBalance = Budget.LeftToSpendBalance + Income.IncomeAmount;
-                            //TODO: Add an Instant Active Income Transaction into transactions
-                            //Calculate the Next Active Income Date if its recurring. Should go active on the date of the payday directly before the next DateOfIncomeEvent.
+                            while (NextIncomeDate.Date < NextPayDay.Date)
+                            {
+                                Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance + Income.IncomeAmount;
+                                Budget.LeftToSpendBalance = Budget.LeftToSpendBalance + Income.IncomeAmount;
+                                //TODO: Add a Transaction into transactions
+                                NextIncomeDate = CalculateNextDate(NextIncomeDate, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
+                            }                       
+                        }
+                        else
+                        {
+                            DateTime CalPayDate = NextPayDay.Date;
+                            while (Income.DateOfIncomeEvent.Date >= NextPayDay.Date)
+                            {
+                                CalPayDate = NextPayDay;
+                                NextPayDay = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
+                            }
+                            Income.IncomeActiveDate = CalPayDate.Date;
+                        }
+
+                        if(Income.DateOfIncomeEvent <= Today.Date)
+                        {
+                            Budget.BankBalance = Budget.BankBalance + Income.IncomeAmount;
+                            //TODO: Update Instant Active Income Transaction in transactions
+                            Income.DateOfIncomeEvent = NextIncomeDate.Date;
                             if (Income.isRecurringIncome)
                             {
-                                DateTime NextIncomeDate = CalculateNextDate(Income.DateOfIncomeEvent, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
-                                DateTime NextPayDay = Budget.NextIncomePayday ?? default;
-                                DateTime PayDayAfterNext = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
-                                if (NextIncomeDate.Date < NextPayDay.Date)
+                                DateTime CalPayDate = new DateTime();
+                                while (NextIncomeDate.Date > NextPayDay.Date)
                                 {
-                                    while (NextIncomeDate.Date < NextPayDay.Date)
-                                    {
-                                        Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance + Income.IncomeAmount;
-                                        Budget.LeftToSpendBalance = Budget.LeftToSpendBalance + Income.IncomeAmount;
-                                        //TODO: Add a Transaction into transactions
-                                        NextIncomeDate = CalculateNextDate(NextIncomeDate, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
-                                    }
+                                    CalPayDate = NextPayDay;
+                                    NextPayDay = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
                                 }
-                                else
-                                {
-                                    while (NextIncomeDate.Date > PayDayAfterNext)
-                                    {
-                                        NextPayDay = PayDayAfterNext;
-                                        PayDayAfterNext = CalculateNextDate(NextPayDay, Budget.PaydayType, Budget.PaydayValue ?? 1, Budget.PaydayDuration);
-                                    }
-                                    Income.IncomeActiveDate = NextPayDay.Date;
-                                }
+                                Income.IncomeActiveDate = CalPayDate.Date;
                             }
                             else
                             {
-
+                                Income.isClosed = true;
+                                Income.isIncomeAddedToBalance = true;
                             }
                         }
-                        else
+                    }                    
+                    else
+                    {
+                        if(Income.DateOfIncomeEvent.Date <= Today.Date)
                         {
                             Budget.BankBalance = Budget.BankBalance + Income.IncomeAmount;
                             Budget.MoneyAvailableBalance = Budget.MoneyAvailableBalance + Income.IncomeAmount;
@@ -160,28 +172,12 @@ namespace DailySpendWebApp.Services
                             }
                         }
                     }
-
-                    //If its an InstantActive Income Check if the Date of Income Event is in the past.
-                    if (Income.DateOfIncomeEvent <= Today & Income.isInstantActive ?? false)
-                    {
-                        Budget.BankBalance = Budget.BankBalance + Income.IncomeAmount;
-                        //TODO: Update Instant Active Income Transaction in transactions
-                        if (Income.isRecurringIncome)
-                        {
-                            DateTime NextDate = CalculateNextDate(Income.DateOfIncomeEvent, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
-                            Income.DateOfIncomeEvent = NextDate;
-                        }
-                        else
-                        {
-                            Income.isClosed = true;
-                            Income.isIncomeAddedToBalance = true;
-                        }
-                    }
-
                 }
-            }
+
             _db.SaveChanges();
             return "OK";
+
+            }
         }
 
         public string UpdateBudgetCreateSavingsSpend(int BudgetID)
@@ -813,6 +809,26 @@ namespace DailySpendWebApp.Services
 
             return "OK";
         }
+        public string RecalculateBudgetDetails(int? BudgetID)
+        {
+            string status = "OK";
+            Budgets? Budget = _db.Budgets?
+               .Where(x => x.BudgetID == BudgetID)
+               .FirstOrDefault();
+
+            _db.Attach(Budget);
+
+            Budget.MoneyAvailableBalance = Budget.BankBalance;
+            Budget.LeftToSpendBalance = Budget.BankBalance;
+
+            status = UpdateBudgetCreateSavings(BudgetID ?? 0);
+            status = UpdateBudgetCreateIncome(BudgetID ?? 0);
+            status = UpdateBudgetCreateSavingsSpend(BudgetID ?? 0);
+            status = UpdateBudgetCreateBillsSpend(BudgetID?? 0);
+            
+            return status;
+        }
+
     }
 
 }

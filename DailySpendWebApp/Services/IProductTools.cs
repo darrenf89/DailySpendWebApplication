@@ -28,5 +28,6 @@ namespace DailySpendWebApp.Services
         public string GetBudgetDatePattern(int BudgetID);
         public string GetBudgetShortDatePattern(int BudgetID);
         public string UpdatePayPeriodStats(int? BudgetID);
+        public string RecalculateBudgetDetails(int? BudgetID);
     }
 }

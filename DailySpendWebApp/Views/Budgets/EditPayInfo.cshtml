@@ -33,7 +33,7 @@
         <div class="accordion-item">
             <h2 class="accordion-header text-white" id="headingTwo">
                 <div class="d-flex align-items-center justify-content-center m-0 p-0">
-                    <button id="AccordionDetails" class="accordion-button text-white bg-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" onclick="UpdateDetailsAccordianStage()">
+                    <button id="AccordionDetails" class="accordion-button text-white bg-primary" type="button">
                         Budget Period and Amount
                     </button>
                 </div>
@@ -175,15 +175,13 @@
                             </div>
                         </div>
                     </div>
+                    <div id="divSaveBudgetDetails" class="d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-success col-4 text-start ps-4 py-2" asp-controller="Budgets" asp-action="UpdateBudgetDetails">Update Details</button>
+                        <button type="submit" class="btn btn-danger col-4 text-start ps-4 py-2" asp-controller="Budgets" asp-action="RecalculateBudget" style="width: 100%">Update Details and Recalculate Budget</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row my-3 shadow ms-1 me-1">
-        <button type="submit" class="btn btn-secondary text-start ps-4 py-2" asp-controller="Budgets" asp-action="UpdateBudgetDetails">Update Details</button>
-    </div>
-    <div class="row my-3 shadow ms-1 me-1">
-        <button type="submit" class="btn btn-success text-start ps-4 py-2" asp-controller="Budgets" asp-action="RecalculateBudget" style="width: 100%">Update Details and Recalculate Budget</button>
     </div>
     <input type="hidden" id="CurrencySymbol" value="@Html.Raw(ViewBag.CurrencySymbol)" />
     <input type="hidden" id="CurrencySpacer" value="@Html.Raw(ViewBag.CurrencySpacer)" />

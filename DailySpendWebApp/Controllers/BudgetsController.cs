@@ -1866,72 +1866,7 @@ namespace DailySpendBudgetWebApp.Controllers
 
             _db.Attach(Budget);
 
-            bool Everynth = obj.Everynth ?? false;
-            bool WorkingDays = obj.WorkingDays ?? false;
-            bool OfEveryMonth = obj.OfEveryMonth ?? false;
-            bool LastOfTheMonth = obj.LastOfTheMonth ?? false;
-
-            Decimal Pay;
-            Decimal.TryParse(obj.NextPayDayAmount, out Pay);
-
-            Budget.PaydayAmount = Pay;
-
-            Budget.NextIncomePayday = obj.NextIncomePayday;
-            Budget.NextIncomePaydayCalculated = obj.NextIncomePayday;
-
-
-            if (Everynth)
-            {
-                Budget.PaydayType = "Everynth";
-                Budget.PaydayValue = obj.PeriodicPayPeriod;
-                Budget.PaydayDuration = obj.PeriodicPayPeriodDDL;
-                int Duration = new int();
-                if (Budget.PaydayDuration == "days")
-                {
-                    Duration = 1;
-                }
-                else if (Budget.PaydayDuration == "weeks")
-                {
-                    Duration = 7;
-                }
-                else if (Budget.PaydayDuration == "years")
-                {
-                    Duration = 365;
-                }
-                Budget.AproxDaysBetweenPay = Duration * Budget.PaydayValue;
-            }
-            else if (WorkingDays)
-            {
-                Budget.PaydayType = "WorkingDays";
-                Budget.PaydayValue = obj.LastDayOfMonthPayPeriod;
-                Budget.PaydayDuration = null;
-
-                int? NumberOfDaysBefore = Budget.PaydayValue;
-
-                Budget.AproxDaysBetweenPay = GetNumberOfDaysLastWorkingDay(NumberOfDaysBefore);
-
-            }
-            else if (OfEveryMonth)
-            {
-                Budget.PaydayType = "OfEveryMonth";
-                Budget.PaydayValue = obj.GivenDayOfMonthPayPeriod;
-                Budget.PaydayDuration = null;
-
-                int year = DateTime.Now.Year;
-                int month = DateTime.Now.Month;
-                int days = DateTime.DaysInMonth(year, month);
-                Budget.AproxDaysBetweenPay = days;
-            }
-            else if (LastOfTheMonth)
-            {
-                Budget.PaydayType = "LastOfTheMonth";
-                Budget.PaydayValue = null;
-                Budget.PaydayDuration = obj.LastGivenDayOfWeekPay;
-
-                int dayNumber = ((int)Enum.Parse(typeof(DayOfWeek), Budget.PaydayDuration));
-
-                Budget.AproxDaysBetweenPay = GetNumberOfDaysLastDayOfWeek(dayNumber);
-            }
+            string status = BudgetDetailsUpdatePayDay(ref Budget, obj);
 
             _db.SaveChanges();
 
@@ -1948,6 +1883,38 @@ namespace DailySpendBudgetWebApp.Controllers
 
             _db.Attach(Budget);
 
+            string status = BudgetDetailsUpdatePayDay(ref Budget, obj);
+
+            _db.SaveChanges();
+
+            try
+            {
+                status = _pt.RecalculateBudgetDetails(Budget.BudgetID);
+
+                Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
+                int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
+                Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
+
+                //TODO: Update PayPeriod Stats.
+                status = _pt.UpdatePayPeriodStats(Budget.BudgetID);
+
+                _db.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { Message = ex.Message, Status = status });
+
+            }
+
+            
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public string BudgetDetailsUpdatePayDay(ref Budgets Budget, CreateABudgetPageModel obj)
+        {
+
             bool Everynth = obj.Everynth ?? false;
             bool WorkingDays = obj.WorkingDays ?? false;
             bool OfEveryMonth = obj.OfEveryMonth ?? false;
@@ -2015,37 +1982,10 @@ namespace DailySpendBudgetWebApp.Controllers
                 Budget.AproxDaysBetweenPay = GetNumberOfDaysLastDayOfWeek(dayNumber);
             }
 
-            string status = "";
+            TimeSpan t = Budget.NextIncomePayday - DateTime.UtcNow ?? new TimeSpan();
+            Budget.LeftToSpendDailyAmount = Budget.PaydayAmount ?? 0 / t.Days;
 
-            _db.SaveChanges();
-
-            try
-            {
-                status = _pt.UpdateBudgetCreateSavings(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
-                status = _pt.UpdateBudgetCreateIncome(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
-                status = _pt.UpdateBudgetCreateSavingsSpend(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
-                status = _pt.UpdateBudgetCreateBillsSpend(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
-
-                Budget.BudgetValuesLastUpdated = DateTime.UtcNow;
-                int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
-                Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
-                Budget.StartDayDailyAmount = Budget.LeftToSpendDailyAmount;
-
-                //TODO: Update PayPeriod Stats.
-                status = _pt.UpdatePayPeriodStats(HttpContext.Session.GetInt32("_NewBudgetID") ?? 0);
-
-                _db.SaveChanges();
-
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Error", "Home", new { Message = ex.Message, Status = status });
-
-            }
-
-            
-
-            return RedirectToAction("Index", "Home");
+            return "OK";
         }
 
     }
