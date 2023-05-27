@@ -244,6 +244,7 @@ namespace DailySpendWebApp.Controllers
             AddUserCurrencyTimeViewBagPreferences();
 
             TempData["PageHeading"] = "Add a Transaction!";
+            obj.stage = "Create";
             return View(obj);
 
         }
@@ -575,9 +576,22 @@ namespace DailySpendWebApp.Controllers
         [Route("Transaction/EditTransaction/{TransactionID?}")]
         public IActionResult EditTransaction(Transactions obj, int? TransactionID)
         {
+            
             obj = _db.Transactions.Where(t => t.TransactionID == TransactionID).FirstOrDefault();
+            AddUserCurrencyTimeViewBagPreferences();
+            _db.Attach(obj);
+
+            obj.stage = "Edit";
+
+            _db.SaveChanges();
 
             return View("EditTransaction", obj);
+        }
+
+        public IActionResult ConfirmEditTransaction(Transactions obj)
+        {
+
+            return RedirectToAction("Index", "Home");
         }
         
         public void AddUserCurrencyTimeViewBagPreferences()

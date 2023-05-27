@@ -1,4 +1,4 @@
-﻿@model DailySpendBudgetWebApp.Models.Transactions
+@model DailySpendBudgetWebApp.Models.Transactions
 
 @{
     ViewData["Title"] = "Add a Transaction";
@@ -49,7 +49,7 @@
         <partial name="_PVAddTransaction"></partial>
         <footer class="sticky-bottom m-0 p-0" style="width: 100%">
             <div class="d-flex flex-column align-items-center justify-content-center">
-                <button asp-action="CreateTransaction" asp-controller="Transaction" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Transaction</button>
+                <button asp-action="ConfirmEditTransaction" asp-controller="Transaction" id="btnSubmit" type="submit" class="btn btn-success rounded-1 mb-4 col-11"><i class="bi bi-save2"></i> &nbsp Add Transaction</button>
             </div>
         </footer>
     </div>

@@ -834,6 +834,215 @@ namespace DailySpendWebApp.Services
             return status;
         }
 
+        public string RegularBudgetUpdateLoop(int? BudgetID)
+        {
+            string status = "OK";
+            if (BudgetID == 0)
+            {
+                return "Couldnt find budget";
+            }
+            else
+            {
+                Budgets Budget = _db.Budgets
+                    .Where(x => x.BudgetID == BudgetID)
+                    .First();
+
+                _db.Attach(Budget);
+
+                DateTime Today = DateTime.Now.Date;
+                DateTime LastBudgetUpdated = Budget.BudgetValuesLastUpdated.Date;
+
+                while(LastBudgetUpdated < Today)
+                {
+                    status = BudgetUpdateDailyy(Budget.BudgetID, LastBudgetUpdated);
+                    if(status == "OK")
+                    {
+                        LastBudgetUpdated = LastBudgetUpdated.AddDays(1);
+                        Budget.BudgetValuesLastUpdated = LastBudgetUpdated;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+            }
+
+            return "OK";
+        }
+
+        public string BudgetUpdateDailyy(int BudgetID, DateTime LastUpdated)
+        {
+            try
+            {
+                Budgets Budget = _db.Budgets
+                    .Include(x => x.PayPeriodStats.Where(p => p.isCurrentPeriod))
+                    .Include(x => x.Transactions.Where(t => !t.isTransacted))
+                    .Include(x => x.Savings.Where(s => !s.isSavingsClosed))
+                    .Include(x => x.Bills.Where(b => !b.isClosed))
+                    .Include(x => x.IncomeEvents.Where(i => !i.isClosed))
+                    .Where(x => x.BudgetID == BudgetID)
+                    .First();
+
+                //Process All Types
+                UpdateTransactionDaily(ref Budget);
+                UpdateSavingsDaily(ref Budget);
+                ProcessBillsDaily(ref Budget);
+                ProcessIncomeDaily(ref Budget);
+
+                //Check if PayDay
+
+                //Recalculate Balances
+                
+                //Upate Stats if needed
+
+                DateTime NextPayDay = Budget.NextIncomePayday.GetValueOrDefault().Date;
+
+            }
+            catch (System.Exception ex)
+            {
+                return ex.Message;
+            }
+            
+            _db.SaveChanges();
+            return "OK";
+        }
+
+        public void UpdateTransactionDaily(ref Budgets Budget)
+        {
+            foreach(Transactions Transaction in Budget.Transactions)
+            {
+                if(Transaction.TransactionDate.GetValueOrDefault().Date == DateTime.Now.Date)
+                {
+                    if(Transaction.isSpendFromSavings)
+                    {
+                        TransactSavingsTransactionDaily(ref Budget, Transaction.TransactionID);
+                    }
+                    else
+                    {
+                        TransactTransactionDaily(ref Budget, Transaction.TransactionID);
+                    }
+
+                    Transaction.isTransacted = true;
+                }
+            }
+        }
+
+        public void TransactSavingsTransactionDaily(ref Budgets Budget, int ID)
+        {
+            Transactions T = Budget.Transactions.Where(t => t.TransactionID == ID).First();
+            int TransactionsSavingsID = T.SavingID ?? 0;
+
+            Savings S = Budget.Savings.Where(s => s.SavingID == TransactionsSavingsID).First();
+
+            if (T.SavingsSpendType == "UpdateValues")
+            {
+                if (T.isIncome)
+                {
+                    Budget.BankBalance += T.TransactionAmount;
+                    Budget.MoneyAvailableBalance += T.TransactionAmount;
+                    Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;
+                    Budget.PayPeriodStats[0].SavingsToDate += T.TransactionAmount ?? 0;
+                    S.CurrentBalance += T.TransactionAmount;
+                    S.LastUpdatedValue = T.TransactionAmount;
+                    S.LastUpdatedDate = DateTime.UtcNow;
+                }
+                else
+                {
+                    Budget.BankBalance -= T.TransactionAmount;
+                    Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                    S.CurrentBalance -= T.TransactionAmount;
+                    S.LastUpdatedValue = T.TransactionAmount;
+                    S.LastUpdatedDate = DateTime.UtcNow;
+                    Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
+                }
+
+                //Update Regular Saving Value
+                RecalculateRegularSavingFromTransaction(ref S);
+                
+            }
+            else if (T.SavingsSpendType == "MaintainValues")
+            {
+                if (T.isIncome)
+                {
+                    Budget.BankBalance += T.TransactionAmount;
+                    Budget.MoneyAvailableBalance += T.TransactionAmount;
+                    S.CurrentBalance += T.TransactionAmount;
+                    S.SavingsGoal += T.TransactionAmount;
+                    S.LastUpdatedValue = T.TransactionAmount;
+                    S.LastUpdatedDate = DateTime.UtcNow;
+                    Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;
+                    Budget.PayPeriodStats[0].SavingsToDate += T.TransactionAmount ?? 0;
+                }
+                else
+                {
+                    Budget.BankBalance -= T.TransactionAmount;
+                    Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                    S.CurrentBalance -= T.TransactionAmount;
+                    S.SavingsGoal -= T.TransactionAmount;
+                    S.LastUpdatedValue = T.TransactionAmount;
+                    S.LastUpdatedDate = DateTime.UtcNow;
+                    Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
+                }
+            }
+            else if (T.SavingsSpendType == "BuildingSaving" | T.SavingsSpendType == "EnvelopeSaving")
+            {
+                if (T.isIncome)
+                {
+                    Budget.BankBalance += T.TransactionAmount;
+                    Budget.MoneyAvailableBalance += T.TransactionAmount;
+                    S.CurrentBalance += T.TransactionAmount;
+                    S.LastUpdatedValue = T.TransactionAmount;
+                    S.LastUpdatedDate = DateTime.UtcNow;
+                    Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;
+                    Budget.PayPeriodStats[0].SavingsToDate += T.TransactionAmount ?? 0;
+                }
+                else
+                {
+                    Budget.BankBalance -= T.TransactionAmount;
+                    Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                    S.CurrentBalance -= T.TransactionAmount;
+                    S.LastUpdatedValue = T.TransactionAmount;
+                    S.LastUpdatedDate = DateTime.UtcNow;
+                    Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
+                }
+            }
+        }
+
+        public void TransactTransactionDaily(ref Budgets Budget, int ID)
+        {
+            
+            Transactions T = Budget.Transactions.Where(t => t.TransactionID == ID).First();
+
+            if (T.isIncome)
+            {
+                Budget.BankBalance += T.TransactionAmount;
+                Budget.MoneyAvailableBalance += T.TransactionAmount;
+                Budget.LeftToSpendBalance += T.TransactionAmount;
+                //Recalculate how much you have left to spen
+                int DaysToPayDay = (Budget.NextIncomePayday.GetValueOrDefault().Date - DateTime.Today.Date).Days;
+                Budget.LeftToSpendDailyAmount = (Budget.LeftToSpendBalance ?? 0) / DaysToPayDay;
+                Budget.PayPeriodStats[0].IncomeToDate += T.TransactionAmount ?? 0;                    
+            }
+            else
+            {
+                Budget.BankBalance -= T.TransactionAmount;
+                Budget.MoneyAvailableBalance -= T.TransactionAmount;
+                Budget.LeftToSpendBalance -= T.TransactionAmount;
+                Budget.LeftToSpendDailyAmount -= T.TransactionAmount ?? 0;
+                Budget.PayPeriodStats[0].SpendToDate += T.TransactionAmount ?? 0;
+            }
+
+        }
+
+        public void UpdateSavingsDaily(ref Budgets Budget)
+        {
+            foreach(Savings Saving in Budget.Savings)
+            {
+                
+            }
+        }
+
     }
 
 }

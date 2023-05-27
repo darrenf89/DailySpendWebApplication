@@ -24,5 +24,6 @@ namespace DailySpendBudgetWebApp.Models
         public string? SavingsSpendType { get; set; }
         [NotMapped]
         public List<string> PayeeList { get; set; } = new List<string>();
+        public string stage { get; set; } = "Create";
     }
 }
