@@ -165,7 +165,17 @@ namespace DailySpendBudgetWebApp.Controllers
                         throw (new Exception("Not Found"));
                     }
 
-                    return Redirect(ReturnUrl == null ? "/Home" : ReturnUrl == "/Accounts/Home" ? "/Home" : ReturnUrl);
+                    if(ReturnUrl == null)
+                    {
+                        ReturnUrl = "/Home";
+                    }
+                    if (ReturnUrl == "/Accounts/Home")
+                    {
+                        ReturnUrl = "/Home";
+                    }
+
+                    return RedirectToAction("UpdateBudget", "Home", new {ReturnURL = ReturnUrl ?? "/Home"});
+                    
                 }
                 else
                 {

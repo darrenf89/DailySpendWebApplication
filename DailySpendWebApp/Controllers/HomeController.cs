@@ -99,10 +99,47 @@ public class HomeController : Controller
         return PartialView("_PVDatePicker");
     }
 
+    public IActionResult UpdateBudget(string ReturnUrl)
+    {
+        string Email = User.FindFirst(ClaimTypes.Name).Value;
+        var Users = _db.UserAccounts
+            .Where(x => x.Email == Email);
+
+        UserAccounts UserAccount = Users.First();
+
+        int DefaultBudgetId = UserAccount.DefaultBudgetID ?? 0;
+
+        var dbBudgets = _db.Budgets
+            .Where(x => x.BudgetID == DefaultBudgetId);
+
+        Budgets? Budget = dbBudgets.FirstOrDefault();
+
+        if (Budget == null)
+        {
+            return RedirectToAction("CreateNewBudget", "Budgets");
+        }
+        else
+        {
+            if (Budget.BudgetValuesLastUpdated.Date < DateTime.Today.Date)
+            {
+                //_pt.RegularBudgetUpdateLoop(Budget.BudgetID);
+                //_pt.RecalculateBudgetDetails(Budget.BudgetID);
+
+                return Redirect(ReturnUrl);
+            }
+            else
+            {
+                return Redirect(ReturnUrl);
+            }
+        }
+
+    }
+
     [Route("Home/Index/{id?}")]
     [Route("Home/Index/{id?}/{ReMess?}")]
     public IActionResult Index(int? id, string? ReMess)
     {
+        UpdateBudget("/Home");
         UserHomePageModel obj = new();
         try
         {

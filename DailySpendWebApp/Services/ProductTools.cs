@@ -885,15 +885,16 @@ namespace DailySpendWebApp.Services
                     .First();
 
                 //Process All Types
-                UpdateTransactionDaily(ref Budget);
+                
                 UpdateSavingsDaily(ref Budget);
-                ProcessBillsDaily(ref Budget);
-                ProcessIncomeDaily(ref Budget);
+                //ProcessBillsDaily(ref Budget);
+                //ProcessIncomeDaily(ref Budget);
+                UpdateTransactionDaily(ref Budget);
 
                 //Check if PayDay
 
                 //Recalculate Balances
-                
+
                 //Upate Stats if needed
 
                 DateTime NextPayDay = Budget.NextIncomePayday.GetValueOrDefault().Date;
@@ -912,7 +913,7 @@ namespace DailySpendWebApp.Services
         {
             foreach(Transactions Transaction in Budget.Transactions)
             {
-                if(Transaction.TransactionDate.GetValueOrDefault().Date == DateTime.Now.Date)
+                if(Transaction.TransactionDate.GetValueOrDefault().Date <= DateTime.Now.Date)
                 {
                     if(Transaction.isSpendFromSavings)
                     {
@@ -922,7 +923,7 @@ namespace DailySpendWebApp.Services
                     {
                         TransactTransactionDaily(ref Budget, Transaction.TransactionID);
                     }
-
+                    Budget.PayPeriodStats[0].SpendToDate += Transaction.TransactionAmount ?? 0;
                     Transaction.isTransacted = true;
                 }
             }
@@ -1039,10 +1040,68 @@ namespace DailySpendWebApp.Services
         {
             foreach(Savings Saving in Budget.Savings)
             {
-                
+                if(Saving.isRegularSaving)
+                {
+                    if(Saving.SavingsType == "SavingsBuilder")
+                    {
+                        Saving.CurrentBalance = Saving.CurrentBalance + Saving.RegularSavingValue;
+                        Saving.LastUpdatedValue = Saving.RegularSavingValue;
+                        Saving.LastUpdatedDate = DateTime.Now.Date;
+                        Budget.PayPeriodStats[0].SavingsToDate += Saving.RegularSavingValue ?? 0;
+                    }
+                    else if (Saving.SavingsType == "TargetAmount")
+                    {
+                        if(Saving.SavingsGoal > Saving.CurrentBalance)
+                        {
+
+                            decimal? Amount;
+                            if(Saving.canExceedGoal)
+                            {
+                                Amount = Saving.RegularSavingValue;
+                            }
+                            else
+                            {
+                                Amount = (Saving.SavingsGoal - Saving.CurrentBalance) < Saving.RegularSavingValue ? (Saving.SavingsGoal - Saving.CurrentBalance) : Saving.RegularSavingValue;
+                            }
+
+                            Saving.CurrentBalance += Amount;
+                            Saving.LastUpdatedValue = Amount;
+                            Saving.LastUpdatedDate = DateTime.Now.Date;
+                            Budget.PayPeriodStats[0].SavingsToDate += Saving.RegularSavingValue ?? 0;
+
+                            if(Saving.CurrentBalance == Saving.SavingsGoal & Saving.isAutoComplete)
+                            {
+                                Saving.isSavingsClosed = true;
+                            }
+                        }
+                    }
+                    else if (Saving.SavingsType == "TargetDate")
+                    {
+                        decimal? Amount;
+                        if (Saving.GoalDate.GetValueOrDefault().Date <= DateTime.Now.Date)
+                        {
+                            Amount = (Saving.SavingsGoal - Saving.CurrentBalance);
+                            Saving.CurrentBalance += Amount;
+                            Saving.LastUpdatedValue = Amount;
+                            Saving.LastUpdatedDate = DateTime.Now.Date;
+                            if (Saving.isAutoComplete)
+                            {
+                                Saving.isSavingsClosed = true;
+                            }
+                            Budget.PayPeriodStats[0].SavingsToDate += Saving.RegularSavingValue ?? 0;                            
+                        }
+                        else
+                        {
+                            Amount = Saving.RegularSavingValue;
+                            Saving.CurrentBalance += Amount;
+                            Saving.LastUpdatedValue = Amount;
+                            Saving.LastUpdatedDate = DateTime.Now.Date;
+                            Budget.PayPeriodStats[0].SavingsToDate += Saving.RegularSavingValue ?? 0;
+                        }
+                    }
+                }
             }
         }
-
     }
 
 }
