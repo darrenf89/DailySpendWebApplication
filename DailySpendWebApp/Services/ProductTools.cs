@@ -210,7 +210,7 @@ namespace DailySpendWebApp.Services
                         DailySavingOutgoing += Saving.RegularSavingValue ?? 0;
                         //check if goal date is before pay day
                         int DaysToSaving = (Saving.GoalDate.GetValueOrDefault().Date - DateTime.Today.Date).Days;
-                        if (DaysToSaving < DaysToPayDay)
+                        if (DaysToSaving < DaysToPayDay & !Saving.canExceedGoal)
                         {
                             PeriodTotalSavingOutgoing += ((Saving.RegularSavingValue ?? 0) * DaysToSaving);
                         }
@@ -887,7 +887,7 @@ namespace DailySpendWebApp.Services
                 //Process All Types
                 
                 UpdateSavingsDaily(ref Budget);
-                //ProcessBillsDaily(ref Budget);
+                UpdateBillsDaily(ref Budget);
                 //ProcessIncomeDaily(ref Budget);
                 UpdateTransactionDaily(ref Budget);
 
@@ -1102,6 +1102,45 @@ namespace DailySpendWebApp.Services
                 }
             }
         }
+
+        public void UpdateBillsDaily(ref Budgets Budget)
+        {
+            foreach(Bills Bill in Budget.Bills)
+            {
+                if((Bill.BillCurrentBalance + Bill.RegularBillValue) <= Bill.BillAmount)
+                {
+                    Bill.BillCurrentBalance += Bill.RegularBillValue ?? 0;
+                    Bill.LastUpdatedDate = DateTime.Now.Date;
+                    Budget.PayPeriodStats[0].BillsToDate += Bill.RegularBillValue ?? 0;
+                }
+                else
+                {
+                    Decimal Amount = Bill.BillAmount - Bill.BillCurrentBalance ?? 0;
+                    Bill.BillCurrentBalance += Amount;
+                    Bill.LastUpdatedDate = DateTime.Now.Date;
+                    Budget.PayPeriodStats[0].BillsToDate += Amount;
+                }
+
+                if(Bill.BillDueDate.GetValueOrDefault().Date == DateTime.Now.Date)
+                {
+                    if(Bill.BillAmount > Bill.BillCurrentBalance)
+                    {
+                        Decimal Amount = Bill.BillAmount - Bill.BillCurrentBalance ?? 0;
+                        Bill.BillCurrentBalance += Amount;
+                        Budget.PayPeriodStats[0].BillsToDate += Amount;
+                    }
+                    else if (Bill.BillAmount < Bill.BillCurrentBalance)
+                    {
+                        Decimal Amount = Bill.BillAmount - Bill.BillCurrentBalance ?? 0;
+                        Bill.BillCurrentBalance += Amount;
+                        Budget.PayPeriodStats[0].BillsToDate += Amount;
+                    }
+                    //create and transact transaction
+
+                }
+            }
+        }
+
     }
 
 }
