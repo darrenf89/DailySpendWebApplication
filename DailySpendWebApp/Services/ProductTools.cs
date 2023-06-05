@@ -888,7 +888,7 @@ namespace DailySpendWebApp.Services
                 
                 UpdateSavingsDaily(ref Budget);
                 UpdateBillsDaily(ref Budget);
-                //ProcessIncomeDaily(ref Budget);
+                UpdateIncomesDaily(ref Budget);
                 UpdateTransactionDaily(ref Budget);
 
                 //Check if PayDay
@@ -1135,12 +1135,102 @@ namespace DailySpendWebApp.Services
                         Bill.BillCurrentBalance += Amount;
                         Budget.PayPeriodStats[0].BillsToDate += Amount;
                     }
-                    //create and transact transaction
+                    //create transaction
+                    Transactions T = new Transactions();
+
+                    T.TransactionAmount = Bill.BillAmount;
+                    T.isIncome = false;
+                    T.isSpendFromSavings = false;
+                    T.isTransacted = false;
+                    T.Notes = "Transaction from bill " + Bill.BillName + " for " + Bill.BillAmount;
+                    T.WhenAdded = DateTime.Now;
+                    T.TransactionDate = DateTime.Now;
+                    T.Payee = Bill.BillName;
+
+                    Budget.Transactions.Add(T);
+                    Bill.BillCurrentBalance = 0;
+
+                    //Set new BillDate and calculate details
+                    if(Bill.isRecuring)
+                    {
+                        DateTime NextBillDate = new DateTime();
+                        if(Bill.BillType == "Everynth")
+                        {
+                            CalculateNextDateEverynth(ref NextBillDate, Bill.BillDueDate.GetValueOrDefault(), Bill.BillValue ?? 28, Bill.BillDuration);
+                            Bill.BillDueDate = NextBillDate;
+                        }
+                        else if(Bill.BillType == "OfEveryMonth")
+                        {
+                            CalculateNextDateOfEveryMonth(ref NextBillDate, Bill.BillDueDate.GetValueOrDefault(), Bill.BillValue ?? 28);
+                            Bill.BillDueDate = NextBillDate;
+                        }
+
+                        decimal DailySavingValue = new();
+                        TimeSpan Difference = (TimeSpan)(Bill.BillDueDate - DateTime.Now);
+                        int NumberOfDays = Difference.Days;
+                        decimal BillAmount = Bill.BillAmount ?? 0;
+                        decimal RemainingBillAmount = BillAmount - Bill.BillCurrentBalance;
+                        DailySavingValue = RemainingBillAmount / NumberOfDays;
+                        DailySavingValue = Math.Round(DailySavingValue, 2);
+
+                        Bill.RegularBillValue = DailySavingValue;
+                        Bill.isClosed = false;
+
+                    }
+                    else
+                    {
+                        Bill.isClosed = true;
+                    }
 
                 }
             }
         }
 
+        public void UpdateIncomesDaily(ref Budgets Budget)
+        {
+            foreach(IncomeEvents Income in Budget.IncomeEvents)
+            {
+                if(Income.DateOfIncomeEvent.Date == DateTime.Today.Date)
+                {
+                    if(Income.isInstantActive ?? false)
+                    {
+                        Budget.BankBalance += Income.IncomeAmount;
+                        if(Income.isRecurringIncome)
+                        {
+                            DateTime NextDate = CalculateNextDate(Income.DateOfIncomeEvent, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
+                            Income.DateOfIncomeEvent = NextDate;
+                        }
+                        else
+                        {
+                            Income.isClosed = true;
+                            Income.isIncomeAddedToBalance = true;
+                        }
+
+                    }
+                    else
+                    {
+                        Budget.BankBalance += Income.IncomeAmount;
+                        Budget.MoneyAvailableBalance += Income.IncomeAmount;
+                        Budget.LeftToSpendDailyAmount += Income.IncomeAmount;
+                        if(Income.isRecurringIncome)
+                        {
+                            DateTime NextDate = CalculateNextDate(Income.DateOfIncomeEvent, Income.RecurringIncomeType, Income.RecurringIncomeValue ?? 1, Income.RecurringIncomeDuration);
+                            Income.DateOfIncomeEvent = NextDate;
+                        }
+                        else
+                        {
+                            Income.isClosed = true;
+                            Income.isIncomeAddedToBalance = true;
+                        }
+                    }
+
+                    //Add a income transaction.
+                    
+                }
+
+            }
+
+        }
     }
 
 }
