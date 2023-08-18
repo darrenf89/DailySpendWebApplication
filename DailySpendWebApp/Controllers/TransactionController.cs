@@ -626,6 +626,4 @@ namespace DailySpendWebApp.Controllers
             ViewBag.DateSeperator = CultureInfo.DefaultThreadCurrentCulture.DateTimeFormat.DateSeparator;
         }
     }
-
-    test
 }
