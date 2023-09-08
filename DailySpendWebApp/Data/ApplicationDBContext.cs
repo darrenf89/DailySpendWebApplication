@@ -30,6 +30,7 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<lut_NumberFormat> lut_NumberFormats {get; set;}
         public DbSet<lut_CurrencyPlacement> lut_CurrencyPlacements {get; set;}
         public DbSet<PayPeriodStats> PayPeriodStats { get; set; }
+        public DbSet<ErrorLog> ErrorLog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

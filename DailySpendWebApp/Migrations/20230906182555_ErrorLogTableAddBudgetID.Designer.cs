@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230906182555_ErrorLogTableAddBudgetID")]
+    partial class ErrorLogTableAddBudgetID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,12 +151,6 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<decimal>("DailySavingOutgoing")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsCreated")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
 
                     b.Property<decimal?>("LeftToSpendBalance")
                         .HasColumnType("decimal(18,2)");
@@ -302,9 +298,6 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<string>("ErrorPage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("WhenAdded")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("ErrorLogID");
 

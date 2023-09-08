@@ -22,6 +22,8 @@ namespace DailySpendBudgetWebApp.Models
         public string? PaydayType { get; set; }
         public int? PaydayValue { get; set; }
         public string? PaydayDuration { get; set; }
+        public bool IsCreated { get; set; }
+        public DateTime LastUpdated { get; set; }
         public List<IncomeEvents> IncomeEvents { get; set; } = new List<IncomeEvents>();
         public List<Savings> Savings { get; set; } = new List<Savings>();
         public List<Transactions> Transactions { get; set; } = new List<Transactions>();
