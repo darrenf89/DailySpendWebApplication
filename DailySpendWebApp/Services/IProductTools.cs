@@ -35,6 +35,8 @@ namespace DailySpendWebApp.Services
         public void TransactSavingsTransactionDaily(ref Budgets Budget, int ID);
         public void TransactTransactionDaily(ref Budgets Budget, int ID);
         public void UpdateSavingsDaily(ref Budgets Budget);
+        public void UpdateBillsDaily(ref Budgets Budget);
+        public void UpdateIncomesDaily(ref Budgets Budget);
 
 
 
