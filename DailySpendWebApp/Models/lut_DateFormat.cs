@@ -10,6 +10,7 @@ namespace DailySpendBudgetWebApp.Models
         public int id { get; set; }
         public int DateSeperatorID { get; set; }
         public int ShortDatePatternID { get; set; }
+        [MaxLength(25)]
         public string DateFormat { get; set; } = "";
 
     }

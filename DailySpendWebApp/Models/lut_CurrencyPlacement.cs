@@ -10,6 +10,7 @@ namespace DailySpendBudgetWebApp.Models
 
         [Key]
         public int id { get; set; }
+        [MaxLength(25)]
         public string CurrencyPlacement { get; set; } = "";
         public int CurrencyPositivePatternRef { get; set; } = 0;
 

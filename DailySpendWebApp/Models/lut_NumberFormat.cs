@@ -11,6 +11,7 @@ namespace DailySpendBudgetWebApp.Models
         public int CurrencyDecimalDigitsID { get; set; }
         public int CurrencyDecimalSeparatorID { get; set; } 
         public int CurrencyGroupSeparatorID { get; set; }
+        [MaxLength(25)]
         public string NumberFormat { get; set; } = "";
 
     }

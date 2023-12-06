@@ -1,9 +1,5 @@
-﻿using DailySpendBudgetWebApp.Data;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing.Text;
-using System.Security.Cryptography;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace DailySpendBudgetWebApp.Models
 {
@@ -27,12 +23,9 @@ namespace DailySpendBudgetWebApp.Models
         public bool isDPAPermissions { get; set; } = false;
         public bool isAgreedToTerms { get; set; } = false;
         public bool isEmailVerified { get; set; } = false;
-        [ForeignKey("Budget")]
         public int? DefaultBudgetID { get; set; }
         public Budgets? Budget { get; set; }
-
         public List<Budgets> Budgets { get; set; } = new List<Budgets>();
-
 
     }
 }

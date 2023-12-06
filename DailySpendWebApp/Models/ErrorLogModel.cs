@@ -7,13 +7,21 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int ErrorLogID { get; set; }
+        [MaxLength(500)]
         public string? ErrorMessage { get; set;}
+        [MaxLength(250)]
         public string? ErrorPage { get; set; }
+        [MaxLength(250)]
         public string? ErrorMethod { get; set; }
+        [MaxLength(250)]
         public string? DeviceName { get; set; }
+        [MaxLength(250)]
         public string? DevicePlatform { get; set; }
+        [MaxLength(250)]
         public string? DeviceIdiom { get; set; }
+        [MaxLength(250)]
         public string? DeviceOSVersion { get; set; }
+        [MaxLength(250)]
         public string? DeviceModel { get; set; }
         public int BudgetID { get; set; }
         public DateTime WhenAdded { get; set; }

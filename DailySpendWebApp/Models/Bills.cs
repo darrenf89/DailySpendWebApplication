@@ -7,9 +7,12 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int BillID { get; set; }
         [Required]
+        [MaxLength(25)]
         public string? BillName { get; set; }
+        [MaxLength(250)]
         public string? BillType { get; set; }
         public int? BillValue { get; set; }
+        [MaxLength(250)]
         public string? BillDuration { get; set; }
         [Required]
         public decimal? BillAmount { get; set; }

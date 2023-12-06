@@ -7,12 +7,15 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int IncomeEventID { get; set; }
         public decimal IncomeAmount { get; set; }
+        [MaxLength(25)]
         public string IncomeName { get; set; } = "";
         public DateTime IncomeActiveDate { get; set; } = DateTime.Now;
         public DateTime DateOfIncomeEvent { get; set; } = DateTime.Now;
         public bool isRecurringIncome { get; set; }
+        [MaxLength(25)]
         public string? RecurringIncomeType { get; set; } 
-        public int? RecurringIncomeValue { get; set; } 
+        public int? RecurringIncomeValue { get; set; }
+        [MaxLength(25)]
         public string? RecurringIncomeDuration { get; set; }
         public bool isClosed { get; set; } = true;
         public bool? isInstantActive { get; set; }

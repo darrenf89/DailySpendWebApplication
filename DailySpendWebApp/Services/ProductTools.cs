@@ -132,9 +132,10 @@ namespace DailySpendWebApp.Services
                         {
                             Budget.BankBalance = Budget.BankBalance + Income.IncomeAmount;
                             //TODO: Update Instant Active Income Transaction in transactions
-                            Income.DateOfIncomeEvent = NextIncomeDate.Date;
+                            
                             if (Income.isRecurringIncome)
                             {
+                                Income.DateOfIncomeEvent = NextIncomeDate.Date;
                                 DateTime CalPayDate = new DateTime();
                                 while (NextIncomeDate.Date > NextPayDay.Date)
                                 {

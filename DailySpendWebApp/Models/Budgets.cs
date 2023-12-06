@@ -39,5 +39,6 @@ namespace DailySpendBudgetWebApp.Models
         public decimal DailyBillOutgoing { get; set; }
         public decimal LeftToSpendDailyAmount { get; set; }
         public decimal? StartDayDailyAmount { get; set; }
+        public int Stage { get; set; } = 1;
     }
 }

@@ -8,6 +8,7 @@ namespace DailySpendBudgetWebApp.Models
 
         [Key]
         public int id { get; set; }
+        [MaxLength(25)]
         public string CurrencyDecimalSeparator { get; set; } = "";
 
     }

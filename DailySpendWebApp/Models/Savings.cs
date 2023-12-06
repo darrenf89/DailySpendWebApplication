@@ -8,6 +8,7 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int SavingID { get; set; }
+        [MaxLength(25)]
         public string? SavingsType { get; set; }
         [Required]
         [MaxLength(15)]
@@ -31,6 +32,7 @@ namespace DailySpendBudgetWebApp.Models
         public decimal? RegularSavingValue { get; set; }
         public decimal? PeriodSavingValue { get; set; }
         public bool isAutoComplete { get; set; }
+        [MaxLength(25)]
         public string? ddlSavingsPeriod { get; set; }
 
     }
