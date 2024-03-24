@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240203224033_CurrentActiveIncome2")]
+    partial class CurrentActiveIncome2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,9 +289,6 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<int?>("CategoryGroupID")
                         .HasColumnType("int");
-
-                    b.Property<string>("CategoryIcon")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CategoryName")
                         .HasMaxLength(50)
@@ -658,27 +657,6 @@ namespace DailySpendWebApp.Migrations
                     b.ToTable("OTP");
                 });
 
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.ProfilePictureImage", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("FileLocation")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("ProfilePictureImages");
-                });
-
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Savings", b =>
                 {
                     b.Property<int>("SavingID")
@@ -866,16 +844,16 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<DateTime?>("LastLoggedOn")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NickName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Password")
                         .IsRequired()

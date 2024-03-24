@@ -29,9 +29,13 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<lut_DateFormat> lut_DateFormats {get; set;}
         public DbSet<lut_NumberFormat> lut_NumberFormats {get; set;}
         public DbSet<lut_CurrencyPlacement> lut_CurrencyPlacements {get; set;}
+        public DbSet<lut_BudgetTimeZone> lut_BudgetTimeZone { get; set; }
         public DbSet<PayPeriodStats> PayPeriodStats { get; set; }
         public DbSet<ErrorLog> ErrorLog { get; set; }
-
+        public DbSet<OTP> OTP { get; set; }
+        public DbSet<ShareBudgetRequest> ShareBudgetRequest {  get; set; }
+        public DbSet<FirebaseDevices> FirebaseDevices { get; set; }
+        public DbSet<ProfilePictureImage> ProfilePictureImages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UserAccounts>(entity => {

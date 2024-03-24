@@ -7,7 +7,7 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int IncomeEventID { get; set; }
         public decimal IncomeAmount { get; set; }
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string IncomeName { get; set; } = "";
         public DateTime IncomeActiveDate { get; set; } = DateTime.Now;
         public DateTime DateOfIncomeEvent { get; set; } = DateTime.Now;

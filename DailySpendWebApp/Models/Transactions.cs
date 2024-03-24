@@ -10,14 +10,15 @@ namespace DailySpendBudgetWebApp.Models
         public bool isSpendFromSavings { get; set; } = false;
         [ForeignKey("Savings")]
         public int? SavingID { get; set; }
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string? SavingName { get; set; } = "";
         public DateTime? TransactionDate { get; set; }
         public DateTime? WhenAdded { get; set; } = DateTime.UtcNow;
         public bool isIncome { get; set; } = false;
         public decimal? TransactionAmount { get; set; }
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string? Category { get; set; } = "";
+        [MaxLength(50)]
         public string? Payee { get; set; } = "";
         [MaxLength(250)]
         public string? Notes { get; set; }
@@ -29,8 +30,8 @@ namespace DailySpendBudgetWebApp.Models
         [NotMapped]
         public List<string> PayeeList { get; set; } = new List<string>();
         [MaxLength(25)]
-        public string stage { get; set; } = "Create";
+        public string? stage { get; set; } = "Create";
         [MaxLength(25)]
-        public string EventType { get; set; }
+        public string? EventType { get; set; }
     }
 }

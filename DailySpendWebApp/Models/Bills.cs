@@ -7,12 +7,12 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int BillID { get; set; }
         [Required]
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string? BillName { get; set; }
-        [MaxLength(250)]
+        [MaxLength(25)]
         public string? BillType { get; set; }
         public int? BillValue { get; set; }
-        [MaxLength(250)]
+        [MaxLength(25)]
         public string? BillDuration { get; set; }
         [Required]
         public decimal? BillAmount { get; set; }
@@ -23,6 +23,8 @@ namespace DailySpendBudgetWebApp.Models
         public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
         public bool isClosed { get; set; }
         public decimal? RegularBillValue { get; set; }
+        [MaxLength(25)]
+        public string? BillPayee { get; set; }
 
 
     }

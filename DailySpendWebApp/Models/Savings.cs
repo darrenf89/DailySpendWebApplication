@@ -11,7 +11,7 @@ namespace DailySpendBudgetWebApp.Models
         [MaxLength(25)]
         public string? SavingsType { get; set; }
         [Required]
-        [MaxLength(15)]
+        [MaxLength(50)]
         public string? SavingsName { get; set; }
         [DataType(DataType.Currency)]
         [DisplayName("Current Balance")]

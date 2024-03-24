@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240126210339_billpayeenullable")]
+    partial class billpayeenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,21 +44,21 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BillDuration")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("BillName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("BillPayee")
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("BillType")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("BillValue")
                         .HasColumnType("int");
@@ -143,8 +145,7 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BudgetName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BudgetType")
                         .IsRequired()
@@ -157,17 +158,11 @@ namespace DailySpendWebApp.Migrations
                     b.Property<string>("CurrencyType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("CurrentActiveIncome")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("DailyBillOutgoing")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DailySavingOutgoing")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsBorrowPay")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsCreated")
                         .HasColumnType("bit");
@@ -197,12 +192,10 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PaydayDuration")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaydayType")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PaydayValue")
                         .HasColumnType("int");
@@ -288,12 +281,9 @@ namespace DailySpendWebApp.Migrations
                     b.Property<int?>("CategoryGroupID")
                         .HasColumnType("int");
 
-                    b.Property<string>("CategoryIcon")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CategoryName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<bool>("isSubCategory")
                         .HasColumnType("bit");
@@ -317,35 +307,36 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeviceIdiom")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("DeviceModel")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("DeviceName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("DeviceOSVersion")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("DevicePlatform")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ErrorMethod")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ErrorPage")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<DateTime>("WhenAdded")
                         .HasColumnType("datetime2");
@@ -377,8 +368,8 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<string>("IncomeName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("RecurringIncomeDuration")
                         .HasMaxLength(25)
@@ -658,27 +649,6 @@ namespace DailySpendWebApp.Migrations
                     b.ToTable("OTP");
                 });
 
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.ProfilePictureImage", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("FileLocation")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("ProfilePictureImages");
-                });
-
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Savings", b =>
                 {
                     b.Property<int>("SavingID")
@@ -713,8 +683,8 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<string>("SavingsName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("SavingsType")
                         .HasMaxLength(25)
@@ -757,10 +727,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("RequestInitiated")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("SharedBudgetID")
                         .HasColumnType("int");
 
@@ -792,8 +758,8 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int?>("CategoryID")
                         .HasColumnType("int");
@@ -807,15 +773,15 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Payee")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int?>("SavingID")
                         .HasColumnType("int");
 
                     b.Property<string>("SavingName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("SavingsSpendType")
                         .HasMaxLength(50)
@@ -866,16 +832,16 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<DateTime?>("LastLoggedOn")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NickName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Password")
                         .IsRequired()

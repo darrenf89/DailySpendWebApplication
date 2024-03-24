@@ -24,6 +24,7 @@ namespace DailySpendBudgetWebApp.Models
         public int? DateSeperator { get; set; } = 1;
         [MaxLength(10)]
         public int? ShortDatePattern { get; set; } = 1;
+        public int? TimeZone { get; set; } = 47;
 
     }
 }

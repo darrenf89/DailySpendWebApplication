@@ -1,4 +1,5 @@
 ﻿using DailySpendWebApp.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,7 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int BudgetID { get; set; }
+        [MaxLength(50)]
         public string? BudgetName { get; set; }
         public DateTime BudgetCreatedOn { get; set; } = DateTime.Now;
         [DataType(DataType.Currency)]
@@ -19,8 +21,10 @@ namespace DailySpendBudgetWebApp.Models
         public DateTime? NextIncomePayday { get; set; }
         public DateTime? NextIncomePaydayCalculated { get; set; }
         public decimal? PaydayAmount { get; set; }
+        [MaxLength(25)]
         public string? PaydayType { get; set; }
         public int? PaydayValue { get; set; }
+        [MaxLength(25)]
         public string? PaydayDuration { get; set; }
         public bool IsCreated { get; set; }
         public DateTime LastUpdated { get; set; }
@@ -40,5 +44,13 @@ namespace DailySpendBudgetWebApp.Models
         public decimal LeftToSpendDailyAmount { get; set; }
         public decimal? StartDayDailyAmount { get; set; }
         public int Stage { get; set; } = 1;
+        public int SharedUserID { get; set; } = 0;
+        public bool IsSharedValidated { get; set; } = false;
+        [MaxLength(15)]
+        public string BudgetType { get; set; } = "Basic";
+        [DefaultValue(true)]
+        public bool IsBorrowPay { get; set; } = true;
+        [DefaultValue(0)]
+        public decimal CurrentActiveIncome { get; set; } = 0;
     }
 }

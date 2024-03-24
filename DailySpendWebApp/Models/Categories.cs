@@ -8,10 +8,11 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int CategoryID { get; set; }
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string? CategoryName { get; set; }
         public bool isSubCategory { get; set; } = true;
         public int? CategoryGroupID { get; set; }
+        public string? CategoryIcon { get; set; }
 
     }
 }
