@@ -9,7 +9,9 @@ namespace DailySpendBudgetWebApp.Models
     {
         [Key]
         public int SharedBudgetRequestID { get; set; }
+        [ForeignKey("Budget")]
         public int SharedBudgetID { get; set; }
+        [ForeignKey("UserAccount")]
         public int SharedWithUserAccountID { get; set; }
         [MaxLength(40)]
         public string? SharedWithUserEmail { get; set; }
@@ -18,7 +20,8 @@ namespace DailySpendBudgetWebApp.Models
         public bool IsVerified { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime RequestInitiated { get; set; } = DateTime.UtcNow;
-
+        public Budgets? Budget { get; set; }
+        public UserAccounts? UserAccount { get; set; }
 
     }
 }

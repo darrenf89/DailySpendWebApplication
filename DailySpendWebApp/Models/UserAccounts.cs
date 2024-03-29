@@ -28,6 +28,8 @@ namespace DailySpendBudgetWebApp.Models
         public string? SubscriptionType {  get; set; }
         public DateTime SubscriptionExpiry {  get; set; }
         public List<Budgets> Budgets { get; set; } = new List<Budgets>();
+        [MaxLength(50)]
+        public string ProfilePicture { get; set; }
 
     }
 }

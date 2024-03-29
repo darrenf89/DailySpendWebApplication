@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240324205939_foreignkeys")]
+    partial class foreignkeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,13 +66,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -86,8 +81,6 @@ namespace DailySpendWebApp.Migrations
                     b.HasKey("BillID");
 
                     b.HasIndex("BudgetsBudgetID");
-
-                    b.HasIndex("CategoryID");
 
                     b.ToTable("Bills");
                 });
@@ -664,8 +657,6 @@ namespace DailySpendWebApp.Migrations
 
                     b.HasKey("OTPID");
 
-                    b.HasIndex("UserAccountID");
-
                     b.ToTable("OTP");
                 });
 
@@ -793,8 +784,6 @@ namespace DailySpendWebApp.Migrations
 
                     b.HasKey("SharedBudgetRequestID");
 
-                    b.HasIndex("SharedBudgetID");
-
                     b.HasIndex("SharedWithUserAccountID");
 
                     b.ToTable("ShareBudgetRequest");
@@ -900,11 +889,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePicture")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Salt")
                         .IsRequired()
@@ -1036,12 +1020,6 @@ namespace DailySpendWebApp.Migrations
                     b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
                         .WithMany("Bills")
                         .HasForeignKey("BudgetsBudgetID");
-
-                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", "Categories")
-                        .WithMany()
-                        .HasForeignKey("CategoryID");
-
-                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.BudgetHstoryLastPeriod", b =>
@@ -1081,17 +1059,6 @@ namespace DailySpendWebApp.Migrations
                         .HasForeignKey("BudgetsBudgetID");
                 });
 
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.OTP", b =>
-                {
-                    b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", "UserAccount")
-                        .WithMany()
-                        .HasForeignKey("UserAccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserAccount");
-                });
-
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.ProfilePictureImage", b =>
                 {
                     b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", "UserAccount")
@@ -1112,19 +1079,11 @@ namespace DailySpendWebApp.Migrations
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.ShareBudgetRequest", b =>
                 {
-                    b.HasOne("DailySpendBudgetWebApp.Models.Budgets", "Budget")
-                        .WithMany()
-                        .HasForeignKey("SharedBudgetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", "UserAccount")
                         .WithMany()
                         .HasForeignKey("SharedWithUserAccountID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Budget");
 
                     b.Navigation("UserAccount");
                 });

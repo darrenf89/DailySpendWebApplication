@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240324210134_foreignkeysOTP")]
+    partial class foreignkeysOTP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,13 +66,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<int?>("BudgetsBudgetID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -86,8 +81,6 @@ namespace DailySpendWebApp.Migrations
                     b.HasKey("BillID");
 
                     b.HasIndex("BudgetsBudgetID");
-
-                    b.HasIndex("CategoryID");
 
                     b.ToTable("Bills");
                 });
@@ -901,11 +894,6 @@ namespace DailySpendWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfilePicture")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1036,12 +1024,6 @@ namespace DailySpendWebApp.Migrations
                     b.HasOne("DailySpendBudgetWebApp.Models.Budgets", null)
                         .WithMany("Bills")
                         .HasForeignKey("BudgetsBudgetID");
-
-                    b.HasOne("DailySpendBudgetWebApp.Models.Categories", "Categories")
-                        .WithMany()
-                        .HasForeignKey("CategoryID");
-
-                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.BudgetHstoryLastPeriod", b =>

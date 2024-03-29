@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DailySpendBudgetWebApp.Models
 {
@@ -25,7 +26,11 @@ namespace DailySpendBudgetWebApp.Models
         public decimal? RegularBillValue { get; set; }
         [MaxLength(25)]
         public string? BillPayee { get; set; }
-
+        [MaxLength(50)]
+        public string? Category { get; set; } = "";
+        [ForeignKey("Categories")]
+        public int? CategoryID { get; set; }
+        public Categories Categories { get; set; }
 
     }
 
