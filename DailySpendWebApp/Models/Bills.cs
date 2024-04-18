@@ -20,6 +20,7 @@ namespace DailySpendBudgetWebApp.Models
         [Required]
         public DateTime? BillDueDate { get; set; }
         public decimal BillCurrentBalance { get; set; } = decimal.Zero;
+        public decimal  BillBalanceAtLastPayDay { get; set; } = decimal.Zero;
         public bool isRecuring { get; set; } = false;
         public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
         public bool isClosed { get; set; }
