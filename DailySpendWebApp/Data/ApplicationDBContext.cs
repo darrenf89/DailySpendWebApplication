@@ -38,6 +38,7 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<ShareBudgetRequest> ShareBudgetRequest {  get; set; }
         public DbSet<FirebaseDevices> FirebaseDevices { get; set; }
         public DbSet<ProfilePictureImage> ProfilePictureImages { get; set; }
+        public DbSet<dBudgetReleaseDetails> dBudgetReleaseDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UserAccounts>(entity => {

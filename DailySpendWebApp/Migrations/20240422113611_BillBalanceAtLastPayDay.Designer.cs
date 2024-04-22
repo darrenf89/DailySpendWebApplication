@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240422113611_BillBalanceAtLastPayDay")]
+    partial class BillBalanceAtLastPayDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,35 +317,6 @@ namespace DailySpendWebApp.Migrations
                     b.HasIndex("BudgetsBudgetID");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.dBudgetReleaseDetails", b =>
-                {
-                    b.Property<int>("ReleaseID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReleaseID"), 1L, 1);
-
-                    b.Property<bool>("IsMajorVersion")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("VersionName")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("VersionNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("ReleaseID");
-
-                    b.ToTable("dBudgetReleaseDetails");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.ErrorLog", b =>
