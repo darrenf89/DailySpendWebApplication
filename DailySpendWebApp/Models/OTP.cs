@@ -10,7 +10,6 @@ namespace DailySpendBudgetWebApp.Models
         [MaxLength(8)]
         public string OTPCode { get; set; }
         public DateTime OTPExpiryTime { get; set; }
-        [ForeignKey("UserAccount")]
         public int UserAccountID { get; set; }
         public bool IsValidated { get; set; }
         [MaxLength(25)]

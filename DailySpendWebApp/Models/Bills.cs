@@ -32,6 +32,8 @@ namespace DailySpendBudgetWebApp.Models
         [ForeignKey("Categories")]
         public int? CategoryID { get; set; }
         public Categories Categories { get; set; }
+        [ForeignKey("BankAccounts")]
+        public int? AccountID { get; set; }
 
     }
 

@@ -8,6 +8,7 @@ namespace DailySpendBudgetWebApp.Models
         [Key]
         public int ErrorLogID { get; set; }
         public string? ErrorMessage { get; set;}
+        public string? StackTrace { get; set;}
         [MaxLength(100)]
         public string? ErrorPage { get; set; }
         [MaxLength(100)]

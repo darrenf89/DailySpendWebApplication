@@ -27,6 +27,8 @@ namespace DailySpendBudgetWebApp.Models
         public decimal? SavingsGoal { get; set; } = 0;
         public bool canExceedGoal { get; set; }
         public bool isDailySaving { get; set; }
+        public bool IsSavingsPaused { get; set; } = false;
+        public bool IsTopUp { get; set; }
         public bool isRegularSaving { get; set; }
         [DisplayName("Savings Amount")]
         public decimal? RegularSavingValue { get; set; }

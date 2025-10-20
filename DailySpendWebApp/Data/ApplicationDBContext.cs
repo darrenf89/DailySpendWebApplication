@@ -39,11 +39,30 @@ namespace DailySpendBudgetWebApp.Data
         public DbSet<FirebaseDevices> FirebaseDevices { get; set; }
         public DbSet<ProfilePictureImage> ProfilePictureImages { get; set; }
         public DbSet<dBudgetReleaseDetails> dBudgetReleaseDetails { get; set; }
+        public DbSet<UserAddDetails> UserAddDetails { get; set; }
+        public DbSet<CustomerSupport> CustomerSupports { get; set; }
+        public DbSet<CustomerSupportMessage> SupportMessages { get; set; }
+        public DbSet<BankAccounts> BankAccounts { get; set; }
+        public DbSet<SessionDetails> SessionDetails { get; set; }
+        public DbSet<FamilyUserAccount> FamilyUserAccount { get; set; }
+        public DbSet<FamilyUserBudgetsAllowance> FamilyUserBudgetsAllowance { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UserAccounts>(entity => {
                 entity.HasIndex(e => e.Email).IsUnique();
             });
+
+            builder.HasSequence<int>("SharedSequence", schema: "dbo")
+                .StartsAt(70)
+                .IncrementsBy(1);
+
+            builder.Entity<UserAccounts>()
+                .Property(o => o.UniqueUserID)
+                .HasDefaultValueSql("NEXT VALUE FOR dbo.SharedSequence");
+
+            builder.Entity<FamilyUserAccount>()
+                .Property(o => o.UniqueUserID)
+                .HasDefaultValueSql("NEXT VALUE FOR dbo.SharedSequence");
         }
     }
 }

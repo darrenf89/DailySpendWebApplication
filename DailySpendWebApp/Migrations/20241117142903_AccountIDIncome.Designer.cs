@@ -4,6 +4,7 @@ using DailySpendBudgetWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DailySpendWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241117142903_AccountIDIncome")]
+    partial class AccountIDIncome
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,9 +23,6 @@ namespace DailySpendWebApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.HasSequence<int>("SharedSequence", "dbo")
-                .StartsAt(70L);
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.BankAccounts", b =>
                 {
@@ -182,9 +181,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<int?>("AproxDaysBetweenPay")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("BalanceAllocatedToAllowance")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("BankBalance")
                         .HasColumnType("decimal(18,2)");
 
@@ -214,9 +210,6 @@ namespace DailySpendWebApp.Migrations
 
                     b.Property<decimal>("DailySavingOutgoing")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("FamilyUserAccountUserID")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsBorrowPay")
                         .HasColumnType("bit");
@@ -278,8 +271,6 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("BudgetID");
-
-                    b.HasIndex("FamilyUserAccountUserID");
 
                     b.HasIndex("UserAccountsUserID");
 
@@ -378,9 +369,6 @@ namespace DailySpendWebApp.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("FamilyUserAccountUserID")
-                        .HasColumnType("int");
-
                     b.Property<string>("FileLocation")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -408,8 +396,6 @@ namespace DailySpendWebApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("SupportID");
-
-                    b.HasIndex("FamilyUserAccountUserID");
 
                     b.HasIndex("UserAccountsUserID");
 
@@ -881,9 +867,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<DateTime?>("GoalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsSavingsPaused")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsTopUp")
                         .HasColumnType("bit");
 
@@ -935,39 +918,6 @@ namespace DailySpendWebApp.Migrations
                     b.HasIndex("BudgetsBudgetID");
 
                     b.ToTable("Savings");
-                });
-
-            modelBuilder.Entity("DailySpendBudgetWebApp.Models.SessionDetails", b =>
-                {
-                    b.Property<int>("SessionID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SessionID"), 1L, 1);
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<DateTime>("SessionExpiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SessionToken")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("SessionUser")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("SessionID");
-
-                    b.ToTable("SessionDetails");
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.ShareBudgetRequest", b =>
@@ -1032,9 +982,6 @@ namespace DailySpendWebApp.Migrations
                     b.Property<string>("EventType")
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
-
-                    b.Property<bool>("IsQuickTransaction")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(250)
@@ -1103,9 +1050,6 @@ namespace DailySpendWebApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("HasFamiltyAccounts")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastLoggedOn")
                         .IsRequired()
                         .HasColumnType("datetime2");
@@ -1137,11 +1081,6 @@ namespace DailySpendWebApp.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<int>("UniqueUserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR dbo.SharedSequence");
-
                     b.Property<bool>("isAgreedToTerms")
                         .HasColumnType("bit");
 
@@ -1157,111 +1096,6 @@ namespace DailySpendWebApp.Migrations
                         .IsUnique();
 
                     b.ToTable("UserAccounts");
-                });
-
-            modelBuilder.Entity("DailySpendWebApp.Models.FamilyUserAccount", b =>
-                {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"), 1L, 1);
-
-                    b.Property<DateTime>("AccountCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("AssignedBudgetID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BudgetID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAgreedToTerms")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsBudgetHidden")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDPAPermissions")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEmailVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastLoggedOn")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NickName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("ParentUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePicture")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UniqueUserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR dbo.SharedSequence");
-
-                    b.HasKey("UserID");
-
-                    b.ToTable("FamilyUserAccount");
-                });
-
-            modelBuilder.Entity("DailySpendWebApp.Models.FamilyUserBudgetsAllowance", b =>
-                {
-                    b.Property<int>("AllowancePaymentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AllowancePaymentID"), 1L, 1);
-
-                    b.Property<double>("AllowancePaymentAmount")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("AllowancePaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FamilyUserID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsParentAdded")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ParentBudgetID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParentUserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("AllowancePaymentID");
-
-                    b.ToTable("FamilyUserBudgetsAllowance");
                 });
 
             modelBuilder.Entity("DailySpendWebApp.Models.FirebaseDevices", b =>
@@ -1412,10 +1246,6 @@ namespace DailySpendWebApp.Migrations
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.Budgets", b =>
                 {
-                    b.HasOne("DailySpendWebApp.Models.FamilyUserAccount", null)
-                        .WithMany("Budgets")
-                        .HasForeignKey("FamilyUserAccountUserID");
-
                     b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", null)
                         .WithMany("Budgets")
                         .HasForeignKey("UserAccountsUserID");
@@ -1439,10 +1269,6 @@ namespace DailySpendWebApp.Migrations
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.CustomerSupport", b =>
                 {
-                    b.HasOne("DailySpendWebApp.Models.FamilyUserAccount", null)
-                        .WithMany("Supports")
-                        .HasForeignKey("FamilyUserAccountUserID");
-
                     b.HasOne("DailySpendBudgetWebApp.Models.UserAccounts", null)
                         .WithMany("Supports")
                         .HasForeignKey("UserAccountsUserID");
@@ -1549,13 +1375,6 @@ namespace DailySpendWebApp.Migrations
                 });
 
             modelBuilder.Entity("DailySpendBudgetWebApp.Models.UserAccounts", b =>
-                {
-                    b.Navigation("Budgets");
-
-                    b.Navigation("Supports");
-                });
-
-            modelBuilder.Entity("DailySpendWebApp.Models.FamilyUserAccount", b =>
                 {
                     b.Navigation("Budgets");
 

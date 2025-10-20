@@ -25,6 +25,7 @@ namespace DailySpendBudgetWebApp.Models
         [ForeignKey("Categories")]
         public int? CategoryID { get; set; }
         public bool isTransacted { get; set; } = false;
+        public bool IsQuickTransaction { get; set; } = false;
         [MaxLength(50)]
         public string? SavingsSpendType { get; set; }
         [NotMapped]
@@ -33,5 +34,7 @@ namespace DailySpendBudgetWebApp.Models
         public string? stage { get; set; } = "Create";
         [MaxLength(25)]
         public string? EventType { get; set; }
+        [ForeignKey("BankAccounts")]
+        public int? AccountID { get; set; }
     }
 }

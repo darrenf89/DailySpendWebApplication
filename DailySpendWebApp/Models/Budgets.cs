@@ -15,7 +15,11 @@ namespace DailySpendBudgetWebApp.Models
         [DataType(DataType.Currency)]
         public decimal? BankBalance { get; set; }
         [DataType(DataType.Currency)]
-        public decimal? MoneyAvailableBalance { get; set; }
+        public decimal? MoneyAvailableBalance { get; set; }        
+        [DataType(DataType.Currency)]
+        public decimal? PlusStashSpendBalance { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal? BalanceAllocatedToAllowance { get; set; }
         [DataType(DataType.Currency)]
         public decimal? LeftToSpendBalance { get; set; }
         public DateTime? NextIncomePayday { get; set; }
@@ -27,6 +31,7 @@ namespace DailySpendBudgetWebApp.Models
         [MaxLength(25)]
         public string? PaydayDuration { get; set; }
         public bool IsCreated { get; set; }
+        public bool IsMultipleAccounts { get; set; }
         public DateTime LastUpdated { get; set; }
         public List<IncomeEvents> IncomeEvents { get; set; } = new List<IncomeEvents>();
         public List<Savings> Savings { get; set; } = new List<Savings>();
@@ -34,7 +39,8 @@ namespace DailySpendBudgetWebApp.Models
         public List<Categories> Categories { get; set; } = new List<Categories>();
         public List<Bills> Bills { get; set; } = new List<Bills>();
         public List<PayPeriodStats> PayPeriodStats { get; set; } = new List<PayPeriodStats>();
-        public List<BudgetHstoryLastPeriod> BudgetHistory { get; set; } = new List<BudgetHstoryLastPeriod>();
+        public List<BudgetHstoryLastPeriod> BudgetHistory { get; set; } = new List<BudgetHstoryLastPeriod>();        
+        public List<BankAccounts> BankAccounts { get; set; } = new List<BankAccounts>();
         public string? CurrencyType { get; set; }
         [DataType(DataType.Currency)]
         public int? AproxDaysBetweenPay { get; set; } = 30;

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DailySpendBudgetWebApp.Models
 {
@@ -20,5 +21,7 @@ namespace DailySpendBudgetWebApp.Models
         public bool isClosed { get; set; } = true;
         public bool? isInstantActive { get; set; }
         public bool? isIncomeAddedToBalance { get; set; } = false;
+        [ForeignKey("BankAccounts")]
+        public int? AccountID { get; set; }
     }
 }
